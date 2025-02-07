@@ -1,0 +1,12 @@
+package com.glowcorner.backend.model.implement;
+
+import com.glowcorner.backend.model.interfaces.UserServive;
+import com.glowcorner.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class UserServiceImp implements UserServive {
+    @Autowired
+    private UserRepository userRepository;
+
+    
+}
