@@ -1,32 +1,48 @@
 package com.glowcorner.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 
-@Entity
-@Data
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "User")
+@Document(collection = "user")
 public class User {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int userID;
+    private ObjectId userID;
 
     private String fullName;
+
     private String email;
+
     private String phone;
+
     private String address;
+
     private String skinType;
+
     private int loyalPoints;
-    private int roleID;
+
+
+    private Role role;
+
+    private Authentication authentication;
+
+    private Cart cart;
+
+    private List<Order> orders;
+
 
 }

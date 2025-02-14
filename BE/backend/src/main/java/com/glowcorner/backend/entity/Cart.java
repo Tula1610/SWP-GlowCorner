@@ -1,14 +1,15 @@
 package com.glowcorner.backend.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 
 @Document(collection = "cart") // Maps this entity to the "carts" collection in MongoDB
@@ -21,13 +22,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Cart {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private ObjectId id; // Unique MongoDB document identifier
 
-    private String id; // Unique MongoDB document identifier
+    @Field(targetType = FieldType.OBJECT_ID)
+    private ObjectId userID; // References the User collection
 
-    private int userID; // References the User collection
-
-    private int productID; // References the Product collection
+    @Field(targetType = FieldType.OBJECT_ID)
+    private ObjectId productID; // References the Product collection
 
     private int quantity;
 }

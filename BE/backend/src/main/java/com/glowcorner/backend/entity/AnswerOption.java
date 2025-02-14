@@ -1,17 +1,16 @@
 package com.glowcorner.backend.entity;
 
 
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,8 +20,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class AnswerOption {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int answerOptionID;
-    private int questionID;
+    private String answerOptionID;
+
+    @Field(targetType = FieldType.OBJECT_ID)
+    private ObjectId questionID;
+
     private String optionText;
 }
