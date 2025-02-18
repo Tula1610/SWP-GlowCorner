@@ -1,9 +1,6 @@
 package com.glowcorner.backend.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
@@ -13,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 
 @Document(collection = "cart") // Maps this entity to the "carts" collection in MongoDB
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,7 +20,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 public class Cart {
 
     @Id
-    private ObjectId id; // Unique MongoDB document identifier
+    private ObjectId cartID; // Unique MongoDB document identifier
 
     @Field(targetType = FieldType.OBJECT_ID)
     private ObjectId userID; // References the User collection

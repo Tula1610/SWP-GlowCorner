@@ -2,19 +2,17 @@ package com.glowcorner.backend.entity;
 
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-
+@Data
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "user")
@@ -35,13 +33,16 @@ public class User {
 
     private int loyalPoints;
 
-
+    //One to one
     private Role role;
 
+    //One to One
     private Authentication authentication;
 
-    private Cart cart;
+    //One to Many
+    private List<Cart> cart;
 
+    //One to Many
     private List<Order> orders;
 
 
