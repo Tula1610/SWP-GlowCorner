@@ -1,28 +1,21 @@
 package com.glowcorner.backend.entity;
 
-
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-@Entity
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
-@Document(collection = "quiz")
 @NoArgsConstructor
+@Document(collection = "quiz")
 public class Quiz {
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int quizID;
-    private String quizName;
+    private ObjectId quizID;
+
+    private String quizText;
+
 }

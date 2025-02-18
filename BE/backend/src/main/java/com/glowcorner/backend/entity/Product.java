@@ -1,11 +1,10 @@
 package com.glowcorner.backend.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,8 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productID; // Maps the primary key, as specified in your SQL schema
+    private ObjectId productID;
 
     private String productName;
 

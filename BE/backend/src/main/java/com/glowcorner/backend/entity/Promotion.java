@@ -1,11 +1,10 @@
 package com.glowcorner.backend.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,9 +17,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Promotion {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int promotionID; // Primary key for the promotion entity
+    private ObjectId promotionID; // Primary key for the promotion entity
 
     private String promotionName;
 
