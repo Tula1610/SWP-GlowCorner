@@ -9,4 +9,6 @@ import java.util.List;
 public interface UserService {
     List<UserDTO> getAllUsers();
     UserDTO updateUser(ObjectId userID, UserDTO userDTO);
+    UserDTO createUser(UserDTO userDTO);
+    UserDTO getUserById(ObjectId userID);
 }

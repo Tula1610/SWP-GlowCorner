@@ -13,16 +13,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImp implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final UserMapper userMapper;
 
     @Autowired
-    private UserMapper userMapper;
-
-    public UserServiceImp(UserRepository userRepository) { this.userRepository = userRepository; }
+    public UserServiceImp(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public List<UserDTO> getAllUsers() {
@@ -30,6 +31,7 @@ public class UserServiceImp implements UserService {
         return userMapper.toUserDTO(users);
     }
 
+    @Override
     public UserDTO updateUser(ObjectId userId, UserDTO userDTO) {
         //Find existing user
         User existingUser = userRepository.findByUserId(userId)
@@ -46,5 +48,19 @@ public class UserServiceImp implements UserService {
 
         //Convert updated user entity to DTO
         return userMapper.toUserDTO(updatedUser);
+    }
+
+    @Override
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = userMapper.toUser(userDTO);
+        User createdUser = userRepository.save(user);
+        return userMapper.toUserDTO(createdUser);
+    }
+
+    @Override
+    public UserDTO getUserById(ObjectId userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.toUserDTO(user);
     }
 }
