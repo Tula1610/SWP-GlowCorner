@@ -87,15 +87,16 @@ You can use any package manager like `npm` or `yarn`
 
 ```bash
 git clone https://github.com/devhasibulislam/canim-ecommerce.git
-cd canim-ecommerce
 
-cd client
-yarn install
+cd D:/Anh Tri/Chuyên Ngành/CN7/SWP/SWP-GlowCorner/FE/client
+npm install
+npm run build
+npm start
 
 cd ..
 
 cd server
-yarn install
+npm install
 ```
 
 ## Environment Setup
@@ -142,14 +143,3 @@ STRIPE_SECRET_KEY="YOUR_STRIPE_SECRET_KEY"
 - [x] `Server Side` Live Link: [Click Here](https://canim-ssr.vercel.app/)
 - [x] `Dashboard Reference` Link: [Click Here](https://loopinfosol.in/themeforest/ekka-html-v33/ekka-admin/index.html)
 - [x] `Reference Site` Live Link: [Click Here](https://chisnghiax.com/ciseco/)
-
-# Author
-
-- Developer: [Hasibul Islam](https://bento.me/devhasibulislam)
-- Designer: [Sadia Khanum](https://www.facebook.com/devsadiakhan) `dedicate to`
-
-# `find it useful` then `buy me a coffee` 😜😜😜
-
-<a href="https://www.buymeacoffee.com/devhasibulislam" target="_blank">
-    <img src="./buy-me-a-coffee.png" alt="devhasibulislam - buy me a coffee" alt="linkedin logo" style="max-widh: 100%; border-radius: 10px;"  />
-</a>
