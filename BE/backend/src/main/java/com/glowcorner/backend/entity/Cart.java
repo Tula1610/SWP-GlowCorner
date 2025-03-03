@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
+import java.util.List;
+
 
 @Document(collection = "cart") // Maps this entity to the "carts" collection in MongoDB
 @Data
@@ -25,8 +27,5 @@ public class Cart {
     @Field(targetType = FieldType.OBJECT_ID)
     private ObjectId userID; // References the User collection
 
-    @Field(targetType = FieldType.OBJECT_ID)
-    private ObjectId productID; // References the Product collection
-
-    private int quantity;
+    private List<CartItem> items; // List of products in the cart
 }

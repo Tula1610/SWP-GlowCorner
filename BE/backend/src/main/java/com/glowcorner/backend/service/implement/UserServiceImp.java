@@ -1,8 +1,10 @@
 package com.glowcorner.backend.service.implement;
 
+import com.glowcorner.backend.entity.Role;
 import com.glowcorner.backend.entity.User;
 import com.glowcorner.backend.model.DTO.UserDTO;
 import com.glowcorner.backend.model.mapper.UserMapper;
+import com.glowcorner.backend.repository.RoleRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +21,13 @@ public class UserServiceImp implements UserService {
 
     private final UserMapper userMapper;
 
+    private final RoleRepository roleRepository;
+
     @Autowired
-    public UserServiceImp(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImp(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -42,6 +47,18 @@ public class UserServiceImp implements UserService {
         existingUser.setEmail(userDTO.getEmail());
         existingUser.setPhone(userDTO.getPhone());
         existingUser.setAddress(userDTO.getAddress());
+        existingUser.setLoyalPoints(userDTO.getLoyalPoints());
+        existingUser.setSkinType(userDTO.getSkinType());
+
+        if (userDTO.getRoleID() != null) {
+            Role role = roleRepository.findById(new ObjectId(userDTO.getRoleID()))
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            existingUser.setRole(role);
+        } else {
+            Role defaultRole = roleRepository.findByName("Customer")
+                    .orElseThrow(() -> new RuntimeException("Default role 'Customer' not found"));
+            existingUser.setRole(defaultRole);
+        }
 
         //Save update
         User updatedUser = userRepository.save(existingUser);
