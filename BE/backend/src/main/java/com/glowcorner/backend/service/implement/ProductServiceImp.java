@@ -27,8 +27,11 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductById(ObjectId productId) {
-        Product product = productRepository.findById(productId).orElse(null);
+    public ProductDTO getProductById(String productId) {
+        Product product = new Product();
+        if (!productRepository.existsById(productId)){
+            return null;
+        }
         return ProductMapper.toDTO(product);
     }
 
@@ -40,42 +43,20 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductDTO updateProduct(ObjectId productId, ProductDTO productDTO) {
+    public ProductDTO updateProduct(String productId, ProductDTO productDTO) {
         if (!productRepository.existsById(productId)) {
             return null;
         }
         Product product = ProductMapper.toEntity(productDTO);
-        product.setProductID(productId);
+        product.setId(productId);
         product = productRepository.save(product);
         return ProductMapper.toDTO(product);
     }
 
     @Override
-    public void deleteProduct(ObjectId productId) {
+    public void deleteProduct(String productId) {
         productRepository.deleteById(productId);
     }
 
-    @Override
-    public List<ProductDTO> getProductsByCategory(String category) {
-        List<Product> products = productRepository.findByCategory(category);
-        return products.stream()
-                .map(ProductMapper::toDTO)
-                .collect(Collectors.toList());
-    }
 
-    @Override
-    public List<ProductDTO> getProductsBySkinTypeCompability(String skinTypeCompability) {
-        List<Product> products = productRepository.findBySkinTypeCompability(skinTypeCompability);
-        return products.stream()
-                .map(ProductMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductDTO> getProductsByRating(float rating) {
-        List<Product> products = productRepository.findByRatingGreaterThanEqual(rating);
-        return products.stream()
-                .map(ProductMapper::toDTO)
-                .collect(Collectors.toList());
-    }
 }

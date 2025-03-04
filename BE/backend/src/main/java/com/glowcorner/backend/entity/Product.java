@@ -1,35 +1,33 @@
 package com.glowcorner.backend.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.glowcorner.backend.enums.Category;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.bson.types.ObjectId;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
 
-
+@Data
 @Document(collection = "product") // Maps this class to the "products" MongoDB collection
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class Product {
 
     @Id
-    private ObjectId productID;
+    String id;
 
-    private String productName;
+    String productName;
 
-    private String description;
+    String description;
 
-    private long price; // BIGINT maps to 'long' in Java
+    long price; // BIGINT maps to 'long' in Java
 
-    private String category;
+    Category category;
 
-    private String skinTypeCompability;
+    String skinTypeCompability;
 
-    private float rating;
+    float rating;
 }

@@ -23,7 +23,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable ObjectId id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
         ProductDTO product = productService.getProductById(id);
         if (product == null) {
             return ResponseEntity.notFound().build();
@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable ObjectId id, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         if (updatedProduct == null) {
             return ResponseEntity.notFound().build();
@@ -47,26 +47,9 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable ObjectId id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable String category) {
-        List<ProductDTO> products = productService.getProductsByCategory(category);
-        return ResponseEntity.ok(products);
-    }
-
-    @GetMapping("/skinType/{skinType}")
-    public ResponseEntity<List<ProductDTO>> getProductsBySkinTypeCompability(@PathVariable String skinType) {
-        List<ProductDTO> products = productService.getProductsBySkinTypeCompability(skinType);
-        return ResponseEntity.ok(products);
-    }
-
-    @GetMapping("/rating/{rating}")
-    public ResponseEntity<List<ProductDTO>> getProductsByRating(@PathVariable float rating) {
-        List<ProductDTO> products = productService.getProductsByRating(rating);
-        return ResponseEntity.ok(products);
-    }
 }
