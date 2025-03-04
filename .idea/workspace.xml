@@ -1,4 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PropertiesComponent">{}</component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="014fadd5-732d-457e-86cb-e8400fdfcb40" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/src/main/java/com/glowcorner/backend/controller/ProductController/ProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/src/main/java/com/glowcorner/backend/model/DTO/ProductDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/src/main/java/com/glowcorner/backend/model/mapper/ProductMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/src/main/java/com/glowcorner/backend/repository/ProductRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/src/main/java/com/glowcorner/backend/service/implement/ProductServiceImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/src/main/java/com/glowcorner/backend/service/interfaces/ProductService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/BackendApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/config/SecurityConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/config/SwaggerConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/AuthenticationController/AuthenticationController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/CartController/CartController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/ProductController/ProductController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/RoleController/RoleController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/UserController/UserController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/UserController/UserControllerAdmin.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/UserController/UserControllerBeautyAdvisor.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/UserController/UserControllerCustomer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/controller/UserController/UserControllerStaff.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/Authentication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/Cart.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/CartItem$CartItemBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/CartItem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/Feedback.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/Order.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/OrderDetail.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/Promotion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/Quiz.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/Role.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/SkinCareRoutine.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/TestResult.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/User$UserBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/entity/User.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/DTO/CartDTO$CartDTOBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/DTO/CartDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/DTO/LoginDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/DTO/ProductDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/DTO/RoleDTO$RoleDTOBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/DTO/RoleDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/DTO/UserDTO$UserDTOBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/DTO/UserDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/mapper/CartMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/mapper/ProductMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/mapper/RoleMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/model/mapper/UserMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/repository/AuthenticationRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/repository/CartRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/repository/OrderRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/repository/ProductRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/repository/RoleRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/repository/UserRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/implement/AuthenticationServiceImp.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/implement/CartServiceImp.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/implement/ProductServiceImp.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/implement/RoleServiceImp.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/implement/UserServiceImp.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/interfaces/AuthenticationService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/interfaces/CartService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/interfaces/ProductService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/interfaces/RoleService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/backend/target/classes/com/glowcorner/backend/service/interfaces/UserService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/enums/Category.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/controller/ProductController/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/controller/ProductController/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/entity/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/model/DTO/ProductDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/model/DTO/ProductDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/model/mapper/ProductMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/model/mapper/ProductMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/repository/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/service/implement/ProductServiceImp.java" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/service/implement/ProductServiceImp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/service/interfaces/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/src/main/java/com/glowcorner/backend/service/interfaces/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/controller/ProductController/ProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/controller/ProductController/ProductController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/entity/Product.class" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/entity/Product.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/model/DTO/ProductDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/model/DTO/ProductDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/model/mapper/ProductMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/model/mapper/ProductMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/repository/ProductRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/repository/ProductRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/service/implement/ProductServiceImp.class" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/service/implement/ProductServiceImp.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/service/interfaces/ProductService.class" beforeDir="false" afterPath="$PROJECT_DIR$/SWP-GlowCorner/BE/backend/target/classes/com/glowcorner/backend/service/interfaces/ProductService.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/SWP-GlowCorner" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "hoagtr"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Tula1610/SWP-GlowCorner.git",
+    "accountId": "bdf427c9-cb4b-48f5-8996-edc37f183955"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2tqBoedax8wttpw6xHahVksP9au" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.glowcorner.backend.BackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="014fadd5-732d-457e-86cb-e8400fdfcb40" name="Changes" comment="" />
+      <created>1741069901785</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741069901785</updated>
+      <workItem from="1741069903104" duration="487000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
 </project>
