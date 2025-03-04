@@ -1,6 +1,5 @@
 package com.glowcorner.backend.service.implement;
 
-import com.glowcorner.backend.entity.Role;
 import com.glowcorner.backend.model.DTO.RoleDTO;
 import com.glowcorner.backend.model.mapper.RoleMapper;
 import com.glowcorner.backend.repository.RoleRepository;

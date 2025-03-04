@@ -1,7 +1,6 @@
 package com.glowcorner.backend.controller.CartController;
 
 import com.glowcorner.backend.entity.mongoDB.Cart;
-import com.glowcorner.backend.entity.CartItem;
 import com.glowcorner.backend.service.interfaces.CartService;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;

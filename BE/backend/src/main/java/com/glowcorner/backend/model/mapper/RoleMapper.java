@@ -1,6 +1,5 @@
 package com.glowcorner.backend.model.mapper;
 
-import com.glowcorner.backend.entity.Role;
 import com.glowcorner.backend.model.DTO.RoleDTO;
 
 import java.util.List;

@@ -14,7 +14,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Quiz {
 
     @Id
-    private ObjectId quizID;
+    String id;
+
+    String questionId;
 
     private String quizText;
 

@@ -3,7 +3,7 @@ package com.glowcorner.backend.entity.mongoDB;
 
 
 import com.glowcorner.backend.entity.Authentication;
-import com.glowcorner.backend.entity.Role;
+import com.glowcorner.backend.enums.Role;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;

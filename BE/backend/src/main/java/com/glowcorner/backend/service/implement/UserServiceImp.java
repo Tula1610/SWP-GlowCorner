@@ -1,6 +1,5 @@
 package com.glowcorner.backend.service.implement;
 
-import com.glowcorner.backend.entity.Role;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.UserDTO;
 import com.glowcorner.backend.model.mapper.UserMapper;

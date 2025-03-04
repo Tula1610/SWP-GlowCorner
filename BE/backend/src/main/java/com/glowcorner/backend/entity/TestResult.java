@@ -1,31 +1,22 @@
 package com.glowcorner.backend.entity;
 
-import lombok.Getter;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.bson.types.ObjectId;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
+
 
 import java.util.Date;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Document(collection = "testresult")
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TestResult {
 
     @Id
-    private ObjectId resultID;
+    String id;
 
-    @Field(targetType = FieldType.OBJECT_ID)
-    private ObjectId userID;
+    String userID;
 
-    private Date testDate;
-    private String testResult;
+    Date testDate;
+    String testResult;
 
 }

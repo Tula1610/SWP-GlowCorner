@@ -1,29 +1,24 @@
 package com.glowcorner.backend.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Document(collection = "answeroption")
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 
 public class AnswerOption {
 
     @Id
-    private String answerOptionID;
+    String id;
 
-    @Field(targetType = FieldType.OBJECT_ID)
-    private ObjectId questionID;
+    String questionID;
 
-    private String optionText;
+    String optionText;
 }
