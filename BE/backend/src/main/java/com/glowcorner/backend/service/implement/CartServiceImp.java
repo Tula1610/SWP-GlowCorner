@@ -1,6 +1,6 @@
 package com.glowcorner.backend.service.implement;
 
-import com.glowcorner.backend.entity.Cart;
+import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.CartItem;
 import com.glowcorner.backend.repository.CartRepository;
 import com.glowcorner.backend.service.interfaces.CartService;

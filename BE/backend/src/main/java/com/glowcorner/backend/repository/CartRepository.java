@@ -1,6 +1,6 @@
 package com.glowcorner.backend.repository;
 
-import com.glowcorner.backend.entity.Cart;
+import com.glowcorner.backend.entity.mongoDB.Cart;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

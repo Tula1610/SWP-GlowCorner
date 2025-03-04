@@ -1,7 +1,9 @@
-package com.glowcorner.backend.entity;
+package com.glowcorner.backend.entity.mongoDB;
 
 
 
+import com.glowcorner.backend.entity.Authentication;
+import com.glowcorner.backend.entity.Role;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;

@@ -1,6 +1,6 @@
 package com.glowcorner.backend.service.interfaces;
 
-import com.glowcorner.backend.entity.Cart;
+import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.CartItem;
 import org.bson.types.ObjectId;
 

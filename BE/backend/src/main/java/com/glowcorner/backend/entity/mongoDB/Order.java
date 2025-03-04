@@ -1,4 +1,4 @@
-package com.glowcorner.backend.entity;
+package com.glowcorner.backend.entity.mongoDB;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

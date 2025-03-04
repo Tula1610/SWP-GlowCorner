@@ -1,13 +1,12 @@
 package com.glowcorner.backend.service.implement;
 
-import com.glowcorner.backend.entity.Product;
+import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.mapper.ProductMapper;
 import com.glowcorner.backend.repository.ProductRepository;
 import com.glowcorner.backend.service.interfaces.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.stream.Collectors;

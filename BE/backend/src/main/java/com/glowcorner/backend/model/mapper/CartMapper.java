@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.mapper;
 
-import com.glowcorner.backend.entity.Cart;
+import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.model.DTO.CartDTO;
 
 public class CartMapper {

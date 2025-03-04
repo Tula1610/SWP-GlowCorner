@@ -1,13 +1,12 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.Role;
-import com.glowcorner.backend.entity.User;
+import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.UserDTO;
 import com.glowcorner.backend.model.mapper.UserMapper;
 import com.glowcorner.backend.repository.RoleRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.UserService;
-import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,9 @@
 package com.glowcorner.backend.model.mapper;
 
 import com.glowcorner.backend.entity.*;
+import com.glowcorner.backend.entity.mongoDB.Cart;
+import com.glowcorner.backend.entity.mongoDB.Order;
+import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.UserDTO;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;

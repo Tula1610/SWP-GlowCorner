@@ -1,10 +1,8 @@
-package com.glowcorner.backend.entity;
+package com.glowcorner.backend.entity.mongoDB;
 
 import com.glowcorner.backend.enums.Category;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.bson.types.ObjectId;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

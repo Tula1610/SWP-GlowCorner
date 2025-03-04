@@ -1,5 +1,6 @@
-package com.glowcorner.backend.entity;
+package com.glowcorner.backend.entity.mongoDB;
 
+import com.glowcorner.backend.entity.CartItem;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;

@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.mapper;
 
-import com.glowcorner.backend.entity.Product;
+import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 
 public class ProductMapper {

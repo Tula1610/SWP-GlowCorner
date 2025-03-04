@@ -1,11 +1,10 @@
 package com.glowcorner.backend.repository;
 
-import com.glowcorner.backend.entity.Product;
+import com.glowcorner.backend.entity.mongoDB.Product;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.lang.ScopedValue;
 import java.util.List;
 
 @Repository
