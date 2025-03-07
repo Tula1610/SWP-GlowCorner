@@ -19,7 +19,5 @@ public class Cart {
     @Id
     String cartID; // Unique MongoDB document identifier
 
-    List<Product> items; // List of products in the cart
-
-    int quantity; // Quantity of each product in the cart
+    List<CartItem> items; // List of products in the cart
 }

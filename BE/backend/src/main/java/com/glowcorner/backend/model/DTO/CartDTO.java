@@ -1,5 +1,6 @@
 package com.glowcorner.backend.model.DTO;
 
+import com.glowcorner.backend.entity.mongoDB.CartItem;
 import com.glowcorner.backend.entity.mongoDB.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,5 @@ public class CartDTO {
     @Id
     String cartID;
 
-    List<Product> items;
-
-    int quantity;
+    List<CartItem> items;
 }

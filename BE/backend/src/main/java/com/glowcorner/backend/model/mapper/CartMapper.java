@@ -2,7 +2,9 @@ package com.glowcorner.backend.model.mapper;
 
 import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.model.DTO.CartDTO;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CartMapper {
 
     public CartDTO toCartDTO(Cart cart) {
@@ -12,8 +14,7 @@ public class CartMapper {
 
         return new CartDTO(
                 cart.getCartID(),
-                cart.getItems(),
-                cart.getQuantity()
+                cart.getItems()
         );
     }
 
@@ -24,8 +25,7 @@ public class CartMapper {
 
         return new Cart(
                 cartDTO.getCartID(),
-                cartDTO.getItems(),
-                cartDTO.getQuantity()
+                cartDTO.getItems()
         );
     }
 
