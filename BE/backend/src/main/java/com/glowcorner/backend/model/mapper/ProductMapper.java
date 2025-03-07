@@ -1,6 +1,7 @@
 package com.glowcorner.backend.model.mapper;
 
 import com.glowcorner.backend.entity.mongoDB.Product;
+import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 
 public class ProductMapper {
@@ -11,11 +12,11 @@ public class ProductMapper {
             return null;
         }
         return new ProductDTO(
-            product.getProductID(),
+            product.getId(),
             product.getProductName(),
             product.getDescription(),
             product.getPrice(),
-            product.getCategory(),
+            Category.valueOf(product.getCategory().name()),
             product.getSkinTypeCompability(),
             product.getRating()
         );
@@ -31,7 +32,7 @@ public class ProductMapper {
             productDTO.getProductName(),
             productDTO.getDescription(),
             productDTO.getPrice(),
-            productDTO.getCategory(),
+            Category.valueOf(productDTO.getCategory().name()),
             productDTO.getSkinTypeCompability(),
             productDTO.getRating()
         );

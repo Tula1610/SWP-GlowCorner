@@ -1,10 +1,15 @@
 package com.glowcorner.backend.model.DTO;
 
 
+import com.glowcorner.backend.entity.Authentication;
+import com.glowcorner.backend.entity.mongoDB.Cart;
+import com.glowcorner.backend.entity.mongoDB.Order;
+import com.glowcorner.backend.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
@@ -12,20 +17,21 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserDTO {
-    private String userID;
-    private String fullName;
-    private String email;
-    private String phone;
-    private String address;
-    private String skinType;
-    private int loyalPoints;
+    String userID;
+    String fullName;
+    String email;
+    String phone;
+    String address;
+    String skinType;
+    int loyalPoints;
 
-    private String roleID;
+    Role role;
 
-    private String authenticationID;
+    Authentication authentication;
 
-    private List<String> cartIDs;
+    Cart cart;
 
-    private List<String> orderIDs;
+    List<Order> orders;
 }

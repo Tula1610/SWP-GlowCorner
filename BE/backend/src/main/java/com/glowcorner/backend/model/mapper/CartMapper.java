@@ -10,10 +10,23 @@ public class CartMapper {
             return null;
         }
 
-        return CartDTO.builder()
-                .cartID(cart.getCartID().toHexString()) // Convert ObjectId to String
-                .userID(cart.getUserID().toHexString()) // Convert ObjectId to String
-                .build();
+        return new CartDTO(
+                cart.getCartID(),
+                cart.getItems(),
+                cart.getQuantity()
+        );
+    }
+
+    public Cart toCart(CartDTO cartDTO) {
+        if (cartDTO == null) {
+            return null;
+        }
+
+        return new Cart(
+                cartDTO.getCartID(),
+                cartDTO.getItems(),
+                cartDTO.getQuantity()
+        );
     }
 
 

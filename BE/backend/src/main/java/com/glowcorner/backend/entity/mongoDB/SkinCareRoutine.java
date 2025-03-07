@@ -1,25 +1,22 @@
 package com.glowcorner.backend.entity.mongoDB;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.bson.types.ObjectId;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Document(collection = "skincareroutine")
 
 public class SkinCareRoutine {
 
     @Id
-    private ObjectId routineID;
+    String routineID;
 
-    private String skinType;
-    private String routineName;
-    private String routineDescription;
+    String skinType;
+
+    String routineName;
+
+    String routineDescription;
 }

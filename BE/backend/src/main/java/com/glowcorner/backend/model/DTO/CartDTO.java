@@ -1,22 +1,25 @@
 package com.glowcorner.backend.model.DTO;
 
+import com.glowcorner.backend.entity.mongoDB.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class CartDTO {
     @Id
-    private String cartID;
+    String cartID;
 
-    private String userID;
+    List<Product> items;
 
-    private String productID;
-
-    private int quantity;
+    int quantity;
 }

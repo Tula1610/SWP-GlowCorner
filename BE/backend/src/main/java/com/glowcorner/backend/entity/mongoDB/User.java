@@ -5,6 +5,7 @@ package com.glowcorner.backend.entity.mongoDB;
 import com.glowcorner.backend.entity.Authentication;
 import com.glowcorner.backend.enums.Role;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,40 +13,37 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Document(collection = "user")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
     @Id
-    private ObjectId userID;
+    String userID;
 
-    private String fullName;
+    String fullName;
 
-    private String email;
+    String email;
 
-    private String phone;
+    String phone;
 
-    private String address;
+    String address;
 
-    private String skinType;
+    String skinType;
 
-    private int loyalPoints;
+    int loyalPoints;
 
     //One to one
-    private Role role;
+    Role role;
 
     //One to One
-    private Authentication authentication;
+    Authentication authentication;
+
+    //One to one
+    Cart cart;
 
     //One to Many
-    private List<Cart> cart;
+    List<Order> orders;
 
-    //One to Many
-    private List<Order> orders;
 
 
 }

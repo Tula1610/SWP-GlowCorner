@@ -3,11 +3,8 @@ package com.glowcorner.backend.service.implement;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.UserDTO;
 import com.glowcorner.backend.model.mapper.UserMapper;
-import com.glowcorner.backend.repository.RoleRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.UserService;
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,23 +16,39 @@ public class UserServiceImp implements UserService {
 
     private final UserMapper userMapper;
 
-    private final RoleRepository roleRepository;
-
-    @Autowired
-    public UserServiceImp(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
+    public UserServiceImp(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.roleRepository = roleRepository;
     }
 
+    // Get all users
     @Override
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return userMapper.toUserDTO(users);
+        return users.stream()
+                .map(userMapper::toUserDTO)
+                .toList();
     }
 
+    // Get user by ID
     @Override
-    public UserDTO updateUser(ObjectId userId, UserDTO userDTO) {
+    public UserDTO getUserById(String userId) {
+        if(userRepository.findByUserId(userId).isPresent())
+            return userMapper.toUserDTO(userRepository.findByUserId(userId).get());
+        return null;
+    }
+
+    // Create a new user
+    @Override
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = userMapper.toUser(userDTO);
+        user = userRepository.save(user);
+        return userMapper.toUserDTO(user);
+    }
+
+    //Update a user
+    @Override
+    public UserDTO updateUser(String userId, UserDTO userDTO) {
         //Find existing user
         User existingUser = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -47,16 +60,7 @@ public class UserServiceImp implements UserService {
         existingUser.setAddress(userDTO.getAddress());
         existingUser.setLoyalPoints(userDTO.getLoyalPoints());
         existingUser.setSkinType(userDTO.getSkinType());
-
-        if (userDTO.getRoleID() != null) {
-            Role role = roleRepository.findById(new ObjectId(userDTO.getRoleID()))
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
-            existingUser.setRole(role);
-        } else {
-            Role defaultRole = roleRepository.findByName("Customer")
-                    .orElseThrow(() -> new RuntimeException("Default role 'Customer' not found"));
-            existingUser.setRole(defaultRole);
-        }
+        existingUser.setRole(userDTO.getRole());
 
         //Save update
         User updatedUser = userRepository.save(existingUser);
@@ -65,17 +69,10 @@ public class UserServiceImp implements UserService {
         return userMapper.toUserDTO(updatedUser);
     }
 
+    // Delete a user
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = userMapper.toUser(userDTO);
-        User createdUser = userRepository.save(user);
-        return userMapper.toUserDTO(createdUser);
+    public void deleteUser(String userId) {
+        userRepository.deleteById(userId);
     }
 
-    @Override
-    public UserDTO getUserById(ObjectId userId) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return userMapper.toUserDTO(user);
-    }
 }

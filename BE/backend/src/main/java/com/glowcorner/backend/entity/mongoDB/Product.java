@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document(collection = "product") // Maps this class to the "products" MongoDB collection
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
+@AllArgsConstructor
 public class Product {
 
     @Id
