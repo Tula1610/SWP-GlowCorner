@@ -1,7 +1,7 @@
-package com.example.backend.security;
+package com.glowcorner.backend.security;
 
-import com.example.backend.model.mongoDB.User;
-import com.example.backend.repository.UserRepository;
+import com.glowcorner.backend.model.mongoDB.User;
+import com.glowcorner.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

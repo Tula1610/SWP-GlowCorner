@@ -1,8 +1,7 @@
-package com.example.backend.security;
+package com.glowcorner.backend.security;
 
-import com.example.backend.model.mongoDB.Employee;
-import com.example.backend.repository.EmployeeRepository;
-import com.example.backend.util.JwtUtilHelper;
+import com.glowcorner.backend.model.mongoDB.User;
+import com.glowcorner.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +39,7 @@ public class CustomFilterSecurity {
     private JwtUtilHelper jwtUtilHelper;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,7 +49,9 @@ public class CustomFilterSecurity {
                 "/login/google", "/login/firebase", "/v3/api-docs/**" // Both login endpoints are public
         };
 
-        String[] adminUrls = {"/api/users/**", "/api/admin/users/**"};
+        String[] adminUrls = {
+                "/api/users/**", "/api/admin/users/**"
+        };
 
         http
                 .cors().and()
@@ -96,8 +97,8 @@ public class CustomFilterSecurity {
             OidcUser oidcUser = delegate.loadUser(userRequest);
             String email = oidcUser.getEmail();
 
-            Employee employee = employeeRepository.findByEmail(email);
-            if (employee == null) {
+            User User = UserRepository.findByEmail(email);
+            if (user == null) {
                 throw new UsernameNotFoundException("Employee with email " + email + " not found in the system");
             }
 
@@ -119,7 +120,7 @@ public class CustomFilterSecurity {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://dashboard.example.com", "http://app.example.com"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
