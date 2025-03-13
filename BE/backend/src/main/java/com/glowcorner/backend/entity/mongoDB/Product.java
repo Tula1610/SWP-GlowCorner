@@ -25,7 +25,5 @@ public class Product {
 
     Category category;
 
-    String skinTypeCompability;
-
     float rating;
 }

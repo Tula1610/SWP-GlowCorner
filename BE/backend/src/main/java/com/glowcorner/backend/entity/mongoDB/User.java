@@ -3,10 +3,10 @@ package com.glowcorner.backend.entity.mongoDB;
 
 
 import com.glowcorner.backend.entity.Authentication;
+import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.enums.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,6 +18,8 @@ import java.util.List;
 public class User {
 
     @Id
+    String id;
+
     String userID;
 
     String fullName;
@@ -28,7 +30,7 @@ public class User {
 
     String address;
 
-    String skinType;
+    Category skinType;
 
     int loyalPoints;
 

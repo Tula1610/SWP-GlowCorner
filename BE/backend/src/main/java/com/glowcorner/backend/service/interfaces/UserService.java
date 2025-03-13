@@ -1,13 +1,34 @@
 package com.glowcorner.backend.service.interfaces;
 
-import com.glowcorner.backend.model.DTO.UserDTO;
+import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
+import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
+import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 
 import java.util.List;
 
 public interface UserService {
-    List<UserDTO> getAllUsers();
-    UserDTO updateUser(String userID, UserDTO userDTO);
+
+    /* Manager */
+    UserDTOByManager updateUserByManager(String userID, UserDTOByManager userDTOByManager);
     void deleteUser(String userId);
-    UserDTO createUser(UserDTO userDTO);
-    UserDTO getUserById(String userID);
+    UserDTOByManager createUser(UserDTOByManager userDTOByManager);
+
+    List <UserDTOByManager> searchUserByNameManager(String name);
+    UserDTOByManager getUserById(String userID);
+    List<UserDTOByManager> getAllUsers();
+
+    /* Customer */
+    UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer);
+
+    /* Beauty Advisor */
+//    UserDTOByBeautyAdvisor updateUserByBeautyAdvisor(String userID, UserDTOByBeautyAdvisor userDTOByBeautyAdvisor);
+
+    List<UserDTOByBeautyAdvisor> getAllUsersByBeautyAdvisor();
+    UserDTOByBeautyAdvisor getUserByEmailByBeautyAdvisor(String email);
+    List<UserDTOByBeautyAdvisor> searchUserByNameBeautyAdvisor(String name);
+
+
+
+
+
 }

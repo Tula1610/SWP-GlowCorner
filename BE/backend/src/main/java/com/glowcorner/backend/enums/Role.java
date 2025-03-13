@@ -4,7 +4,6 @@ public enum Role {
     CUSTOMER,
     MANAGER,
     STAFF,
-    GUEST,
     BEAUTY_ADVISOR
 
 }
