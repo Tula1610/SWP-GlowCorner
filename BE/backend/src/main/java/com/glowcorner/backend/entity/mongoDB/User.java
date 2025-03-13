@@ -6,7 +6,6 @@ import com.glowcorner.backend.entity.Authentication;
 import com.glowcorner.backend.enums.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,7 +17,9 @@ import java.util.List;
 public class User {
 
     @Id
-    String userID;
+    String id;
+
+    String userId;
 
     String fullName;
 

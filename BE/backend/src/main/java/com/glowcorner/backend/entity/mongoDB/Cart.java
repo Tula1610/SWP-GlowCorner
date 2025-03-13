@@ -17,7 +17,11 @@ import java.util.List;
 public class Cart {
 
     @Id
-    String cartID; // Unique MongoDB document identifier
+    String id; // Unique MongoDB document identifier
+
+    String cartId;
+
+    String userId;
 
     List<CartItem> items; // List of products in the cart
 }

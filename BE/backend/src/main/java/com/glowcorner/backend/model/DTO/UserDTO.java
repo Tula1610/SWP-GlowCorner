@@ -19,7 +19,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserDTO {
-    String userID;
     String fullName;
     String email;
     String phone;
