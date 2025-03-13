@@ -11,6 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Document(collection = "cartItem")
 public class CartItem {
-    Product product;
+
+    String userID;
+    String productID;
     int quantity;
+
 }

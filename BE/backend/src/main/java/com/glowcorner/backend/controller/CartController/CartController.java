@@ -1,7 +1,7 @@
 package com.glowcorner.backend.controller.CartController;
 
-import com.glowcorner.backend.entity.mongoDB.Product;
-import com.glowcorner.backend.model.DTO.CartDTO;
+import com.glowcorner.backend.model.DTO.Cart.CartDTO;
+import com.glowcorner.backend.model.DTO.Cart.CartItemDTO;
 import com.glowcorner.backend.service.interfaces.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +17,8 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    /* Cart */
+
     // Get cart for user
     @GetMapping("/{userID}")
     public ResponseEntity<CartDTO> getCartsByUserID(@PathVariable String userID) {
@@ -29,23 +31,42 @@ public class CartController {
 
     // Add an item to a cart
     @PostMapping("/{userID}/add")
-    public ResponseEntity<String> addItemToCart(@PathVariable String userID, @RequestBody Product newProduct, @RequestParam int quantity) {
-        cartService.addItemToCart(userID, newProduct, quantity);
+    public ResponseEntity<String> addItemToCart(@PathVariable String userID, @RequestBody String productID, @RequestParam int quantity) {
+        cartService.addItemToCart(userID, productID, quantity);
         return ResponseEntity.ok("Item added to the cart");
     }
 
     // Remove item from Cart
-    @DeleteMapping("{cartID}/remove/{productID}")
-    public ResponseEntity<String> removeItemFromCart(@PathVariable String cartID, @PathVariable String productID) {
-        cartService.removeItemFromCart(cartID, productID);
+    @DeleteMapping("{userID}/remove/{productID}")
+    public ResponseEntity<String> removeItemFromCart(@PathVariable String userID, @PathVariable String productID) {
+        cartService.removeItemFromCart(userID, productID);
         return ResponseEntity.ok("Item removed from the cart");
     }
 
     // Clear a Cart
-    @DeleteMapping("/{cartID}/clear")
-    public ResponseEntity<String> clearCart(@PathVariable String cartID) {
-        cartService.clearCart(cartID);
+    @DeleteMapping("/{userID}/clear")
+    public ResponseEntity<String> clearCart(@PathVariable String userID) {
+        cartService.clearCart(userID);
         return ResponseEntity.ok("Cart cleared");
+    }
+
+    /* Cart Item */
+
+    // Get a Cart Item
+    @GetMapping("/{userID}/{productID}")
+    public ResponseEntity<CartItemDTO> getCartItem(@PathVariable String userID, @PathVariable String productID) {
+        CartItemDTO cartItem = cartService.getCartItem(userID, productID);
+        if (cartItem == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cartItem);
+    }
+
+    // Update a Cart Item
+    @PutMapping("/{userID}/{productID}")
+    public ResponseEntity<String> updateCartItem(@PathVariable String userID, @PathVariable String productID, @RequestParam int quantity) {
+        cartService.updateCartItem(userID, productID, quantity);
+        return ResponseEntity.ok("Cart item updated");
     }
 
 }

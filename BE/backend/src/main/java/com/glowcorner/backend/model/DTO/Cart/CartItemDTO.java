@@ -1,19 +1,18 @@
-package com.glowcorner.backend.model.DTO;
+package com.glowcorner.backend.model.DTO.Cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class OrderDetailDTO {
+public class CartItemDTO {
 
-    String orderID;
+    String userID;
     String productID;
     int quantity;
-    int price;
 
 }

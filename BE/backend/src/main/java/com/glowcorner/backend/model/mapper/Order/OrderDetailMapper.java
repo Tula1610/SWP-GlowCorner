@@ -1,7 +1,7 @@
-package com.glowcorner.backend.model.mapper;
+package com.glowcorner.backend.model.mapper.Order;
 
 import com.glowcorner.backend.entity.mongoDB.OrderDetail;
-import com.glowcorner.backend.model.DTO.OrderDetailDTO;
+import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
 import org.springframework.stereotype.Component;
 
 @Component

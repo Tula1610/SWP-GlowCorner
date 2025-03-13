@@ -1,13 +1,10 @@
-package com.glowcorner.backend.model.DTO;
+package com.glowcorner.backend.model.DTO.Cart;
 
-import com.glowcorner.backend.entity.mongoDB.CartItem;
-import com.glowcorner.backend.entity.mongoDB.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
@@ -20,5 +17,5 @@ public class CartDTO {
 
     String userID;
 
-    List<CartItem> items;
+    List<CartItemDTO> items;
 }

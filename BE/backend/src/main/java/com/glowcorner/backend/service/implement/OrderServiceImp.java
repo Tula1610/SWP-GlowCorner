@@ -1,11 +1,14 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Order;
+import com.glowcorner.backend.entity.mongoDB.OrderDetail;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
-import com.glowcorner.backend.model.DTO.OrderDTO;
-import com.glowcorner.backend.model.mapper.OrderDetailMapper;
-import com.glowcorner.backend.model.mapper.OrderMapper;
+import com.glowcorner.backend.model.DTO.Order.OrderDTO;
+import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
+import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
+import com.glowcorner.backend.model.mapper.Order.OrderMapper;
+import com.glowcorner.backend.repository.OrderDetailRepository;
 import com.glowcorner.backend.repository.OrderRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.OrderService;
@@ -20,18 +23,24 @@ public class OrderServiceImp implements OrderService {
 
     private final OrderRepository orderRepository;
 
+    private final OrderDetailRepository orderDetailRepository;
+
     private final UserRepository userRepository;
 
     private final OrderMapper orderMapper;
 
     private final OrderDetailMapper orderDetailMapper;
 
-    public OrderServiceImp(OrderRepository orderRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper) {
+    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper) {
         this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
     }
+
+    /* Order
+    * */
 
     // Create order
     public OrderDTO createOrder(OrderDTO orderDTO) {
@@ -111,6 +120,52 @@ public class OrderServiceImp implements OrderService {
         List<Order> orders = orderRepository.findByOrderDate(orderDate);
         return orders.stream()
                 .map(orderMapper::toOrderDTO)
+                .collect(Collectors.toList());
+    }
+
+    /* OrderDetail
+    * */
+
+    // Create order detail
+    @Override
+    public OrderDetailDTO createOrderDetail(String orderId, OrderDetailDTO orderDetailDTO) {
+        orderDetailDTO.setOrderID(orderId);
+        OrderDetail orderDetail = orderDetailMapper.toOrderDetail(orderDetailDTO);
+        orderDetail = orderDetailRepository.save(orderDetail);
+        return orderDetailMapper.toOrderDetailDTO(orderDetail);
+    }
+
+    // Update order detail
+    @Override
+    public OrderDetailDTO updateOrderDetail(String orderID, String productID, OrderDetailDTO orderDetailDTO) {
+        OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIdAndProductID(orderID, productID)
+                .orElseThrow(() -> new RuntimeException("Order detail not found"));
+
+        existingOrderDetail.setOrderID(orderDetailDTO.getOrderID());
+        existingOrderDetail.setProductID(orderDetailDTO.getProductID());
+        existingOrderDetail.setQuantity(orderDetailDTO.getQuantity());
+        existingOrderDetail.setPrice(orderDetailDTO.getPrice());
+
+        existingOrderDetail = orderDetailRepository.save(existingOrderDetail);
+        return orderDetailMapper.toOrderDetailDTO(existingOrderDetail);
+    }
+
+    // Delete order detail
+    @Override
+    public void deleteOrderDetail(String orderID, String productID) {
+        OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIdAndProductID(orderID, productID)
+                .orElseThrow(() -> new RuntimeException("Order detail not found"));
+
+        orderDetailRepository.delete(existingOrderDetail);
+    }
+
+    // Get order details by order ID
+    @Override
+    public List<OrderDetailDTO> getOrderDetailByOrderID(String orderID) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderID(orderID);
+
+        return orderDetails.stream()
+                .map(orderDetailMapper::toOrderDetailDTO)
                 .collect(Collectors.toList());
     }
 }
