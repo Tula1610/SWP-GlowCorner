@@ -17,8 +17,5 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class CartDTO {
-    @Id
-    String cartID;
-
     List<CartItem> items;
 }

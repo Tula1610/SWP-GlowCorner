@@ -13,7 +13,6 @@ public class CartMapper {
         }
 
         return new CartDTO(
-                cart.getCartID(),
                 cart.getItems()
         );
     }
@@ -24,8 +23,7 @@ public class CartMapper {
         }
 
         return new Cart(
-                cartDTO.getCartID(),
-                cartDTO.getItems()
+            cartDTO.getItems()
         );
     }
 
