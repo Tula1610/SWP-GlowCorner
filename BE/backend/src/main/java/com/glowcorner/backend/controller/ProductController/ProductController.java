@@ -1,5 +1,6 @@
 package com.glowcorner.backend.controller.ProductController;
 
+import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.service.interfaces.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,20 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(product);
+    }
+
+    // Get products by category
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Category category) {
+        List<ProductDTO> products = productService.getProductsByCategory(category);
+        return ResponseEntity.ok(products);
+    }
+
+    // Get products by product name
+    @GetMapping("/name/{productName}")
+    public ResponseEntity<List<ProductDTO>> getProductsByProductName(@PathVariable String productName) {
+        List<ProductDTO> products = productService.getProductsByProductName(productName);
+        return ResponseEntity.ok(products);
     }
 
     @PostMapping

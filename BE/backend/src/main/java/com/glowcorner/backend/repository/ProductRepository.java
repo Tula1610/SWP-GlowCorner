@@ -1,6 +1,7 @@
 package com.glowcorner.backend.repository;
 
 import com.glowcorner.backend.entity.mongoDB.Product;
+import com.glowcorner.backend.enums.Category;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,6 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     Optional<Product> findByProductId(String productId);
 
     void deleteById(String productId);
-//    List<Product> findByCategory(String category);
-//   List<Product> findBySkinTypeCompability(String skinTypeCompability);
-//   List<Product> findByRatingGreaterThanEqual(float rating);
+    List<Product> findByCategory(Category category);
+    List<Product> findByProductNameRegexIgnoreCase(String productName);
 }
