@@ -14,6 +14,7 @@ import java.util.List;
 
 @Data
 @Document(collection = "user")
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 

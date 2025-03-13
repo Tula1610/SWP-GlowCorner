@@ -17,6 +17,8 @@ import java.util.List;
 public class Order {
 
     @Id
+    String id; // Unique MongoDB document identifier (can be ignored if unused)
+
     String orderID; // Primary key for orders
 
     String customerID; // Refers to userID in the User collection (foreign key in SQL)

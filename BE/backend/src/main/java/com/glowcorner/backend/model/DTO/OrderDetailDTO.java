@@ -1,19 +1,19 @@
 package com.glowcorner.backend.model.DTO;
 
-import com.glowcorner.backend.enums.Category;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class ProductDTO {
+public class OrderDetailDTO {
 
+    String orderID;
     String productID;
-    String productName;
-    String description;
-    long price;
-    Category category;
-    float rating;
+    int quantity;
+    int price;
+
 }

@@ -13,6 +13,7 @@ public class UserMapperBeautyAdvisor {
         }
 
         return new UserDTOByBeautyAdvisor(
+                user.getUserID(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),

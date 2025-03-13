@@ -1,7 +1,6 @@
 package com.glowcorner.backend.model.mapper.User;
 
 import com.glowcorner.backend.entity.mongoDB.User;
-import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +16,7 @@ public class UserMapperManager {
         }
 
         return new UserDTOByManager(
+                user.getUserID(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),

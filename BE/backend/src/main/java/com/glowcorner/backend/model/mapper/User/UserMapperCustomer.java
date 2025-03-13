@@ -13,6 +13,7 @@ public class UserMapperCustomer {
         }
 
         return new UserDTOByCustomer(
+                user.getUserID(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),
