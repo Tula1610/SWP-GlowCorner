@@ -15,7 +15,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-        boolean isAuthenticated = authenticationService.login(loginDTO.getUsername(), loginDTO.getPassword());
+        boolean isAuthenticated = authenticationService.login(loginDTO.getUsername(), loginDTO.getPasswordHash());
         if (isAuthenticated) {
             return ResponseEntity.ok("Login successful");
         } else {
