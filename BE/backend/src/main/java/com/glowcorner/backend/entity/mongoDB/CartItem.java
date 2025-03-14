@@ -3,6 +3,7 @@ package com.glowcorner.backend.entity.mongoDB;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -11,6 +12,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Document(collection = "cartItem")
 public class CartItem {
-    Product product;
+
+    @Id
+    String id;
+
+    String userID;
+    String productID;
     int quantity;
+
 }

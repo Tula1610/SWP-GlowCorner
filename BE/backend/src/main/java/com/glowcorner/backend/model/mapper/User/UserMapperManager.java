@@ -2,6 +2,7 @@ package com.glowcorner.backend.model.mapper.User;
 
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
+import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,13 +11,18 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapperManager {
 
+    private final CounterServiceImpl counterServiceImpl;
+
+    public UserMapperManager(CounterServiceImpl counterServiceImpl) {
+        this.counterServiceImpl = counterServiceImpl;
+    }
+
     public UserDTOByManager toUserDTO(User user) {
         if (user == null) {
             return null;
         }
 
         return new UserDTOByManager(
-                user.getUserID(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),
@@ -39,6 +45,7 @@ public class UserMapperManager {
         }
 
         User user = new User();
+        user.setUserID(counterServiceImpl.getNextUserID());
         user.setFullName(userDTOByManager.getFullName());
         user.setEmail(userDTOByManager.getEmail());
         user.setPhone(userDTOByManager.getPhone());

@@ -2,9 +2,10 @@ package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.CartItem;
-import com.glowcorner.backend.entity.mongoDB.Product;
-import com.glowcorner.backend.model.DTO.CartDTO;
-import com.glowcorner.backend.model.mapper.CartMapper;
+import com.glowcorner.backend.model.DTO.Cart.CartDTO;
+import com.glowcorner.backend.model.DTO.Cart.CartItemDTO;
+import com.glowcorner.backend.model.mapper.Cart.CartItemMapper;
+import com.glowcorner.backend.model.mapper.Cart.CartMapper;
 import com.glowcorner.backend.repository.CartRepository;
 import com.glowcorner.backend.service.interfaces.CartService;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,15 @@ public class CartServiceImp implements CartService {
 
     private final CartMapper cartMapper;
 
-    public CartServiceImp(CartRepository cartRepository, CartMapper cartMapper) {
+    private final CartItemMapper cartItemMapper;
+
+    public CartServiceImp(CartRepository cartRepository, CartMapper cartMapper, CartItemMapper cartItemMapper) {
         this.cartRepository = cartRepository;
         this.cartMapper = cartMapper;
+        this.cartItemMapper = cartItemMapper;
     }
+
+    /* Cart */
 
     // Get Cart by UserID
     @Override
@@ -31,14 +37,14 @@ public class CartServiceImp implements CartService {
 
     // Add item to Cart
     @Override
-    public void addItemToCart(String userID, Product newProduct, int quantity) {
+    public void addItemToCart(String userID, String productID, int quantity) {
         Cart cart = cartRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         // Check if the item  already exists in cart
         boolean productExists = false;
         for (CartItem cartItem : cart.getItems()) {
-            if (cartItem.getProduct().getId().equals(newProduct.getId())) {
+            if (cartItem.getProductID().equals(productID)) {
                 // Update the quantity
                 cartItem.setQuantity(cartItem.getQuantity() + quantity);
                 productExists = true;
@@ -48,7 +54,7 @@ public class CartServiceImp implements CartService {
 
         // If the item does not exist, add it to the cart
         if (!productExists) {
-            cart.getItems().add(new CartItem(newProduct, quantity));
+            cart.getItems().add(new CartItem(userID, productID, quantity));
         }
 
         // Save the updated cart
@@ -61,7 +67,7 @@ public class CartServiceImp implements CartService {
         Cart cart = cartRepository.findByUserId(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
-        cart.getItems().removeIf(i -> i.getProduct().getId().equals(productID));
+        cart.getItems().removeIf(i -> i.getProductID().equals(productID));
 
         cartRepository.save(cart);
     }
@@ -73,6 +79,40 @@ public class CartServiceImp implements CartService {
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
         cart.getItems().clear();
         cartRepository.save(cart);
+    }
+
+    /* CartItem */
+
+    // Get CartItem by UserID and ProductID
+    @Override
+    public CartItemDTO getCartItem(String userID, String productID) {
+        Cart cart = cartRepository.findByUserId(userID)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        for (CartItem cartItem : cart.getItems()) {
+            if (cartItem.getProductID().equals(productID)) {
+                return cartItemMapper.toCartItemDTO(cartItem);
+            }
+        }
+
+        return null;
+    }
+
+    // Update CartItem quantity
+    @Override
+    public void updateCartItem(String userID, String productID, int quantity) {
+        Cart cart = cartRepository.findByUserId(userID)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        for (CartItem cartItem : cart.getItems()) {
+            if (cartItem.getProductID().equals(productID)) {
+                cartItem.setQuantity(quantity);
+                cartRepository.save(cart);
+                break;
+            }
+        }
+        throw new RuntimeException("Cart item not found");
+
     }
 
 }

@@ -11,7 +11,6 @@ import java.util.List;
 @Data
 @Document(collection = "cart") // Maps this entity to the "carts" collection in MongoDB
 @CompoundIndex(name = "user_product_unique", def = "{'userID': 1, 'productID': 1}", unique = true)
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 // Ensures a user cannot have duplicate products in their cart
 public class Cart {

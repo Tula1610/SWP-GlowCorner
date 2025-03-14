@@ -62,24 +62,27 @@ public class UserServiceImp implements UserService {
     @Override
     public UserDTOByManager updateUserByManager(String userId, UserDTOByManager userDTOByManager) {
         //Find existing user
-        User existingUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        try{
+            User existingUser = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        //Update
-        existingUser.setFullName(userDTOByManager.getFullName());
-        existingUser.setEmail(userDTOByManager.getEmail());
-        existingUser.setPhone(userDTOByManager.getPhone());
-        existingUser.setAddress(userDTOByManager.getAddress());
-        existingUser.setSkinType(userDTOByManager.getSkinType());
-        existingUser.setLoyalPoints(userDTOByManager.getLoyalPoints());
-        existingUser.setRole(userDTOByManager.getRole());
-        existingUser.setOrders(userDTOByManager.getOrders());
+            //Update
+            if(userDTOByManager.getFullName() != null) existingUser.setFullName(userDTOByManager.getFullName());
+            if(userDTOByManager.getEmail() != null) existingUser.setEmail(userDTOByManager.getEmail());
+            if(userDTOByManager.getPhone() != null) existingUser.setPhone(userDTOByManager.getPhone());
+            if(userDTOByManager.getAddress() != null) existingUser.setAddress(userDTOByManager.getAddress());
+            if(userDTOByManager.getSkinType() != null) existingUser.setSkinType(userDTOByManager.getSkinType());
+            if(userDTOByManager.getRole() != null) existingUser.setRole(userDTOByManager.getRole());
+            if (userDTOByManager.getOrders() != null) existingUser.setOrders(userDTOByManager.getOrders());
 
-        //Save update
-        User updatedUser = userRepository.save(existingUser);
+            //Save update
+            User updatedUser = userRepository.save(existingUser);
 
-        //Convert updated user entity to DTO
-        return userMapperManager.toUserDTO(updatedUser);
+            //Convert updated user entity to DTO
+            return userMapperManager.toUserDTO(updatedUser);
+        } catch (Exception e) {
+            throw  new RuntimeException("Fail to update user: " + e.getMessage(), e);
+        }
     }
 
     // Delete a user
@@ -103,22 +106,26 @@ public class UserServiceImp implements UserService {
     //User update themselves
     @Override
     public UserDTOByCustomer updateUserByCustomer(String userId, UserDTOByCustomer userDTOByCustomer) {
-        //Find existing user
-        User existingUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        try {
+            //Find existing user
+            User existingUser = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        //Update
-        existingUser.setFullName(userDTOByCustomer.getFullName());
-        existingUser.setEmail(userDTOByCustomer.getEmail());
-        existingUser.setPhone(userDTOByCustomer.getPhone());
-        existingUser.setAddress(userDTOByCustomer.getAddress());
-        existingUser.setSkinType(userDTOByCustomer.getSkinType());
+            //Update
+            if(userDTOByCustomer.getFullName() != null) existingUser.setFullName(userDTOByCustomer.getFullName());
+            if(userDTOByCustomer.getEmail() != null) existingUser.setEmail(userDTOByCustomer.getEmail());
+            if(userDTOByCustomer.getPhone() != null) existingUser.setPhone(userDTOByCustomer.getPhone());
+            if(userDTOByCustomer.getAddress() != null) existingUser.setAddress(userDTOByCustomer.getAddress());
+            if(userDTOByCustomer.getSkinType() != null) existingUser.setSkinType(userDTOByCustomer.getSkinType());
 
-        //Save update
-        User updatedUser = userRepository.save(existingUser);
+            //Save update
+            User updatedUser = userRepository.save(existingUser);
 
-        //Convert updated user entity to DTO
-        return userMapperCustomer.toUserDTO(updatedUser);
+            //Convert updated user entity to DTO
+            return userMapperCustomer.toUserDTO(updatedUser);
+        } catch (Exception e) {
+            throw  new RuntimeException("Fail to update user: " + e.getMessage(), e);
+        }
     }
 
     /* Beauty Advisor */

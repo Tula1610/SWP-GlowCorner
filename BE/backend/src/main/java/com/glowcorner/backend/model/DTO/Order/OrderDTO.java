@@ -1,4 +1,4 @@
-package com.glowcorner.backend.model.DTO;
+package com.glowcorner.backend.model.DTO.Order;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

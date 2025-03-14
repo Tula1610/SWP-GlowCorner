@@ -1,13 +1,19 @@
-package com.glowcorner.backend.model.mapper;
+package com.glowcorner.backend.model.mapper.Order;
 
 import com.glowcorner.backend.entity.mongoDB.Order;
-import com.glowcorner.backend.model.DTO.OrderDTO;
+import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
+
+    private final OrderDetailMapper orderDetailMapper;
+
+    public OrderMapper(OrderDetailMapper orderDetailMapper) {
+        this.orderDetailMapper = orderDetailMapper;
+    }
 
     // Convert Order entity to OrderDTO
     public OrderDTO toOrderDTO(Order order) {
@@ -21,7 +27,7 @@ public class OrderMapper {
             order.getStatus(),
             order.getTotalAmount(),
             order.getOrderDetails().stream()
-                .map(OrderDetailMapper::toOrderDetailDTO)
+                .map(orderDetailMapper::toOrderDetailDTO)
                 .collect(Collectors.toList())
         );
     }
@@ -39,7 +45,7 @@ public class OrderMapper {
         order.setStatus(orderDTO.getStatus());
         order.setTotalAmount(orderDTO.getTotalAmount());
         order.setOrderDetails(orderDTO.getOrderDetails().stream()
-            .map(OrderDetailMapper::toOrderDetail)
+            .map(orderDetailMapper::toOrderDetail)
             .collect(Collectors.toList())
         );
 
