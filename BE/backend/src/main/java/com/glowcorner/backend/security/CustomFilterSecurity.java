@@ -1,8 +1,8 @@
-package com.glowcorner.backend.security;
+package com.example.backend.security;
 
-import com.glowcorner.backend.entity.mongoDB.User;
-import com.glowcorner.backend.repository.UserRepository;
-import com.glowcorner.backend.utils.JwtUtilHelper;
+import com.example.backend.model.mongoDB.Employee;
+import com.example.backend.repository.EmployeeRepository;
+import com.example.backend.util.JwtUtilHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -41,7 +40,7 @@ public class CustomFilterSecurity {
     private JwtUtilHelper jwtUtilHelper;
 
     @Autowired
-    private UserRepository userRepository;
+    private EmployeeRepository employeeRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -51,9 +50,7 @@ public class CustomFilterSecurity {
                 "/login/google", "/login/firebase", "/v3/api-docs/**" // Both login endpoints are public
         };
 
-        String[] adminUrls = {
-                "/api/users/**", "/api/admin/users/**"
-        };
+        String[] adminUrls = {"/api/users/**", "/api/admin/users/**"};
 
         http
                 .cors().and()
@@ -62,7 +59,7 @@ public class CustomFilterSecurity {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(publicUrls).permitAll()
-                .requestMatchers(adminUrls).hasRole("MANAGER")
+                .requestMatchers(adminUrls).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login(oauth2 -> oauth2
@@ -80,7 +77,7 @@ public class CustomFilterSecurity {
                             }
 
                             String jwtToken = jwtUtilHelper.generateToken(email);
-                            response.sendRedirect("/app/index.html?token=" + jwtToken + "&userType=MANAGER");
+                            response.sendRedirect("/app/index.html?token=" + jwtToken + "&userType=EMPLOYEE");
                         })
                         .failureHandler((request, response, exception) -> {
                             response.sendRedirect("/login.html?error=authentication_failed");
@@ -99,30 +96,30 @@ public class CustomFilterSecurity {
             OidcUser oidcUser = delegate.loadUser(userRequest);
             String email = oidcUser.getEmail();
 
-            User user = userRepository.findByEmail(email);
-            if (user == null) {
-                throw new UsernameNotFoundException("User with email " + email + " not found in the system");
+            Employee employee = employeeRepository.findByEmail(email);
+            if (employee == null) {
+                throw new UsernameNotFoundException("Employee with email " + email + " not found in the system");
             }
 
             List<SimpleGrantedAuthority> authorities = oidcUser.getAuthorities().stream()
                     .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
                     .collect(Collectors.toList());
 
-            authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
 
             return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
         };
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://dashboard.example.com", "http://app.example.com"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
