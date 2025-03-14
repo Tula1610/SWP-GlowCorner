@@ -19,7 +19,7 @@ public class User {
     @Id
     String id;
 
-    String userId;
+    String userID;
 
     String fullName;
 

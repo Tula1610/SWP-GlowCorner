@@ -16,7 +16,7 @@ public class Order {
     @Id
     String orderID; // Primary key for orders
 
-    String customerID; // Refers to userID in the User collection (foreign key in SQL)
+    String customerID; // Refers to userID in the User collection have role "Customer"
 
     LocalDate orderDate; // Maps to the SQL DATE type
 

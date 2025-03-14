@@ -17,6 +17,8 @@ public class Product {
     @Id
     String id;
 
+    String productID;
+
     String productName;
 
     String description;
