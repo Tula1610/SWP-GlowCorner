@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserDTOByBeautyAdvisor {
 
-    String userID;
     String fullName;
     String email;
     String phone;

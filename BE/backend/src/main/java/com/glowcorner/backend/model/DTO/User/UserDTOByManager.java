@@ -17,7 +17,6 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserDTOByManager {
 
-    String userID;
     String fullName;
     String email;
     String phone;

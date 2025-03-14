@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class SkinCareRoutine {
 
     @Id
+    String id;
+
     String routineID;
 
     String skinType;
