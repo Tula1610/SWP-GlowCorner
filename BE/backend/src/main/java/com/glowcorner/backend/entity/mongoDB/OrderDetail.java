@@ -1,7 +1,5 @@
 package com.glowcorner.backend.entity.mongoDB;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;

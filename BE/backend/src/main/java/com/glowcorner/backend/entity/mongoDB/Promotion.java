@@ -1,8 +1,7 @@
-package com.glowcorner.backend.entity;
+package com.glowcorner.backend.entity.mongoDB;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
+@Document(collection = "promotion")
 public class Promotion {
 
     @Id

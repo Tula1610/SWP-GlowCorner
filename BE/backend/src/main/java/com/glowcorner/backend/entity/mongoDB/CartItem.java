@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+
 @AllArgsConstructor
 @Document(collection = "cartItem")
 public class CartItem {
@@ -19,5 +20,11 @@ public class CartItem {
     String userID;
     String productID;
     int quantity;
+
+    public CartItem(String userID, String productID, int quantity) {
+        this.userID = userID;
+        this.productID = productID;
+        this.quantity = quantity;
+    }
 
 }
