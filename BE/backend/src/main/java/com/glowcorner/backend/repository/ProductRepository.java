@@ -13,9 +13,9 @@ import java.util.Optional;
 public interface ProductRepository extends MongoRepository<Product, String> {
     boolean existsById(String productId);
 
-    Optional<Product> findByProductId(String productId);
+    Optional<Product> findByProductID(String productId);
 
-    void deleteById(String productId);
+    void deleteById(String productID);
     List<Product> findByCategory(Category category);
     List<Product> findByProductNameRegexIgnoreCase(String productName);
 }

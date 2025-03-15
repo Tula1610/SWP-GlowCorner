@@ -13,7 +13,7 @@ public class Authentication {
 
     private ObjectId userID;
 
-    private String userName;
+    private String username;
 
     private String passwordHash;
 }
