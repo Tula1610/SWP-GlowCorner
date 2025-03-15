@@ -45,8 +45,8 @@ public class UserServiceImp implements UserService {
     // Get user by ID
     @Override
     public UserDTOByManager getUserById(String userId) {
-        if(userRepository.findByUserId(userId).isPresent())
-            return userMapperManager.toUserDTO(userRepository.findByUserId(userId).get());
+        if(userRepository.findByUserID(userId).isPresent())
+            return userMapperManager.toUserDTO(userRepository.findByUserID(userId).get());
         return null;
     }
 
@@ -63,7 +63,7 @@ public class UserServiceImp implements UserService {
     public UserDTOByManager updateUserByManager(String userId, UserDTOByManager userDTOByManager) {
         //Find existing user
         try{
-            User existingUser = userRepository.findByUserId(userId)
+            User existingUser = userRepository.findByUserID(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             //Update
@@ -108,7 +108,7 @@ public class UserServiceImp implements UserService {
     public UserDTOByCustomer updateUserByCustomer(String userId, UserDTOByCustomer userDTOByCustomer) {
         try {
             //Find existing user
-            User existingUser = userRepository.findByUserId(userId)
+            User existingUser = userRepository.findByUserID(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             //Update

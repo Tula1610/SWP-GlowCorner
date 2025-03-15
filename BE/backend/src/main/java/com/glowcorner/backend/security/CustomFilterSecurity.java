@@ -45,9 +45,8 @@ public class CustomFilterSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         String[] publicUrls = {
-                "/login.html", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                "/swagger-ui-custom", "/oauth2/authorization/google", "/login/oauth2/code/google",
-                "/login/google", "/login/firebase", "/v3/api-docs/**" // Both login endpoints are public
+                "/swagger-ui/**", "/swagger-ui.html","/api-docs/**",
+                "/swagger-ui-custom/**","/swagger-ui-custom", "/oauth2/authorization/google", "/login/oauth2/code/google","/v3/api-docs/**"
         };
 
         String[] adminUrls = {"/api/users/**", "/api/admin/users/**"};
@@ -59,30 +58,30 @@ public class CustomFilterSecurity {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(publicUrls).permitAll()
-                .requestMatchers(adminUrls).hasRole("MANAGER")
-                .anyRequest().authenticated()
-                .and()
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(authEndpoint -> authEndpoint
-                                .authorizationRequestRepository(new HttpSessionOAuth2AuthorizationRequestRepository()))
-                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService()))
-                        .successHandler((request, response, authentication) -> {
-                            OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-                            String email = oidcUser.getEmail();
-
-                            User user = userRepository.findByEmail(email);
-                            if (user == null) {
-                                response.sendRedirect("/login.html?error=user_not_found");
-                                return;
-                            }
-
-                            String jwtToken = jwtUtilHelper.generateToken(email);
-                            response.sendRedirect("/app/index.html?token=" + jwtToken + "&userType=MANAGER");
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            response.sendRedirect("/login.html?error=authentication_failed");
-                        })
-                );
+//                .requestMatchers(adminUrls).hasRole("MANAGER")
+                .anyRequest().authenticated();
+//                .and()
+//                .oauth2Login(oauth2 -> oauth2
+//                        .authorizationEndpoint(authEndpoint -> authEndpoint
+//                                .authorizationRequestRepository(new HttpSessionOAuth2AuthorizationRequestRepository()))
+//                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUserService()))
+//                        .successHandler((request, response, authentication) -> {
+//                            OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+//                            String email = oidcUser.getEmail();
+//
+//                            User user = userRepository.findByEmail(email);
+//                            if (user == null) {
+//                                response.sendRedirect("/login.html?error=user_not_found");
+//                                return;
+//                            }
+//
+//                            String jwtToken = jwtUtilHelper.generateToken(email);
+//                            response.sendRedirect("/app/index.html?token=" + jwtToken + "&userType=MANAGER");
+//                        })
+//                        .failureHandler((request, response, exception) -> {
+//                            response.sendRedirect("/login.html?error=authentication_failed");
+//                        })
+//                );
 
         http.addFilterBefore(customJwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -112,7 +111,7 @@ public class CustomFilterSecurity {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

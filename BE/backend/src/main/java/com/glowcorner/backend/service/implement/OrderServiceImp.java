@@ -44,7 +44,7 @@ public class OrderServiceImp implements OrderService {
 
     // Create order
     public OrderDTO createOrder(OrderDTO orderDTO) {
-        User user = userRepository.findByUserId(orderDTO.getCustomerID())
+        User user = userRepository.findByUserID(orderDTO.getCustomerID())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         if (user.getRole() != Role.CUSTOMER) {
             throw new IllegalArgumentException("Only customers can create orders");
@@ -58,7 +58,7 @@ public class OrderServiceImp implements OrderService {
     // Update order
     public OrderDTO updateOrder(String orderId, OrderDTO orderDTO) {
         // Find existing order
-        Order existingOrder = orderRepository.findByOrderId(orderId)
+        Order existingOrder = orderRepository.findByOrderID(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         // Update
@@ -79,7 +79,7 @@ public class OrderServiceImp implements OrderService {
 
     // Delete order
     public void deleteOrder(String orderId) {
-        Order existingOrder = orderRepository.findByOrderId(orderId)
+        Order existingOrder = orderRepository.findByOrderID(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         orderRepository.delete(existingOrder);
     }
@@ -94,8 +94,8 @@ public class OrderServiceImp implements OrderService {
 
     // Get order by order ID
     public OrderDTO getOrderById(String orderId) {
-        if (orderRepository.findByOrderId(orderId).isPresent())
-            return orderMapper.toOrderDTO(orderRepository.findByOrderId(orderId).get());
+        if (orderRepository.findByOrderID(orderId).isPresent())
+            return orderMapper.toOrderDTO(orderRepository.findByOrderID(orderId).get());
         return null;
     }
 
@@ -138,7 +138,7 @@ public class OrderServiceImp implements OrderService {
     // Update order detail
     @Override
     public OrderDetailDTO updateOrderDetail(String orderID, String productID, OrderDetailDTO orderDetailDTO) {
-        OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIdAndProductID(orderID, productID)
+        OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIDAndProductID(orderID, productID)
                 .orElseThrow(() -> new RuntimeException("Order detail not found"));
 
         existingOrderDetail.setOrderID(orderDetailDTO.getOrderID());
@@ -153,7 +153,7 @@ public class OrderServiceImp implements OrderService {
     // Delete order detail
     @Override
     public void deleteOrderDetail(String orderID, String productID) {
-        OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIdAndProductID(orderID, productID)
+        OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIDAndProductID(orderID, productID)
                 .orElseThrow(() -> new RuntimeException("Order detail not found"));
 
         orderDetailRepository.delete(existingOrderDetail);

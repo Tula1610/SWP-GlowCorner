@@ -30,8 +30,8 @@ public class CartServiceImp implements CartService {
     // Get Cart by UserID
     @Override
     public CartDTO getCartByUserID(String userID) {
-        if(cartRepository.findByUserId(userID).isPresent())
-            return cartMapper.toCartDTO(cartRepository.findByUserId(userID).get());
+        if(cartRepository.findByUserID(userID).isPresent())
+            return cartMapper.toCartDTO(cartRepository.findByUserID(userID).get());
         return null;
     }
 
@@ -64,7 +64,7 @@ public class CartServiceImp implements CartService {
     // Remove item from Cart
     @Override
     public void removeItemFromCart(String userID, String productID) {
-        Cart cart = cartRepository.findByUserId(userID)
+        Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         cart.getItems().removeIf(i -> i.getProductID().equals(productID));
@@ -75,7 +75,7 @@ public class CartServiceImp implements CartService {
     // Clear entire Cart
     @Override
     public void clearCart(String userID) {
-        Cart cart = cartRepository.findByUserId(userID)
+        Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
         cart.getItems().clear();
         cartRepository.save(cart);
@@ -86,7 +86,7 @@ public class CartServiceImp implements CartService {
     // Get CartItem by UserID and ProductID
     @Override
     public CartItemDTO getCartItem(String userID, String productID) {
-        Cart cart = cartRepository.findByUserId(userID)
+        Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         for (CartItem cartItem : cart.getItems()) {
@@ -101,7 +101,7 @@ public class CartServiceImp implements CartService {
     // Update CartItem quantity
     @Override
     public void updateCartItem(String userID, String productID, int quantity) {
-        Cart cart = cartRepository.findByUserId(userID)
+        Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         for (CartItem cartItem : cart.getItems()) {
