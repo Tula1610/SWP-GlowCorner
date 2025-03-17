@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SkinCareRoutineRepository extends MongoRepository<SkinCareRoutine, String> {
-    Optional<SkinCareRoutine> findById(String id);
+    Optional<SkinCareRoutine> findByRoutineID(String id);
     List<SkinCareRoutine> findByCategory(Category category);
     List<SkinCareRoutine> findByRoutineNameRegexIgnoreCase(String regex);
     void deleteById(String id);

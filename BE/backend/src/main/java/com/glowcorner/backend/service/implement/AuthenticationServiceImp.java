@@ -19,7 +19,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
 
     @Override
     public boolean login(String username, String password) {
-        Optional<Authentication> authentication = authenticationRepository.findByUsername(username);
+        Optional<Authentication> authentication = authenticationRepository.findByUserName(username);
         return authentication.isPresent() && bCryptPasswordEncoder.matches(password, authentication.get().getPasswordHash());
     }
 

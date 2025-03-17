@@ -32,8 +32,8 @@ public class ProductServiceImp implements ProductService {
     // Get product by ID
     @Override
     public ProductDTO getProductById(String productId) {
-        if (productRepository.findByProductId(productId).isPresent())
-            return ProductMapper.toDTO(productRepository.findByProductId(productId).get());
+        if (productRepository.findByProductID(productId).isPresent())
+            return ProductMapper.toDTO(productRepository.findByProductID(productId).get());
         return null;
     }
 
@@ -68,7 +68,7 @@ public class ProductServiceImp implements ProductService {
     @Override
     public ProductDTO updateProduct(String productId, ProductDTO productDTO) {
         // Find existing product
-        Product existingProduct = productRepository.findByProductId(productId)
+        Product existingProduct = productRepository.findByProductID(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         // Update

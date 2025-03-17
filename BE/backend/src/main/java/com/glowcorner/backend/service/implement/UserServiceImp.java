@@ -44,9 +44,9 @@ public class UserServiceImp implements UserService {
 
     // Get user by ID
     @Override
-    public UserDTOByManager getUserById(String userId) {
-        if(userRepository.findByUserId(userId).isPresent())
-            return userMapperManager.toUserDTO(userRepository.findByUserId(userId).get());
+    public UserDTOByManager getUserById(String userID) {
+        if(userRepository.findByUserID(userID).isPresent())
+            return userMapperManager.toUserDTO(userRepository.findByUserID(userID).get());
         return null;
     }
 
@@ -60,10 +60,10 @@ public class UserServiceImp implements UserService {
 
     //Manager update a user
     @Override
-    public UserDTOByManager updateUserByManager(String userId, UserDTOByManager userDTOByManager) {
+    public UserDTOByManager updateUserByManager(String userID, UserDTOByManager userDTOByManager) {
         //Find existing user
         try{
-            User existingUser = userRepository.findByUserId(userId)
+            User existingUser = userRepository.findByUserID(userID)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             //Update
@@ -87,8 +87,8 @@ public class UserServiceImp implements UserService {
 
     // Delete a user
     @Override
-    public void deleteUser(String userId) {
-        userRepository.deleteById(userId);
+    public void deleteUser(String userID) {
+        userRepository.deleteById(userID);
     }
 
     // Search user by name
@@ -105,10 +105,10 @@ public class UserServiceImp implements UserService {
 
     //User update themselves
     @Override
-    public UserDTOByCustomer updateUserByCustomer(String userId, UserDTOByCustomer userDTOByCustomer) {
+    public UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer) {
         try {
             //Find existing user
-            User existingUser = userRepository.findByUserId(userId)
+            User existingUser = userRepository.findByUserID(userID)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             //Update

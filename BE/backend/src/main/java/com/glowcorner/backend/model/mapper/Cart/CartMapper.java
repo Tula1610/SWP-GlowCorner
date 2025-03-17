@@ -28,20 +28,20 @@ public class CartMapper {
         );
     }
 
-    public Cart toCart(CartDTO cartDTO) {
-        if (cartDTO == null) {
-            return null;
-        }
-
-        Cart cart = new Cart();
-        cart.setUserID(cartDTO.getUserID());
-        cart.setItems(cartDTO.getItems().stream()
-                .map(cartItemMapper::toCartItem)
-                .collect(Collectors.toList())
-        );
-
-        return cart;
-    }
+//    public Cart toCart(CartDTO cartDTO) {
+//        if (cartDTO == null) {
+//            return null;
+//        }
+//
+//        Cart cart = new Cart();
+//        cart.setUserID(cartDTO.getUserID());
+//        cart.setItems(cartDTO.getItems().stream()
+//                .map(cartItemMapper::toCartItem)
+//                .collect(Collectors.toList())
+//        );
+//
+//        return cart;
+//    }
 
 
 }

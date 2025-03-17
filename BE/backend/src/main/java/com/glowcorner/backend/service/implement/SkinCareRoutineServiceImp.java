@@ -53,7 +53,7 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
     // Get routine by id
     @Override
     public SkinCareRoutineDTO getSkinCareRoutineById(String routineId) {
-        SkinCareRoutine skinCareRoutine = skinCareRoutineRepository.findById(routineId)
+        SkinCareRoutine skinCareRoutine = skinCareRoutineRepository.findByRoutineID(routineId)
                 .orElseThrow(() -> new RuntimeException("Skin care routine not found"));
         return skinCareRoutineMapper.toDTO(skinCareRoutine);
     }
