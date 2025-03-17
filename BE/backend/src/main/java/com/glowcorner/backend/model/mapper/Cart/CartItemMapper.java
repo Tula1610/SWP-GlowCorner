@@ -24,11 +24,12 @@ public class CartItemMapper {
             return null;
         }
 
-        return new CartItem(
-                cartItemDTO.getUserID(),
-                cartItemDTO.getProductID(),
-                cartItemDTO.getQuantity()
-        );
+        CartItem cartItem = new CartItem();
+        cartItem.setUserID(cartItemDTO.getUserID());
+        cartItem.setProductID(cartItemDTO.getProductID());
+        cartItem.setQuantity(cartItemDTO.getQuantity());
+
+        return cartItem;
     }
 
 }

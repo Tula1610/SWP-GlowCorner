@@ -3,12 +3,15 @@ package com.glowcorner.backend.controller.UserController;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "User Management System", description = "Operations pertaining to users in the User Management System")
 @RestController
 @RequestMapping("/manager/users")
 public class UserControllerManager {
@@ -20,6 +23,7 @@ public class UserControllerManager {
     }
 
     // Get all users
+    @Operation(summary = "Get all users", description = "Retrieve a list of all users")
     @GetMapping
     public ResponseEntity<List<UserDTOByManager>> getAllUsers() {
         List<UserDTOByManager> users = userService.getAllUsers();
@@ -27,6 +31,7 @@ public class UserControllerManager {
     }
 
     // Get user by id
+    @Operation(summary = "Get a user by ID", description = "Retrieve a single user using its ID")
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable String userId) {
         UserDTOByManager user = userService.getUserById(userId);
@@ -38,6 +43,7 @@ public class UserControllerManager {
     }
 
     // Search user by name
+    @Operation(summary = "Search a user by name", description = "Search for a user using their name")
     @GetMapping("/search")
     public ResponseEntity<?> searchUserByName(@RequestParam String name) {
         List<UserDTOByManager> users = userService.searchUserByNameManager(name);
@@ -49,6 +55,7 @@ public class UserControllerManager {
     }
 
     // Create a new user
+    @Operation(summary = "Create a new user", description = "Add a new user to the system")
     @PostMapping
     public ResponseEntity<ResponseData> createUser(@RequestBody UserDTOByManager userDTOByManager) {
         UserDTOByManager createdUser = userService.createUser(userDTOByManager);
@@ -57,6 +64,7 @@ public class UserControllerManager {
     }
 
     // Update user
+    @Operation(summary = "Update a user", description = "Update an existing user using their ID")
     @PutMapping("/{userId}")
     public ResponseEntity<ResponseData> updateUserByManager(@PathVariable String userId, @RequestBody UserDTOByManager userDTO) {
         try {
@@ -74,6 +82,7 @@ public class UserControllerManager {
     }
 
     // Delete user
+    @Operation(summary = "Delete a user by ID", description = "Remove a user from the system using their ID")
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
