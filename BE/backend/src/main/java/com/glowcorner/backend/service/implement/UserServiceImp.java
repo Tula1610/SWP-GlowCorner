@@ -142,8 +142,10 @@ public class UserServiceImp implements UserService {
     // Get user by email
     @Override
     public UserDTOByBeautyAdvisor getUserByEmailByBeautyAdvisor(String email) {
-        if(!email.isEmpty())
-            return userMapperBeautyAdvisor.toUserDTO(userRepository.findByEmail(email));
+        if (!email.isEmpty()) {
+            User user = userRepository.findByEmail(email).orElse(null);
+            return userMapperBeautyAdvisor.toUserDTO(user);
+        }
         return null;
     }
 

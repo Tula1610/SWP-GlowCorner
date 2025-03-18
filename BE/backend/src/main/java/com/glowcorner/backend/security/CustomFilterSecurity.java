@@ -26,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -95,8 +96,8 @@ public class CustomFilterSecurity {
             OidcUser oidcUser = delegate.loadUser(userRequest);
             String email = oidcUser.getEmail();
 
-            User user = userRepository.findByEmail(email);
-            if (user == null) {
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isEmpty()) {
                 throw new UsernameNotFoundException("User with email " + email + " not found in the system");
             }
 
