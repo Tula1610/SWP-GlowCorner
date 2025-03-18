@@ -44,16 +44,20 @@ public class PromotionServiceImp implements PromotionService {
 
     @Override
     public PromotionDTO updatePromotion(String id, PromotionDTO promotionDTO) {
-        Promotion existingPromotion = promotionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Promotion not found"));
+        try {
+            Promotion existingPromotion = promotionRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Promotion not found"));
 
-        existingPromotion.setPromotionName(promotionDTO.getPromotionName());
-        existingPromotion.setDiscount(promotionDTO.getDiscount());
-        existingPromotion.setStartDate(promotionDTO.getStartDate());
-        existingPromotion.setEndDate(promotionDTO.getEndDate());
+            if (promotionDTO.getPromotionName() != null) existingPromotion.setPromotionName(promotionDTO.getPromotionName());
+            if (promotionDTO.getDiscount() != null) existingPromotion.setDiscount(promotionDTO.getDiscount());
+            if (promotionDTO.getStartDate() != null) existingPromotion.setStartDate(promotionDTO.getStartDate());
+            if (promotionDTO.getEndDate() != null) existingPromotion.setEndDate(promotionDTO.getEndDate());
 
-        Promotion updatedPromotion = promotionRepository.save(existingPromotion);
-        return promotionMapper.toDTO(updatedPromotion);
+            Promotion updatedPromotion = promotionRepository.save(existingPromotion);
+            return promotionMapper.toDTO(updatedPromotion);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail to update promotion: " + e.getMessage(), e);
+        }
     }
 
     @Override

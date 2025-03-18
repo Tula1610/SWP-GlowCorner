@@ -62,11 +62,12 @@ public class OrderServiceImp implements OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         // Update
-        existingOrder.setCustomerID(orderDTO.getCustomerID());
-        existingOrder.setOrderDate(orderDTO.getOrderDate());
-        existingOrder.setStatus(orderDTO.getStatus());
-        existingOrder.setTotalAmount(orderDTO.getTotalAmount());
-        existingOrder.setOrderDetails(orderDTO.getOrderDetails().stream()
+        if (orderDTO.getCustomerID() != null) existingOrder.setCustomerID(orderDTO.getCustomerID());
+        if (orderDTO.getOrderDate() != null) existingOrder.setOrderDate(orderDTO.getOrderDate());
+        if (orderDTO.getStatus() != null) existingOrder.setStatus(orderDTO.getStatus());
+        if (orderDTO.getTotalAmount() != null) existingOrder.setTotalAmount(orderDTO.getTotalAmount());
+        if (orderDTO.getOrderDetails() != null)
+            existingOrder.setOrderDetails(orderDTO.getOrderDetails().stream()
                 .map(orderDetailMapper::toOrderDetail)
                 .collect(Collectors.toList()));
 
@@ -138,16 +139,20 @@ public class OrderServiceImp implements OrderService {
     // Update order detail
     @Override
     public OrderDetailDTO updateOrderDetail(String orderID, String productID, OrderDetailDTO orderDetailDTO) {
-        OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIDAndProductID(orderID, productID)
-                .orElseThrow(() -> new RuntimeException("Order detail not found"));
+        try {
+            OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIDAndProductID(orderID, productID)
+                    .orElseThrow(() -> new RuntimeException("Order detail not found"));
 
-        existingOrderDetail.setOrderID(orderDetailDTO.getOrderID());
-        existingOrderDetail.setProductID(orderDetailDTO.getProductID());
-        existingOrderDetail.setQuantity(orderDetailDTO.getQuantity());
-        existingOrderDetail.setPrice(orderDetailDTO.getPrice());
+            if (orderDetailDTO.getOrderID() != null) existingOrderDetail.setOrderID(orderDetailDTO.getOrderID());
+            if (orderDetailDTO.getProductID() != null) existingOrderDetail.setProductID(orderDetailDTO.getProductID());
+            if (orderDetailDTO.getQuantity() != null) existingOrderDetail.setQuantity(orderDetailDTO.getQuantity());
+            if (orderDetailDTO.getPrice() != null) existingOrderDetail.setPrice(orderDetailDTO.getPrice());
 
-        existingOrderDetail = orderDetailRepository.save(existingOrderDetail);
-        return orderDetailMapper.toOrderDetailDTO(existingOrderDetail);
+            existingOrderDetail = orderDetailRepository.save(existingOrderDetail);
+            return orderDetailMapper.toOrderDetailDTO(existingOrderDetail);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail to update order detail: " + e.getMessage(), e);
+        }
     }
 
     // Delete order detail

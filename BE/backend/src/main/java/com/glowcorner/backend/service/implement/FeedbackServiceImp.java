@@ -1,5 +1,6 @@
 package com.glowcorner.backend.service.implement;
 
+import com.glowcorner.backend.entity.mongoDB.Feedback;
 import com.glowcorner.backend.model.DTO.FeedbackDTO;
 import com.glowcorner.backend.model.mapper.FeedbackMapper;
 import com.glowcorner.backend.repository.FeedbackRepository;
@@ -41,11 +42,25 @@ public class FeedbackServiceImp implements FeedbackService {
 
     @Override
     public FeedbackDTO updateFeedback(int id, FeedbackDTO feedbackDTO) {
-        if (!feedbackRepository.existsById(id)) {
-            return null;
+        try {
+            // Find existing feedback
+            Feedback existingFeedback = feedbackRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Feedback not found"));
+
+            // Update
+            if (feedbackDTO.getCustomerID() != 0) existingFeedback.setCustomerID(feedbackDTO.getCustomerID());
+            if (feedbackDTO.getRating() != 0) existingFeedback.setRating(feedbackDTO.getRating());
+            if (feedbackDTO.getComment() != null) existingFeedback.setComment(feedbackDTO.getComment());
+            if (feedbackDTO.getFeedbackDate() != null) existingFeedback.setFeedbackDate(feedbackDTO.getFeedbackDate());
+
+            // Save update
+            Feedback updatedFeedback = feedbackRepository.save(existingFeedback);
+
+            // Convert updated feedback entity to DTO
+            return feedbackMapper.toDTO(updatedFeedback);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail to update feedback: " + e.getMessage(), e);
         }
-        feedbackDTO.setFeedbackID(id);
-        return feedbackMapper.toDTO(feedbackRepository.save(feedbackMapper.toEntity(feedbackDTO)));
     }
 
     @Override

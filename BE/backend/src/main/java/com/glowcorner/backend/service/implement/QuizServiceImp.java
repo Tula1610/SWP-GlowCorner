@@ -1,5 +1,6 @@
 package com.glowcorner.backend.service.implement;
 
+import com.glowcorner.backend.entity.mongoDB.Quiz;
 import com.glowcorner.backend.model.DTO.QuizDTO;
 import com.glowcorner.backend.model.mapper.QuizMapper;
 import com.glowcorner.backend.repository.QuizRepository;
@@ -41,11 +42,24 @@ public class QuizServiceImp implements QuizService {
 
     @Override
     public QuizDTO updateQuiz(String id, QuizDTO quizDTO) {
-        if (!quizRepository.existsById(id)) {
-            return null;
+        try {
+            // Find existing quiz
+            Quiz existingQuiz = quizRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Quiz not found"));
+
+            // Update
+            if (quizDTO.getQuestionId() != null) existingQuiz.setQuestionId(quizDTO.getQuestionId());
+            if (quizDTO.getOptionId() != null) existingQuiz.setOptionId(quizDTO.getOptionId());
+            if (quizDTO.getQuizText() != null) existingQuiz.setQuizText(quizDTO.getQuizText());
+
+            // Save update
+            Quiz updatedQuiz = quizRepository.save(existingQuiz);
+
+            // Convert updated quiz entity to DTO
+            return quizMapper.toDTO(updatedQuiz);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail to update quiz: " + e.getMessage(), e);
         }
-        quizDTO.setId(id);
-        return quizMapper.toDTO(quizRepository.save(quizMapper.toEntity(quizDTO)));
     }
 
     @Override

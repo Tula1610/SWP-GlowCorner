@@ -69,15 +69,19 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
     // Update a routine
     @Override
     public SkinCareRoutineDTO updateSkinCareRoutine(String routineId, SkinCareRoutineDTO skinCareRoutineDTO) {
-        SkinCareRoutine existingRoutine = skinCareRoutineRepository.findById(routineId)
-                .orElseThrow(() -> new RuntimeException("Skin care routine not found"));
+        try {
+            SkinCareRoutine existingRoutine = skinCareRoutineRepository.findById(routineId)
+                    .orElseThrow(() -> new RuntimeException("Skin care routine not found"));
 
-        existingRoutine.setCategory(skinCareRoutineDTO.getCategory());
-        existingRoutine.setRoutineName(skinCareRoutineDTO.getRoutineName());
-        existingRoutine.setRoutineDescription(skinCareRoutineDTO.getRoutineDescription());
+            if (skinCareRoutineDTO.getCategory() != null) existingRoutine.setCategory(skinCareRoutineDTO.getCategory());
+            if (skinCareRoutineDTO.getRoutineName() != null) existingRoutine.setRoutineName(skinCareRoutineDTO.getRoutineName());
+            if (skinCareRoutineDTO.getRoutineDescription() != null) existingRoutine.setRoutineDescription(skinCareRoutineDTO.getRoutineDescription());
 
-        SkinCareRoutine updatedRoutine = skinCareRoutineRepository.save(existingRoutine);
-        return skinCareRoutineMapper.toDTO(updatedRoutine);
+            SkinCareRoutine updatedRoutine = skinCareRoutineRepository.save(existingRoutine);
+            return skinCareRoutineMapper.toDTO(updatedRoutine);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail to update SkincareRoutine: " + e.getMessage(), e);
+        }
     }
 
     // Delete a routine
