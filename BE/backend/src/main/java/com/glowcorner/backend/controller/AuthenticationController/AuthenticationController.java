@@ -1,12 +1,12 @@
-package com.glowcorner.backend.controller.AuthenticationController;
+package com.glowcorner.backend.controller;
 
 import com.glowcorner.backend.entity.mongoDB.User;
-import com.glowcorner.backend.model.DTO.GoogleLoginDTO;
 import com.glowcorner.backend.model.DTO.LoginDTO;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
 import com.glowcorner.backend.utils.JwtUtilHelper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class AuthenticationController {
     private JwtUtilHelper jwtUtilHelper;
 
     // Login
-    @Operation(summary = "Login", description = "Authenticate user credentials")
+    @Operation(summary = "Login", description = "Authenticate user credentials", security = {})
     @PostMapping("/login")
     public ResponseEntity<ResponseData> login(@RequestBody LoginDTO loginDTO) {
         boolean isAuthenticated = authenticationService.login(loginDTO.getUsername(), loginDTO.getPasswordHash());
@@ -47,9 +47,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login/google")
-    public ResponseEntity<ResponseData> loginWithGoogle(@RequestBody GoogleLoginDTO googleLoginDTO) {
-        String email = googleLoginDTO.getEmail();
-
+    @Operation(summary = "Login with Google by Email", security = {})
+    public ResponseEntity<ResponseData> loginWithGoogle(@RequestParam("email") String email) {
         // Tìm user trong database
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
@@ -59,7 +58,7 @@ public class AuthenticationController {
 
         // Lấy thông tin user
         User user = userOpt.get();
-        String fullName = user.getFullName();
+        String fullName = user.getFullName() != null ? user.getFullName() : "N/A";
         String role = user.getRole().name();
 
         // Tạo JWT Token
@@ -75,6 +74,41 @@ public class AuthenticationController {
         return ResponseEntity.ok(new ResponseData(200, true, "Login successful", responseData, null, null));
     }
 
+    @PostMapping("/login/token/google")
+    @Operation(summary = "Login with Google by JWT Token", security = {})
+    public ResponseEntity<ResponseData> loginWithGoogleByToken(@RequestParam("jwtToken") String token) {
+        // Kiểm tra token hợp lệ
+        if (!jwtUtilHelper.verifyToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseData(401, false, "Invalid or expired token", null, null, null));
+        }
+
+        // Lấy email từ token
+        String email = jwtUtilHelper.getUsernameFromToken(token);
+
+        // Tìm user trong database
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseData(401, false, "User not found", null, null, null));
+        }
+
+        // Lấy thông tin user
+        User user = userOpt.get();
+        String fullName = user.getFullName() != null ? user.getFullName() : "N/A";
+        String role = user.getRole().name();
+
+        // Trả về response
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("email", email);
+        responseData.put("fullName", fullName);
+        responseData.put("role", role);
+        responseData.put("jwtToken", token);
+
+        return ResponseEntity.ok(new ResponseData(200, true, "Login successful", responseData, null, null));
+    }
+
+    @Hidden
     @GetMapping(value = "/login/google", produces = MediaType.TEXT_HTML_VALUE)
     public String loginWithGoogle(
             @RequestParam("email") String email,
@@ -101,7 +135,4 @@ public class AuthenticationController {
                 "</body>" +
                 "</html>";
     }
-
-
-
 }

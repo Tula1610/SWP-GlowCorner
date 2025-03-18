@@ -34,6 +34,12 @@ public class CustomJwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+        if ("/auth/login".equals(path) || "/auth/login/google".equals(path) || "/auth/login/token/google".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = getTokenFromHeader(request);
         if (token == null) {
             filterChain.doFilter(request, response);
