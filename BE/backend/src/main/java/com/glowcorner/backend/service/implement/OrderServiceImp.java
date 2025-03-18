@@ -140,6 +140,7 @@ public class OrderServiceImp implements OrderService {
     // Update order detail
     @Override
     public OrderDetailDTO updateOrderDetail(String orderID, String productID, OrderDetailDTO orderDetailDTO) {
+        try{
         OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIDAndProductID(orderID, productID)
                 .orElseThrow(() -> new RuntimeException("Order detail not found"));
 
@@ -167,7 +168,7 @@ public class OrderServiceImp implements OrderService {
     // Get order details by order ID
     @Override
     public List<OrderDetailDTO> getOrderDetailByOrderID(String orderID) {
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderID(orderID);
+        List<OrderDetail> orderDetails = orderDetailRepository.findAllByOrderID(orderID);
 
         return orderDetails.stream()
                 .map(orderDetailMapper::toOrderDetailDTO)

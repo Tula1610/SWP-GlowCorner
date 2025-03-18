@@ -14,8 +14,8 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FeedbackDTO {
 
-    int feedbackID;
-    int customerID;
+    String feedbackID;
+    String customerID;
     int rating;
     String comment;
     LocalDate feedbackDate;

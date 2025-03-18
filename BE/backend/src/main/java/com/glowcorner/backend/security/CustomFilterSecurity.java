@@ -1,6 +1,7 @@
 package com.glowcorner.backend.security;
 
 import com.glowcorner.backend.entity.mongoDB.User;
+import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.utils.JwtUtilHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -47,7 +47,10 @@ public class CustomFilterSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         String[] publicUrls = {
                 "/swagger-ui/**", "/swagger-ui.html","/api-docs/**",
-                "/swagger-ui-custom/**","/swagger-ui-custom", "/auth/login/google", "/login/oauth2/code/google",
+                "/swagger-ui-custom/**","/swagger-ui-custom",
+                "/login.html","/login?error",
+                "/favicon.ico",
+                "/oauth2/authorization/google", "/login/oauth2/code/google", "/auth/login/google/**",
                 "/v3/api-docs/**",
                 "/api/products/**",
                 "/manager/users/**"
@@ -73,18 +76,16 @@ public class CustomFilterSecurity {
                             OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
                             String email = oidcUser.getEmail();
 
-
                             Optional<User> user = userRepository.findByEmail(email);
                             if (user.isEmpty()) {
-                                response.sendRedirect("/login.html?error=user_not_found");
+                                response.sendRedirect("/login.html");
                                 return;
                             }
+
                             String role = user.get().getRole().name();
-                            String jwtToken = jwtUtilHelper.generateToken(email,role);
-                            response.sendRedirect("/app/index.html?token=" + jwtToken + "&userType=MANAGER");
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            response.sendRedirect("/login.html?error=authentication_failed");
+                            String jwtToken = jwtUtilHelper.generateToken(email, role);
+
+                            response.sendRedirect("/auth/login/google?email=" + email + "&role=" + role + "&jwtToken=" + jwtToken);
                         })
                 );
 
@@ -95,28 +96,33 @@ public class CustomFilterSecurity {
     @Bean
     public OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
         OidcUserService delegate = new OidcUserService();
-
         return userRequest -> {
             OidcUser oidcUser = delegate.loadUser(userRequest);
             String email = oidcUser.getEmail();
 
-            Optional<User> user = userRepository.findByEmail(email);
-            if (user.isEmpty()) {
-                throw new UsernameNotFoundException("User with email " + email + " not found in the system");
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            User user;
+            if (userOptional.isEmpty()) {
+                // Tạo user mới nếu không tồn tại
+                user = new User();
+                user.setEmail(email);
+                user.setRole(Role.GUEST);
+                userRepository.save(user);
+            } else {
+                user = userOptional.get();
             }
 
             List<SimpleGrantedAuthority> authorities = oidcUser.getAuthorities().stream()
                     .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
                     .collect(Collectors.toList());
-
-            authorities.add(new SimpleGrantedAuthority("ROLE_GUEST"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
             return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
         };
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

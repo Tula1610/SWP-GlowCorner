@@ -48,7 +48,7 @@ public class FeedbackServiceImp implements FeedbackService {
                     .orElseThrow(() -> new RuntimeException("Feedback not found"));
 
             // Update
-            if (feedbackDTO.getCustomerID() != 0) existingFeedback.setCustomerID(feedbackDTO.getCustomerID());
+            if (feedbackDTO.getCustomerID() != null && !feedbackDTO.getCustomerID().isEmpty()) existingFeedback.setCustomerID(feedbackDTO.getCustomerID());
             if (feedbackDTO.getRating() != 0) existingFeedback.setRating(feedbackDTO.getRating());
             if (feedbackDTO.getComment() != null) existingFeedback.setComment(feedbackDTO.getComment());
             if (feedbackDTO.getFeedbackDate() != null) existingFeedback.setFeedbackDate(feedbackDTO.getFeedbackDate());

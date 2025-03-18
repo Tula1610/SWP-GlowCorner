@@ -63,7 +63,7 @@ public class UserServiceImp implements UserService {
     public UserDTOByManager updateUserByManager(String userID, UserDTOByManager userDTOByManager) {
         //Find existing user
         try{
-            User existingUser = userRepository.findByUserID(userId)
+            User existingUser = userRepository.findByUserID(userID)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             //Update
@@ -108,7 +108,7 @@ public class UserServiceImp implements UserService {
     public UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer) {
         try {
             //Find existing user
-            User existingUser = userRepository.findByUserID(userId)
+            User existingUser = userRepository.findByUserID(userID)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             //Update
