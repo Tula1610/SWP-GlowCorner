@@ -13,11 +13,11 @@ import java.time.LocalDate;
 public class Feedback {
 
     @Id
-    int id;
+    String id;
 
-    int feedbackID;
+    String feedbackID;
 
-    int customerID; // Refers to the userID in the User collection (foreign key in SQL)
+    String customerID; // Refers to the userID in the User collection (foreign key in SQL)
 
     int rating; // Rating is represented as an integer
 
