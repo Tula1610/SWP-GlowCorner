@@ -1,6 +1,7 @@
 package com.glowcorner.backend.controller.UserController;
 
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
+import com.glowcorner.backend.model.DTO.request.UserCreateRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,8 +58,8 @@ public class UserControllerManager {
     // Create a new user
     @Operation(summary = "Create a new user", description = "Add a new user to the system")
     @PostMapping
-    public ResponseEntity<ResponseData> createUser(@RequestBody UserDTOByManager userDTOByManager) {
-        UserDTOByManager createdUser = userService.createUser(userDTOByManager);
+    public ResponseEntity<ResponseData> createUser(@RequestBody UserCreateRequest request) {
+        UserDTOByManager createdUser = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseData(201, true, "User created", createdUser, null, null));
     }

@@ -23,6 +23,7 @@ public class UserMapperManager {
         }
 
         return new UserDTOByManager(
+                user.getUserID(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),

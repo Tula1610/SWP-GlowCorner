@@ -4,6 +4,8 @@ import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
+import com.glowcorner.backend.model.DTO.request.UserCreateRequest;
+import com.glowcorner.backend.model.mapper.User.UserCreateRequestMapper;
 import com.glowcorner.backend.model.mapper.User.UserMapperBeautyAdvisor;
 import com.glowcorner.backend.model.mapper.User.UserMapperCustomer;
 import com.glowcorner.backend.model.mapper.User.UserMapperManager;
@@ -24,11 +26,14 @@ public class UserServiceImp implements UserService {
 
     private final UserMapperBeautyAdvisor userMapperBeautyAdvisor;
 
-    public UserServiceImp(UserRepository userRepository, UserMapperManager userMapperManager, UserMapperCustomer userMapperCustomer, UserMapperBeautyAdvisor userMapperBeautyAdvisor) {
+    private final UserCreateRequestMapper userCreateRequestMapper;
+
+    public UserServiceImp(UserRepository userRepository, UserMapperManager userMapperManager, UserMapperCustomer userMapperCustomer, UserMapperBeautyAdvisor userMapperBeautyAdvisor, UserCreateRequestMapper userCreateRequestMapper) {
         this.userRepository = userRepository;
         this.userMapperManager = userMapperManager;
         this.userMapperCustomer = userMapperCustomer;
         this.userMapperBeautyAdvisor = userMapperBeautyAdvisor;
+        this.userCreateRequestMapper = userCreateRequestMapper;
     }
 
     /* Manager */
@@ -52,8 +57,8 @@ public class UserServiceImp implements UserService {
 
     // Create a new user
     @Override
-    public UserDTOByManager createUser(UserDTOByManager userDTOByManager) {
-        User user = userMapperManager.toUser(userDTOByManager);
+    public UserDTOByManager createUser(UserCreateRequest request) {
+        User user = userCreateRequestMapper.fromCreateRequest(request);
         user = userRepository.save(user);
         return userMapperManager.toUserDTO(user);
     }
@@ -103,7 +108,7 @@ public class UserServiceImp implements UserService {
 
     /* Customer */
 
-    //User update themselves
+    // User update themselves
     @Override
     public UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer) {
         try {

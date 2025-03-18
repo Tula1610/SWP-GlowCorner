@@ -1,6 +1,6 @@
 package com.glowcorner.backend.service.implement;
 
-import com.glowcorner.backend.entity.Authentication;
+import com.glowcorner.backend.entity.mongoDB.Authentication;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.GoogleLoginDTO;
