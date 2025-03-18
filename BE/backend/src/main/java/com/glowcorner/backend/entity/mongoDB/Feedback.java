@@ -13,7 +13,9 @@ import java.time.LocalDate;
 public class Feedback {
 
     @Id
-    int feedbackID; // Primary key
+    String id;
+
+    String feedbackID;
 
     int customerID; // Refers to the userID in the User collection (foreign key in SQL)
 

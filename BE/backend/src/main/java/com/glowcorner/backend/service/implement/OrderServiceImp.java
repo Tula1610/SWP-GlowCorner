@@ -62,11 +62,13 @@ public class OrderServiceImp implements OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         // Update
-        existingOrder.setCustomerID(orderDTO.getCustomerID());
-        existingOrder.setOrderDate(orderDTO.getOrderDate());
-        existingOrder.setStatus(orderDTO.getStatus());
-        existingOrder.setTotalAmount(orderDTO.getTotalAmount());
-        existingOrder.setOrderDetails(orderDTO.getOrderDetails().stream()
+        if (orderDTO.getCustomerID() != null) existingOrder.setCustomerID(orderDTO.getCustomerID());
+        if (orderDTO.getOrderDate() != null) existingOrder.setOrderDate(orderDTO.getOrderDate());
+        if (orderDTO.getStatus() != null) existingOrder.setStatus(orderDTO.getStatus());
+        if (orderDTO.getTotalAmount() != null) existingOrder.setTotalAmount(orderDTO.getTotalAmount());
+        if (orderDTO.getOrderDetails() != null)
+
+            existingOrder.setOrderDetails(orderDTO.getOrderDetails().stream()
                 .map(orderDetailMapper::toOrderDetail)
                 .collect(Collectors.toList()));
 
