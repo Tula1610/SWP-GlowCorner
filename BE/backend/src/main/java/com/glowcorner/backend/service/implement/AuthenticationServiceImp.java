@@ -45,7 +45,6 @@ public class AuthenticationServiceImp implements AuthenticationService {
             // Nếu user chưa tồn tại, tạo mới user mà không cần Authentication
             user = new User();
             user.setEmail(googleLoginDTO.getEmail());
-            user.setFullName(googleLoginDTO.getFullName()); // Lấy từ OAuth nếu có
             user.setRole(Role.CUSTOMER); // Mặc định role là USER
             userRepository.save(user);
         }

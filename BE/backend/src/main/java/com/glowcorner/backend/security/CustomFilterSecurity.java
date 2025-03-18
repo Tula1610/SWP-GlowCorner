@@ -50,13 +50,12 @@ public class CustomFilterSecurity {
                 "/swagger-ui-custom/**","/swagger-ui-custom",
                 "/login.html","/login?error",
                 "/favicon.ico",
+                "/auth/login","/auth/login/token/google",
                 "/oauth2/authorization/google", "/login/oauth2/code/google", "/auth/login/google/**",
                 "/v3/api-docs/**",
-                "/api/products/**",
-                "/manager/users/**"
         };
 
-        String[] adminUrls = {"/api/users/**", "/api/admin/users/**"};
+        String[] adminUrls = {"/manager/users/**"};
 
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
