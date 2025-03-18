@@ -1,9 +1,103 @@
 package com.glowcorner.backend.controller.SkinCareRoutineController;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
+import com.glowcorner.backend.model.DTO.response.ResponseData;
+import com.glowcorner.backend.service.interfaces.SkinCareRoutineService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@Tag(name = "Skin Care Routine Management System", description = "Operations pertaining to skin care routines in the Skin Care Routine Management System")
 @RestController
-@RequestMapping
+@RequestMapping("/api/skin-care-routines")
 public class SkinCareRoutineController {
+
+    private final SkinCareRoutineService skinCareRoutineService;
+
+    public SkinCareRoutineController(SkinCareRoutineService skinCareRoutineService) {
+        this.skinCareRoutineService = skinCareRoutineService;
+    }
+
+    // Get all skincare routine
+    @Operation(summary = "Get all skin care routines", description = "Retrieve a list of all available skin care routines")
+    @GetMapping
+    public ResponseEntity<List<SkinCareRoutineDTO>> getAllSkinCareRoutines() {
+        List<SkinCareRoutineDTO> routines = skinCareRoutineService.getAllSkinCareRoutines();
+        return ResponseEntity.ok(routines);
+    }
+
+    // Get skincare routine by ID
+    @Operation(summary = "Get a skincare routine by ID", description = "Retrieve a single skin care routine using its ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseData> getSkinCareRoutineById(@PathVariable String id) {
+        SkinCareRoutineDTO routine = skinCareRoutineService.getSkinCareRoutineById(id);
+        if (routine == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseData(404, false, "Skin care routine with ID: " + id + " not found", null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Skin care routine found", routine, null, null));
+    }
+
+    // Get skincare routine by category
+    @Operation(summary = "Get skincare routines by category", description = "Retrieve a list of skin care routines using their category")
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ResponseData> getSkinCareRoutineByCategory(@PathVariable Category category) {
+        List<SkinCareRoutineDTO> routines = skinCareRoutineService.getSkinCareRoutineByCategory(category);
+        if (routines.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseData(404, false, "There is no skin care routine in category: " + category, null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Skin care routines found", routines, null, null));
+    }
+
+    // Get skincare routine by name
+    @Operation(summary = "Get skincare routines by name", description = "Retrieve a list of skin care routines using their name")
+    @GetMapping("/search")
+    public ResponseEntity<ResponseData> getSkinCareRoutineByName(@RequestParam String name) {
+        List<SkinCareRoutineDTO> routines = skinCareRoutineService.getSkinCareRoutineByName(name);
+        if (routines.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseData(404, false, "There is no skin care routine with name: " + name, null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Skin care routines found", routines, null, null));
+    }
+
+    // Create new skincare routine
+    @Operation(summary = "Create a new skincare routine", description = "Add a new skin care routine to the catalog")
+    @PostMapping
+    public ResponseEntity<ResponseData> createSkinCareRoutine(@RequestBody SkinCareRoutineDTO skinCareRoutineDTO) {
+        SkinCareRoutineDTO createdRoutine = skinCareRoutineService.createSkinCareRoutine(skinCareRoutineDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseData(201, true, "Skin care routine created", createdRoutine, null, null));
+    }
+
+    // Update an existing skincare routine
+    @Operation(summary = "Update a skincare routine", description = "Update an existing skin care routine using its ID")
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseData> updateSkinCareRoutine(@PathVariable String id, @RequestBody SkinCareRoutineDTO skinCareRoutineDTO) {
+        try {
+            SkinCareRoutineDTO updatedRoutine = skinCareRoutineService.updateSkinCareRoutine(id, skinCareRoutineDTO);
+            if (updatedRoutine == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseData(404, false, "Skin care routine with ID: " + id + " not found", null, null, null));
+            }
+            return ResponseEntity.ok(new ResponseData(200, true, "Skin care routine updated", updatedRoutine, null, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseData(500, false, "Fail to update skin care routine with ID: " + id, null, null, null));
+        }
+    }
+
+    // Delete a skincare routine
+    @Operation(summary = "Delete a skincare routine by ID", description = "Remove a skin care routine from the system using its ID")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSkinCareRoutine(@PathVariable String id) {
+        skinCareRoutineService.deleteSkinCareRoutine(id);
+        return ResponseEntity.noContent().build();
+    }
 }

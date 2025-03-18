@@ -2,11 +2,13 @@ package com.glowcorner.backend.repository;
 
 import com.glowcorner.backend.entity.mongoDB.Order;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface OrderRepository extends MongoRepository<Order, String> {
     Optional<Order> findByOrderID(String orderId);
     List<Order> findByCustomerID(String customerID);
