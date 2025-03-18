@@ -105,7 +105,7 @@ public class CustomFilterSecurity {
                 // Tạo user mới nếu không tồn tại
                 user = new User();
                 user.setEmail(email);
-                user.setRole(Role.GUEST);
+                user.setRole(Role.CUSTOMER);
                 userRepository.save(user);
             } else {
                 user = userOptional.get();
