@@ -15,6 +15,8 @@ public class Promotion {
     @Id
     String id; // Primary key for the promotion entity
 
+    String promotionID;
+
     String promotionName;
 
     int discount;

@@ -23,9 +23,11 @@ public class Product {
 
     String description;
 
-    long price; // BIGINT maps to 'long' in Java
+    Long price;
 
     Category category;
 
-    float rating;
+    Float rating;
+
+    String image_url;
 }

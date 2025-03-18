@@ -67,22 +67,27 @@ public class ProductServiceImp implements ProductService {
     // Update product
     @Override
     public ProductDTO updateProduct(String productId, ProductDTO productDTO) {
-        // Find existing product
-        Product existingProduct = productRepository.findByProductID(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        try {
+            // Find existing product
+            Product existingProduct = productRepository.findByProductID(productId)
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Update
-        existingProduct.setProductName(productDTO.getProductName());
-        existingProduct.setDescription(productDTO.getDescription());
-        existingProduct.setPrice(productDTO.getPrice());
-        existingProduct.setCategory(productDTO.getCategory());
-        existingProduct.setRating(productDTO.getRating());
+            // Update
+            if (productDTO.getProductName() != null) existingProduct.setProductName(productDTO.getProductName());
+            if (productDTO.getDescription() != null) existingProduct.setDescription(productDTO.getDescription());
+            if (productDTO.getPrice() != null) existingProduct.setPrice(productDTO.getPrice());
+            if (productDTO.getCategory() != null) existingProduct.setCategory(productDTO.getCategory());
+            if (productDTO.getRating() != null) existingProduct.setRating(productDTO.getRating());
+            if (productDTO.getImage_url() != null) existingProduct.setImage_url(productDTO.getImage_url());
 
-        // Save update
-        Product updatedProduct = productRepository.save(existingProduct);
+            // Save update
+            Product updatedProduct = productRepository.save(existingProduct);
 
-        // Convert updated product entity to DTO
-        return ProductMapper.toDTO(updatedProduct);
+            // Convert updated product entity to DTO
+            return ProductMapper.toDTO(updatedProduct);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail to update product: " + e.getMessage(), e);
+        }
     }
 
     // Delete product

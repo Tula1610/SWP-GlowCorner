@@ -13,7 +13,7 @@ public class OrderDetailDTO {
 
     String orderID;
     String productID;
-    int quantity;
-    int price;
+    Integer quantity;
+    Integer price;
 
 }

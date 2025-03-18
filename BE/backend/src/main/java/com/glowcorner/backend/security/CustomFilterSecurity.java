@@ -48,7 +48,9 @@ public class CustomFilterSecurity {
         String[] publicUrls = {
                 "/swagger-ui/**", "/swagger-ui.html","/api-docs/**",
                 "/swagger-ui-custom/**","/swagger-ui-custom", "/auth/login/google", "/login/oauth2/code/google",
-                "/v3/api-docs/**"
+                "/v3/api-docs/**",
+                "/api/products/**",
+                "/manager/users/**"
         };
 
         String[] adminUrls = {"/api/users/**", "/api/admin/users/**"};
