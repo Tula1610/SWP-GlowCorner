@@ -38,7 +38,7 @@ public class AuthenticationController {
     @Operation(summary = "Login", description = "Authenticate user credentials", security = {})
     @PostMapping("/login")
     public ResponseEntity<ResponseData> login(@RequestBody LoginDTO loginDTO) {
-        boolean isAuthenticated = authenticationService.login(loginDTO.getUsername(), loginDTO.getPasswordHash());
+        boolean isAuthenticated = authenticationService.login(loginDTO.getUsername(), loginDTO.getPassword());
         if (isAuthenticated) {
             return ResponseEntity.ok(new ResponseData(200, true, "Login successful", null, null, null));
         } else {
@@ -106,6 +106,13 @@ public class AuthenticationController {
         responseData.put("jwtToken", token);
 
         return ResponseEntity.ok(new ResponseData(200, true, "Login successful", responseData, null, null));
+    }
+
+    @PostMapping("/login/create")
+    @Operation(summary = "Create Authentication", description = "Create a new authentication", security = {})
+    public ResponseEntity<ResponseData> createAuthentication(@RequestBody LoginDTO loginDTO) {
+        LoginDTO newLoginDTO = authenticationService.createAuthentication(loginDTO.getUsername(), loginDTO.getPassword());
+        return ResponseEntity.ok(new ResponseData(200, true, "Create authentication successful", newLoginDTO, null, null));
     }
 
     @Hidden
