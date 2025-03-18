@@ -67,6 +67,7 @@ public class OrderServiceImp implements OrderService {
         if (orderDTO.getStatus() != null) existingOrder.setStatus(orderDTO.getStatus());
         if (orderDTO.getTotalAmount() != null) existingOrder.setTotalAmount(orderDTO.getTotalAmount());
         if (orderDTO.getOrderDetails() != null)
+
             existingOrder.setOrderDetails(orderDTO.getOrderDetails().stream()
                 .map(orderDetailMapper::toOrderDetail)
                 .collect(Collectors.toList()));
@@ -139,9 +140,8 @@ public class OrderServiceImp implements OrderService {
     // Update order detail
     @Override
     public OrderDetailDTO updateOrderDetail(String orderID, String productID, OrderDetailDTO orderDetailDTO) {
-        try {
-            OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIDAndProductID(orderID, productID)
-                    .orElseThrow(() -> new RuntimeException("Order detail not found"));
+        OrderDetail existingOrderDetail = orderDetailRepository.findByOrderIDAndProductID(orderID, productID)
+                .orElseThrow(() -> new RuntimeException("Order detail not found"));
 
             if (orderDetailDTO.getOrderID() != null) existingOrderDetail.setOrderID(orderDetailDTO.getOrderID());
             if (orderDetailDTO.getProductID() != null) existingOrderDetail.setProductID(orderDetailDTO.getProductID());

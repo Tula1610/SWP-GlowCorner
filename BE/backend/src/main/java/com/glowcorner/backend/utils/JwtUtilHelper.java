@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -17,11 +18,12 @@ public class JwtUtilHelper {
     @Value("${jwt.privateKey}") //Anotation Value: Cho phép gọi lấy giá trị của key
     private String privateKey;
 
-    public String generateToken(String data) {
+    public String generateToken(String data,String role) {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(privateKey));
 
         return Jwts.builder()
                 .setSubject(data)
+                .addClaims(Map.of("role", role))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Hết hạn sau 1 giờ
                 .signWith(key)

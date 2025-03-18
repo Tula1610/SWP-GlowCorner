@@ -26,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -45,15 +46,17 @@ public class CustomFilterSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         String[] publicUrls = {
-                "/login.html", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                "/swagger-ui-custom", "/oauth2/authorization/google", "/login/oauth2/code/google",
-                "/login/google", "/login/firebase", "/v3/api-docs/**" // Both login endpoints are public
+                "/swagger-ui/**", "/swagger-ui.html","/api-docs/**",
+                "/swagger-ui-custom/**","/swagger-ui-custom", "/auth/login/google", "/login/oauth2/code/google",
+                "/v3/api-docs/**",
+                "/api/products/**",
+                "/manager/users/**"
         };
 
         String[] adminUrls = {"/api/users/**", "/api/admin/users/**"};
 
         http
-                .cors().disable()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -70,13 +73,14 @@ public class CustomFilterSecurity {
                             OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
                             String email = oidcUser.getEmail();
 
-                            User user = userRepository.findByEmail(email);
-                            if (user == null) {
+
+                            Optional<User> user = userRepository.findByEmail(email);
+                            if (user.isEmpty()) {
                                 response.sendRedirect("/login.html?error=user_not_found");
                                 return;
                             }
-
-                            String jwtToken = jwtUtilHelper.generateToken(email);
+                            String role = user.get().getRole().name();
+                            String jwtToken = jwtUtilHelper.generateToken(email,role);
                             response.sendRedirect("/app/index.html?token=" + jwtToken + "&userType=MANAGER");
                         })
                         .failureHandler((request, response, exception) -> {
@@ -96,8 +100,8 @@ public class CustomFilterSecurity {
             OidcUser oidcUser = delegate.loadUser(userRequest);
             String email = oidcUser.getEmail();
 
-            User user = userRepository.findByEmail(email);
-            if (user == null) {
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isEmpty()) {
                 throw new UsernameNotFoundException("User with email " + email + " not found in the system");
             }
 
@@ -109,6 +113,11 @@ public class CustomFilterSecurity {
 
             return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
         };
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

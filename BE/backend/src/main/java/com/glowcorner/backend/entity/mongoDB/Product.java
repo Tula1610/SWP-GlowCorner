@@ -23,7 +23,7 @@ public class Product {
 
     String description;
 
-    Long price; // BIGINT maps to 'long' in Java
+    Long price;
 
     Category category;
 

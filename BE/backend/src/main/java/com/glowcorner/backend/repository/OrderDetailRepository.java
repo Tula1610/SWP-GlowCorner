@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface OrderDetailRepository extends MongoRepository<OrderDetail, String> {
     Optional<OrderDetail> findByOrderIDAndProductID(String orderId, String productID);
 
-    List<OrderDetail> findByOrderID(String orderID);
+    List<OrderDetail> findAllByOrderID(String orderID);
 }

@@ -1,5 +1,6 @@
 package com.glowcorner.backend.controller.AuthenticationController;
 
+import com.glowcorner.backend.model.DTO.GoogleLoginDTO;
 import com.glowcorner.backend.model.DTO.LoginDTO;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
@@ -28,6 +29,12 @@ public class AuthenticationController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseData(401, false, "Login failed", null, null, null));
         }
+    }
+
+    @PostMapping("/login/google")
+    public ResponseEntity<String> loginWithGoogle(@RequestBody GoogleLoginDTO googleLoginDTO) {
+        String token = authenticationService.loginWithGoogle(googleLoginDTO);
+        return ResponseEntity.ok(token);
     }
 
 }

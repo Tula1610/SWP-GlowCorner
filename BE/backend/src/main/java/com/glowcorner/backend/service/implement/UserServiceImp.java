@@ -44,9 +44,9 @@ public class UserServiceImp implements UserService {
 
     // Get user by ID
     @Override
-    public UserDTOByManager getUserById(String userID) {
-        if(userRepository.findByUserID(userID).isPresent())
-            return userMapperManager.toUserDTO(userRepository.findByUserID(userID).get());
+    public UserDTOByManager getUserById(String userId) {
+        if(userRepository.findByUserID(userId).isPresent())
+            return userMapperManager.toUserDTO(userRepository.findByUserID(userId).get());
         return null;
     }
 
@@ -63,7 +63,7 @@ public class UserServiceImp implements UserService {
     public UserDTOByManager updateUserByManager(String userID, UserDTOByManager userDTOByManager) {
         //Find existing user
         try{
-            User existingUser = userRepository.findByUserID(userID)
+            User existingUser = userRepository.findByUserID(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             //Update
@@ -108,7 +108,7 @@ public class UserServiceImp implements UserService {
     public UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer) {
         try {
             //Find existing user
-            User existingUser = userRepository.findByUserID(userID)
+            User existingUser = userRepository.findByUserID(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             //Update
@@ -142,8 +142,10 @@ public class UserServiceImp implements UserService {
     // Get user by email
     @Override
     public UserDTOByBeautyAdvisor getUserByEmailByBeautyAdvisor(String email) {
-        if(!email.isEmpty())
-            return userMapperBeautyAdvisor.toUserDTO(userRepository.findByEmail(email));
+        if (!email.isEmpty()) {
+            User user = userRepository.findByEmail(email).orElse(null);
+            return userMapperBeautyAdvisor.toUserDTO(user);
+        }
         return null;
     }
 
