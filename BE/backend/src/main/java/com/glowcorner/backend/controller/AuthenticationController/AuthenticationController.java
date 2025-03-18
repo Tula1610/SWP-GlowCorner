@@ -1,5 +1,6 @@
 package com.glowcorner.backend.controller.AuthenticationController;
 
+import com.glowcorner.backend.model.DTO.GoogleLoginDTO;
 import com.glowcorner.backend.model.DTO.LoginDTO;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,12 @@ public class AuthenticationController {
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
+    }
+
+    @PostMapping("/login/google")
+    public ResponseEntity<String> loginWithGoogle(@RequestBody GoogleLoginDTO googleLoginDTO) {
+        String token = authenticationService.loginWithGoogle(googleLoginDTO);
+        return ResponseEntity.ok(token);
     }
 
 }

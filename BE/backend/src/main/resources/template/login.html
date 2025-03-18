@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Google Test</title>
+</head>
+<body>
+<h2>Login with Google</h2>
+<button onclick="loginWithGoogle()">Login with Google</button>
+<p id="result"></p>
+
+<script>
+    async function loginWithGoogle() {
+        const googleLoginDTO = {
+            email: "khoihmse171467@fpt.edu.vn",
+            fullName: "Huynh Minh Khoi"
+        };
+
+        try {
+            const response = await fetch("http://localhost:8080/auth/login/google", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(googleLoginDTO)
+            });
+
+            const text = await response.text();
+            document.getElementById("result").innerText = text;
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("result").innerText = "Login failed!";
+        }
+    }
+</script>
+</body>
+</html>

@@ -27,10 +27,10 @@ public class SwaggerConfig {
                                 .url("https://mit-license.org")));
     }
 
-    @Bean
-    public SwaggerUiConfigProperties swaggerUiConfigProperties() {
-        SwaggerUiConfigProperties properties = new SwaggerUiConfigProperties();
-        properties.setPath("/swagger-ui-custom");
-        return properties;
-    }
+//    @Bean
+//    public SwaggerUiConfigProperties swaggerUiConfigProperties() {
+//        SwaggerUiConfigProperties properties = new SwaggerUiConfigProperties();
+//        properties.setPath("/swagger-ui-custom");
+//        return properties;
+//    }
 }

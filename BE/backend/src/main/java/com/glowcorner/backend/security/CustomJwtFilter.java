@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Component
 public class CustomJwtFilter extends OncePerRequestFilter {
@@ -43,10 +44,10 @@ public class CustomJwtFilter extends OncePerRequestFilter {
             String email = jwtUtilHelper.getUsernameFromToken(token);
 
             // Check if the email exists in the user table (for admins)
-            User user = userRepository.findByEmail(email);
-            if (user != null) {
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isPresent()) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+                        email, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.get().getRole().name()))
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 filterChain.doFilter(request, response);
