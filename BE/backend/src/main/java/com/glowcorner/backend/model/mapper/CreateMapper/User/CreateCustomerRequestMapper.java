@@ -1,4 +1,4 @@
-package com.glowcorner.backend.model.mapper.CreateMapper;
+package com.glowcorner.backend.model.mapper.CreateMapper.User;
 
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;

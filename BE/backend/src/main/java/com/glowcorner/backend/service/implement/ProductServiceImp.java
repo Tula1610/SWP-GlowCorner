@@ -4,7 +4,7 @@ import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
-import com.glowcorner.backend.model.mapper.CreateMapper.CreateProductRequestMapper;
+import com.glowcorner.backend.model.mapper.CreateMapper.Product.CreateProductRequestMapper;
 import com.glowcorner.backend.model.mapper.Product.ProductMapper;
 import com.glowcorner.backend.repository.ProductRepository;
 import com.glowcorner.backend.service.interfaces.ProductService;

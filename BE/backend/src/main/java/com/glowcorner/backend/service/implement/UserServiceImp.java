@@ -6,7 +6,7 @@ import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
 import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
-import com.glowcorner.backend.model.mapper.CreateMapper.CreateCustomerRequestMapper;
+import com.glowcorner.backend.model.mapper.CreateMapper.User.CreateCustomerRequestMapper;
 import com.glowcorner.backend.model.mapper.User.*;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.UserService;

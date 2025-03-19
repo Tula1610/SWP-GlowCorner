@@ -1,42 +1,38 @@
-package com.glowcorner.backend.model.mapper.CreateMapper;
+package com.glowcorner.backend.model.mapper.CreateMapper.Order;
 
 import com.glowcorner.backend.entity.mongoDB.Order;
-import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
-import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
+import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
 import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
-public class CreateOrderRequestMapper {
-
-    private final OrderDetailMapper orderDetailMapper;
+public class CustomerCreateOrderRequestMapper {
 
     private final CounterServiceImpl counterService;
+    private final CustomerOrderDetailMapper customerOrderDetailMapper;
 
-    public CreateOrderRequestMapper(OrderDetailMapper orderDetailMapper, CounterServiceImpl counterService) {
-        this.orderDetailMapper = orderDetailMapper;
+    public CustomerCreateOrderRequestMapper(CounterServiceImpl counterService, CustomerOrderDetailMapper customerOrderDetailMapper) {
         this.counterService = counterService;
+        this.customerOrderDetailMapper = customerOrderDetailMapper;
     }
 
-    public Order fromCreateRequest (CreateOrderRequest request){
+    public Order fromCustomerCreateRequest (CustomerCreateOrderRequest request){
         if (request == null) {
             return null;
         }
 
         Order order = new Order();
         order.setOrderID(counterService.getNextProductID());
-        order.setCustomerID(request.getCustomerID());
         order.setOrderDate(request.getOrderDate());
         order.setStatus(request.getStatus());
         order.setTotalAmount(request.getTotalAmount());
         order.setOrderDetails(request.getOrderDetails().stream()
-                .map(orderDetailMapper::toOrderDetail)
+                .map(customerOrderDetailMapper::toOrderDetail)
                 .collect(Collectors.toList())
         );
 
         return order;
     }
-
 }

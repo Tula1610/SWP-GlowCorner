@@ -1,4 +1,4 @@
-package com.glowcorner.backend.model.mapper.CreateMapper;
+package com.glowcorner.backend.model.mapper.CreateMapper.Product;
 
 import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;

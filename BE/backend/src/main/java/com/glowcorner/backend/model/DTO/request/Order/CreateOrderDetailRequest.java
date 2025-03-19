@@ -5,19 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class CreateOrderRequest {
+public class CreateOrderDetailRequest {
 
-    String customerID;
-    LocalDate orderDate;
-    String status;
-    Integer totalAmount;
-    List<CreateOrderDetailRequest> orderDetails;
+    String productID;
+    Integer quantity;
+    Integer price;
 
 }

@@ -8,8 +8,8 @@ import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
 import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
 import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
-import com.glowcorner.backend.model.mapper.CreateMapper.CreateOrderRequestMapper;
-import com.glowcorner.backend.model.mapper.CreateMapper.CustomerCreateOrderRequestMapper;
+import com.glowcorner.backend.model.mapper.CreateMapper.Order.CreateOrderRequestMapper;
+import com.glowcorner.backend.model.mapper.CreateMapper.Order.CustomerCreateOrderRequestMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderMapper;
 import com.glowcorner.backend.repository.OrderDetailRepository;
@@ -79,7 +79,7 @@ public class OrderServiceImp implements OrderService {
         if (orderDTO.getTotalAmount() != null) existingOrder.setTotalAmount(calculateTotalAmount(existingOrder.getOrderDetails()));
         if (orderDTO.getOrderDetails() != null)
             existingOrder.setOrderDetails(orderDTO.getOrderDetails().stream()
-                .map(orderDetailMapper::toOrderDetail)
+                .map(orderDetailDTO -> orderDetailMapper.toOrderDetail(orderDetailDTO, orderId))
                 .collect(Collectors.toList()));
 
         // Save
@@ -174,7 +174,7 @@ public class OrderServiceImp implements OrderService {
     @Override
     public OrderDetailDTO createOrderDetail(String orderId, OrderDetailDTO orderDetailDTO) {
         orderDetailDTO.setOrderID(orderId);
-        OrderDetail orderDetail = orderDetailMapper.toOrderDetail(orderDetailDTO);
+        OrderDetail orderDetail = orderDetailMapper.toOrderDetail(orderDetailDTO, orderId);
         orderDetail = orderDetailRepository.save(orderDetail);
         return orderDetailMapper.toOrderDetailDTO(orderDetail);
     }
