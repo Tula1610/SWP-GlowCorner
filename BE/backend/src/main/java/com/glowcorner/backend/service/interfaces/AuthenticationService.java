@@ -8,6 +8,7 @@ import javax.swing.text.html.Option;
 
 public interface AuthenticationService {
     boolean login(String username, String password);
-    LoginDTO createAuthentication(String username, String password);
-    String loginWithGoogle(GoogleLoginDTO googleLoginDTO);
+    boolean signup(String username, String password);
+//    LoginDTO createAuthentication(String username, String password);
+//    String loginWithGoogle(GoogleLoginDTO googleLoginDTO);
 }
