@@ -32,24 +32,4 @@ public class OrderMapper {
         );
     }
 
-    // Convert OrderDTO to Order entity
-    public Order toOrder(OrderDTO orderDTO) {
-        if (orderDTO == null) {
-            return null;
-        }
-
-        Order order = new Order();
-        order.setOrderID(orderDTO.getOrderID());
-        order.setCustomerID(orderDTO.getCustomerID());
-        order.setOrderDate(orderDTO.getOrderDate());
-        order.setStatus(orderDTO.getStatus());
-        order.setTotalAmount(orderDTO.getTotalAmount());
-        order.setOrderDetails(orderDTO.getOrderDetails().stream()
-            .map(orderDetailMapper::toOrderDetail)
-            .collect(Collectors.toList())
-        );
-
-        return order;
-    }
-
 }

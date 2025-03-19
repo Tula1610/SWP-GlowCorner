@@ -1,0 +1,73 @@
+package com.glowcorner.backend.controller.OrderController;
+
+import com.glowcorner.backend.model.DTO.Order.OrderDTO;
+import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
+import com.glowcorner.backend.model.DTO.response.ResponseData;
+import com.glowcorner.backend.service.interfaces.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Tag(name = "Order Management System (Customer)", description = "Operations pertaining to orders in the Order Management System")
+@RestController
+@RequestMapping("/user/{userID}/orders")
+public class CustomerOrderController {
+
+    private OrderService orderService;
+
+    public CustomerOrderController (OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    // Create order
+    @Operation(summary = "Create a new order", description = "Add a new order to the system")
+    @PostMapping
+    public ResponseEntity<ResponseData> createOrder(@PathVariable String userID, @RequestBody CustomerCreateOrderRequest request) {
+        OrderDTO createdOrder = orderService.customerCreateOrder(request);
+        createdOrder.setCustomerID(userID);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseData(201, true, "Order created", createdOrder, null, null));
+    }
+
+    // Get orders by customer ID
+    @Operation(summary = "Get orders by customer ID", description = "Retrieve a list of orders using the customer ID")
+    @GetMapping
+    public ResponseEntity<ResponseData> getOrdersByCustomerID(@PathVariable String userID) {
+        List<OrderDTO> orders = orderService.getOrdersByCustomerID(userID);
+        if (orders.isEmpty()) {
+            return ResponseEntity.status(404)
+                    .body(new ResponseData(404, false, "No orders found for customer ID: " + userID, null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Orders found", orders, null, null));
+    }
+
+    // Get orders by status
+    @Operation(summary = "Get orders by status", description = "Retrieve a list of orders using the status")
+    @GetMapping("/{status}")
+    public ResponseEntity<ResponseData> getOrdersByStatus(@PathVariable String userID, @PathVariable String status) {
+        List<OrderDTO> orders = orderService.getOrdersByStatusAndCustomerID(status, userID);
+        if (orders.isEmpty()) {
+            return ResponseEntity.status(404)
+                    .body(new ResponseData(404, false, "No orders found with status: " + status, null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Orders found", orders, null, null));
+    }
+
+    // Get orders by order date
+    @Operation(summary = "Get orders by order date", description = "Retrieve a list of orders using the order date")
+    @GetMapping("/{orderDate}")
+    public ResponseEntity<ResponseData> getOrdersByOrderDate(@PathVariable String userID, @PathVariable LocalDate orderDate) {
+        List<OrderDTO> orders = orderService.getOrdersByOrderDateAndCustomerID(orderDate, userID);
+        if (orders.isEmpty()) {
+            return ResponseEntity.status(404)
+                    .body(new ResponseData(404, false, "No orders found with order date: " + orderDate, null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Orders found", orders, null, null));
+    }
+
+}

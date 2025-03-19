@@ -1,7 +1,5 @@
-package com.glowcorner.backend.model.DTO.request;
+package com.glowcorner.backend.model.DTO.request.User;
 
-import com.glowcorner.backend.enums.Category;
-import com.glowcorner.backend.enums.Role;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,14 +10,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreateRequest {
+public class CreateCustomerRequest {
 
     String fullName;
     String email;
     String phone;
     String address;
-    Role role;
-    Category skinType;
-
 
 }

@@ -11,12 +11,6 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapperCustomer {
 
-    private final CounterServiceImpl counterServiceImpl;
-
-    public UserMapperCustomer(CounterServiceImpl counterServiceImpl) {
-        this.counterServiceImpl = counterServiceImpl;
-    }
-
     public UserDTOByCustomer toUserDTO(User user) {
         if (user == null) {
             return null;
@@ -29,27 +23,6 @@ public class UserMapperCustomer {
                 user.getAddress(),
                 user.getSkinType()
         );
-    }
-
-    public List<UserDTOByCustomer> toUserDTO(List<User> users) {
-        return users.stream().map(this::toUserDTO).collect(Collectors.toList());
-    }
-
-    // Convert UserDTO to User entity
-    public User toUser(UserDTOByCustomer userDTOByCustomer) {
-        if (userDTOByCustomer == null) {
-            return null;
-        }
-
-        User user = new User();
-        user.setUserID(counterServiceImpl.getNextUserID());
-        user.setFullName(userDTOByCustomer.getFullName());
-        user.setEmail(userDTOByCustomer.getEmail());
-        user.setPhone(userDTOByCustomer.getPhone());
-        user.setAddress(userDTOByCustomer.getAddress());
-        user.setSkinType(userDTOByCustomer.getSkinType());
-
-        return user;
     }
 
 }

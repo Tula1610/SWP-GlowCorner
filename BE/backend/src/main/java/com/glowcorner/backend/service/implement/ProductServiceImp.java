@@ -3,7 +3,9 @@ package com.glowcorner.backend.service.implement;
 import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.ProductDTO;
-import com.glowcorner.backend.model.mapper.ProductMapper;
+import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
+import com.glowcorner.backend.model.mapper.CreateMapper.CreateProductRequestMapper;
+import com.glowcorner.backend.model.mapper.Product.ProductMapper;
 import com.glowcorner.backend.repository.ProductRepository;
 import com.glowcorner.backend.service.interfaces.ProductService;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,14 @@ public class ProductServiceImp implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImp(ProductRepository productRepository) {
+    private final CreateProductRequestMapper createProductRequestMapper;
+
+    private final ProductMapper productMapper;
+
+    public ProductServiceImp(ProductRepository productRepository, CreateProductRequestMapper createProductRequestMapper, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.createProductRequestMapper = createProductRequestMapper;
+        this.productMapper = productMapper;
     }
 
     // Get all products
@@ -25,7 +33,7 @@ public class ProductServiceImp implements ProductService {
     public List<ProductDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(ProductMapper::toDTO)
+                .map(productMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -33,7 +41,7 @@ public class ProductServiceImp implements ProductService {
     @Override
     public ProductDTO getProductById(String productId) {
         if (productRepository.findByProductID(productId).isPresent())
-            return ProductMapper.toDTO(productRepository.findByProductID(productId).get());
+            return productMapper.toDTO(productRepository.findByProductID(productId).get());
         return null;
     }
 
@@ -42,7 +50,7 @@ public class ProductServiceImp implements ProductService {
     public List<ProductDTO> getProductsByCategory(Category category) {
         List<Product> products = productRepository.findByCategory(category);
         return products.stream()
-                .map(ProductMapper::toDTO)
+                .map(productMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -52,16 +60,16 @@ public class ProductServiceImp implements ProductService {
         String regex = ".*" + productName + ".*";
         List<Product> products = productRepository.findByProductNameRegexIgnoreCase(regex) ;
         return products.stream()
-                .map(ProductMapper::toDTO)
+                .map(productMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     // Create product
     @Override
-    public ProductDTO createProduct(ProductDTO productDTO) {
-        Product product = ProductMapper.toEntity(productDTO);
+    public ProductDTO createProduct(CreateProductRequest request) {
+        Product product = createProductRequestMapper.fromCreateRequest(request);
         product = productRepository.save(product);
-        return ProductMapper.toDTO(product);
+        return productMapper.toDTO(product);
     }
 
     // Update product
@@ -84,7 +92,7 @@ public class ProductServiceImp implements ProductService {
             Product updatedProduct = productRepository.save(existingProduct);
 
             // Convert updated product entity to DTO
-            return ProductMapper.toDTO(updatedProduct);
+            return productMapper.toDTO(updatedProduct);
         } catch (Exception e) {
             throw new RuntimeException("Fail to update product: " + e.getMessage(), e);
         }

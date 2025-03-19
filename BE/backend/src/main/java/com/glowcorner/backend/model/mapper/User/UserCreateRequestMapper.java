@@ -1,7 +1,7 @@
 package com.glowcorner.backend.model.mapper.User;
 
 import com.glowcorner.backend.entity.mongoDB.User;
-import com.glowcorner.backend.model.DTO.request.UserCreateRequest;
+import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class UserCreateRequestMapper {
         this.counterServiceImpl = counterServiceImpl;
     }
 
-    public User fromCreateRequest(UserCreateRequest request) {
+    public User fromCreateRequest(CreateUserRequest request) {
         if (request == null){
             return null;
         }
