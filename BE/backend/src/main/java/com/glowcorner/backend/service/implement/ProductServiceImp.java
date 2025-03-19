@@ -101,7 +101,7 @@ public class ProductServiceImp implements ProductService {
     // Delete product
     @Override
     public void deleteProduct(String productId) {
-        productRepository.deleteById(productId);
+        productRepository.deleteByProductID(productId);
     }
 
 

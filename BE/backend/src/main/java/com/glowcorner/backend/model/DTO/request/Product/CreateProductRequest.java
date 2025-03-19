@@ -17,5 +17,7 @@ public class CreateProductRequest {
     String description;
     Long price;
     Category category;
+    Float rating;
+    String image_url;
 
 }
