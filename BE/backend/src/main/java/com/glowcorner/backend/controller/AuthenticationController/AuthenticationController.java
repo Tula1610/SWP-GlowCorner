@@ -3,7 +3,10 @@ package com.glowcorner.backend.controller.AuthenticationController;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.LoginDTO;
+import com.glowcorner.backend.model.DTO.request.User.Signup;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
+import com.glowcorner.backend.repository.AuthenticationRepository;
+import com.glowcorner.backend.entity.mongoDB.Authentication;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
 import com.glowcorner.backend.utils.JwtUtilHelper;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,6 +37,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final JwtUtilHelper jwtUtilHelper;
+    private final AuthenticationRepository authenticationRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
@@ -46,28 +52,77 @@ public class AuthenticationController {
     @Operation(summary = "Login", description = "Authenticate user credentials", security = {})
     @PostMapping("/login")
     public ResponseEntity<ResponseData> login(@RequestBody LoginDTO loginDTO) {
-        boolean isAuthenticated = authenticationService.login(loginDTO.getUsername(), loginDTO.getPassword());
-        if (!isAuthenticated) {
-            return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), "Login failed");
+
+        // 1️⃣ Kiểm tra username trong authenticationRepository
+        Optional<Authentication> authOpt = authenticationRepository.findByUsername(loginDTO.getUsername());
+        if (authOpt.isEmpty()) {
+            return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), "User not found");
         }
 
-        Optional<User> userOpt = userRepository.findByEmail(loginDTO.getUsername());
+        Authentication auth = authOpt.get();
+
+        // 2️⃣ Kiểm tra password có đúng không
+        if (!bCryptPasswordEncoder.matches(loginDTO.getPassword(), auth.getPasswordHash())) {
+            return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), "Invalid password");
+        }
+
+        // 3️⃣ Kiểm tra và lấy thông tin User
+        User user = auth.getUserID(); // Giả sử Authentication có tham chiếu trực tiếp đến User
+        if (user == null) {
+            return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "User data missing");
+        }
+
+        // 4️⃣ Tạo JWT token
+        String email = user.getEmail() != null ? user.getEmail() : "N/A";
+        String role = user.getRole().name();
+        String jwtToken = jwtUtilHelper.generateToken(email, role);
+
+        // 5️⃣ Trả về thông tin user và token
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("email", email);
+        responseData.put("fullName", user.getFullName());
+        responseData.put("role", role);
+        responseData.put("jwtToken", jwtToken);
+
+        return ResponseUtil.success(responseData);
+    }
+
+    @Operation(summary = "Login with Google", description = "Authenticate user credentials with Google", security = {})
+    @GetMapping("/login/google")
+    public ResponseEntity<ResponseData> loginWithGoogle(@RequestParam String email) {
+        // 1️⃣ Kiểm tra email trong userRepository
+        Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
             return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), "User not found");
         }
 
         User user = userOpt.get();
-        String fullName = user.getFullName() != null ? user.getFullName() : "N/A";
-        String role = user.getRole().name();
-        String jwtToken = jwtUtilHelper.generateToken(loginDTO.getUsername(), role);
 
+        // 2️⃣ Tạo JWT token
+        String role = user.getRole().name();
+        String jwtToken = jwtUtilHelper.generateToken(email, role);
+
+        // 3️⃣ Trả về thông tin user và token
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("email", loginDTO.getUsername());
-        responseData.put("fullName", fullName);
+        responseData.put("email", email);
+        responseData.put("fullName", user.getFullName());
         responseData.put("role", role);
         responseData.put("jwtToken", jwtToken);
 
         return ResponseUtil.success(responseData);
+    }
+
+
+
+    @Operation(summary = "Signup", description = "Create a new user", security = {})
+    @PostMapping("/signup")
+    public ResponseEntity<ResponseData> signup(@RequestBody Signup Signup) {
+        boolean isCreated = authenticationService.signup(Signup.getUsername(), Signup.getPassword());
+        if (!isCreated) {
+            return ResponseUtil.error(HttpStatus.BAD_REQUEST.value(), "User already exists");
+        }
+
+        return ResponseUtil.success("User created");
     }
 
     @GetMapping("/oauth2/callback")
