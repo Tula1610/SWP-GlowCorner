@@ -51,7 +51,7 @@ public class CustomFilterSecurity {
                 "/login.html","/login?error",
                 "/favicon.ico",
                 "/auth/login","/auth/login/token/google",
-                "/oauth2/authorization/google", "/login/oauth2/code/google", "/auth/login/google/**",
+                "/oauth2/authorization/google", "/login/oauth2/code/google", "/auth/login/google/**","/auth/oauth2/callback",
                 "/v3/api-docs/**",
         };
 
@@ -77,14 +77,14 @@ public class CustomFilterSecurity {
 
                             Optional<User> user = userRepository.findByEmail(email);
                             if (user.isEmpty()) {
-                                response.sendRedirect("/login.html");
+                                response.sendRedirect("/");
                                 return;
                             }
 
                             String role = user.get().getRole().name();
                             String jwtToken = jwtUtilHelper.generateToken(email, role);
 
-                            response.sendRedirect("/auth/login/google?email=" + email + "&role=" + role + "&jwtToken=" + jwtToken);
+                            response.sendRedirect("/auth/oauth2/callback");
                         })
                 );
 
