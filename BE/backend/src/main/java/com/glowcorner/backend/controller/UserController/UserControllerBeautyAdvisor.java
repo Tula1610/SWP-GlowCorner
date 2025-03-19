@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "User Management System", description = "Operations pertaining to users in the User Management System")
+@Tag(name = "User Management System (Beauty Advisor)", description = "Operations pertaining to users in the User Management System")
 @RestController
 @RequestMapping("/beautyAdvisor/users")
 public class UserControllerBeautyAdvisor {

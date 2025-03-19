@@ -6,6 +6,10 @@ import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
+import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
+import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
+import com.glowcorner.backend.model.mapper.CreateMapper.Order.Manager.CreateOrderRequestMapper;
+import com.glowcorner.backend.model.mapper.CreateMapper.Order.Customer.CustomerCreateOrderRequestMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderMapper;
 import com.glowcorner.backend.repository.OrderDetailRepository;
@@ -30,32 +34,39 @@ public class OrderServiceImp implements OrderService {
     private final OrderMapper orderMapper;
 
     private final OrderDetailMapper orderDetailMapper;
+    private final CreateOrderRequestMapper createOrderRequestMapper;
+    private final CustomerCreateOrderRequestMapper customerCreateOrderRequestMapper;
 
-    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper) {
+    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, CreateOrderRequestMapper createOrderRequestMapper, CustomerCreateOrderRequestMapper customerCreateOrderRequestMapper) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
+        this.createOrderRequestMapper = createOrderRequestMapper;
+        this.customerCreateOrderRequestMapper = customerCreateOrderRequestMapper;
     }
 
     /* Order
     * */
 
     // Create order
-    public OrderDTO createOrder(OrderDTO orderDTO) {
-        User user = userRepository.findByUserID(orderDTO.getCustomerID())
+    @Override
+    public OrderDTO createOrder(CreateOrderRequest request) {
+        User user = userRepository.findByUserID(request.getCustomerID())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         if (user.getRole() != Role.CUSTOMER) {
-            throw new IllegalArgumentException("Only customers can create orders");
+            throw new IllegalArgumentException("Customer ID required!");
         }
 
-        Order order = orderMapper.toOrder(orderDTO);
+        Order order = createOrderRequestMapper.fromCreateRequest(request);
+        order.setTotalAmount(calculateTotalAmount(order.getOrderDetails()));
         order = orderRepository.save(order);
         return orderMapper.toOrderDTO(order);
     }
 
     // Update order
+    @Override
     public OrderDTO updateOrder(String orderId, OrderDTO orderDTO) {
         // Find existing order
         Order existingOrder = orderRepository.findByOrderID(orderId)
@@ -65,11 +76,10 @@ public class OrderServiceImp implements OrderService {
         if (orderDTO.getCustomerID() != null) existingOrder.setCustomerID(orderDTO.getCustomerID());
         if (orderDTO.getOrderDate() != null) existingOrder.setOrderDate(orderDTO.getOrderDate());
         if (orderDTO.getStatus() != null) existingOrder.setStatus(orderDTO.getStatus());
-        if (orderDTO.getTotalAmount() != null) existingOrder.setTotalAmount(orderDTO.getTotalAmount());
+        if (orderDTO.getTotalAmount() != null) existingOrder.setTotalAmount(calculateTotalAmount(existingOrder.getOrderDetails()));
         if (orderDTO.getOrderDetails() != null)
-
             existingOrder.setOrderDetails(orderDTO.getOrderDetails().stream()
-                .map(orderDetailMapper::toOrderDetail)
+                .map(orderDetailDTO -> orderDetailMapper.toOrderDetail(orderDetailDTO, orderId))
                 .collect(Collectors.toList()));
 
         // Save
@@ -80,13 +90,24 @@ public class OrderServiceImp implements OrderService {
     }
 
     // Delete order
+    @Override
     public void deleteOrder(String orderId) {
         Order existingOrder = orderRepository.findByOrderID(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         orderRepository.delete(existingOrder);
     }
 
+    // Customer create order
+    @Override
+    public OrderDTO customerCreateOrder(CustomerCreateOrderRequest request) {
+        Order order = customerCreateOrderRequestMapper.fromCustomerCreateRequest(request);
+        order.setTotalAmount(calculateTotalAmount(order.getOrderDetails()));
+        order = orderRepository.save(order);
+        return orderMapper.toOrderDTO(order);
+    }
+
     // Get all orders
+    @Override
     public List<OrderDTO> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         return orders.stream()
@@ -95,6 +116,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     // Get order by order ID
+    @Override
     public OrderDTO getOrderById(String orderId) {
         if (orderRepository.findByOrderID(orderId).isPresent())
             return orderMapper.toOrderDTO(orderRepository.findByOrderID(orderId).get());
@@ -102,6 +124,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     // Get orders by customer ID
+    @Override
     public List<OrderDTO> getOrdersByCustomerID(String customerID) {
         List<Order> orders = orderRepository.findByCustomerID(customerID);
         return orders.stream()
@@ -110,6 +133,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     // Get orders by status
+    @Override
     public List<OrderDTO> getOrdersByStatus(String status) {
         List<Order> orders = orderRepository.findByStatus(status);
         return orders.stream()
@@ -118,8 +142,26 @@ public class OrderServiceImp implements OrderService {
     }
 
     // Get orders by order date
+    @Override
     public List<OrderDTO> getOrdersByOrderDate(LocalDate orderDate) {
         List<Order> orders = orderRepository.findByOrderDate(orderDate);
+        return orders.stream()
+                .map(orderMapper::toOrderDTO)
+                .collect(Collectors.toList());
+    }
+
+    // \\ For customer \\
+    // Get orders by status and customerID
+    public List<OrderDTO> getOrdersByStatusAndCustomerID(String status, String userID) {
+        List<Order> orders = orderRepository.findByStatusAndCustomerID(status, userID);
+        return orders.stream()
+                .map(orderMapper::toOrderDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Get orders by order date and customerID
+    public List<OrderDTO> getOrdersByOrderDateAndCustomerID(LocalDate orderDate, String userID) {
+        List<Order> orders = orderRepository.findByOrderDateAndCustomerID(orderDate, userID);
         return orders.stream()
                 .map(orderMapper::toOrderDTO)
                 .collect(Collectors.toList());
@@ -132,7 +174,7 @@ public class OrderServiceImp implements OrderService {
     @Override
     public OrderDetailDTO createOrderDetail(String orderId, OrderDetailDTO orderDetailDTO) {
         orderDetailDTO.setOrderID(orderId);
-        OrderDetail orderDetail = orderDetailMapper.toOrderDetail(orderDetailDTO);
+        OrderDetail orderDetail = orderDetailMapper.toOrderDetail(orderDetailDTO, orderId);
         orderDetail = orderDetailRepository.save(orderDetail);
         return orderDetailMapper.toOrderDetailDTO(orderDetail);
     }
@@ -173,5 +215,12 @@ public class OrderServiceImp implements OrderService {
         return orderDetails.stream()
                 .map(orderDetailMapper::toOrderDetailDTO)
                 .collect(Collectors.toList());
+    }
+
+    /* Calculate Total Amount */
+    private int calculateTotalAmount(List<OrderDetail> orderDetails) {
+        return orderDetails.stream()
+                .mapToInt(detail -> detail.getQuantity() * detail.getPrice())
+                .sum();
     }
 }

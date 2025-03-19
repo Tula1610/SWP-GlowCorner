@@ -1,4 +1,4 @@
-package com.glowcorner.backend.controller;
+package com.glowcorner.backend.controller.AuthenticationController;
 
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;

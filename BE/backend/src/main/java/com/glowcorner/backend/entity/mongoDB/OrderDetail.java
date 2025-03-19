@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document(collection = "orderDetail") // Maps this class to the "orderDetails" collection in MongoDB
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
 @CompoundIndex(name = "order_product_unique", def = "{'orderID': 1, 'productID': 1}", unique = true)
 // Enforces the uniqueness of the combination of orderID and productID
 public class OrderDetail {

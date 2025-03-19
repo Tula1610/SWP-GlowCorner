@@ -2,12 +2,13 @@ package com.glowcorner.backend.service.interfaces;
 
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.ProductDTO;
+import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
 
 import java.util.List;
 
 public interface ProductService {
 
-    ProductDTO createProduct(ProductDTO productDTO);
+    ProductDTO createProduct(CreateProductRequest request);
     ProductDTO updateProduct(String productId, ProductDTO productDTO);
     void deleteProduct(String id);
 

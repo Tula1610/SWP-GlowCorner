@@ -2,6 +2,7 @@ package com.glowcorner.backend.controller.ProductController;
 
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.ProductDTO;
+import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,8 +71,8 @@ public class ProductController {
     // Create a new product
     @Operation(summary = "Create a new product", description = "Add a new product to the catalog")
     @PostMapping
-    public ResponseEntity<ResponseData> createProduct(@RequestBody ProductDTO productDTO) {
-        ProductDTO createdProduct = productService.createProduct(productDTO);
+    public ResponseEntity<ResponseData> createProduct(@RequestBody CreateProductRequest request) {
+        ProductDTO createdProduct = productService.createProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseData(201, true, "Product created", createdProduct, null, null));
     }
