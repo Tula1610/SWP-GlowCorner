@@ -1,6 +1,7 @@
 package com.glowcorner.backend.controller.UserController;
 
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
+import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "User Management System", description = "Operations pertaining to users in the User Management System")
+@Tag(name = "User Management System (Customer)", description = "Operations pertaining to users in the User Management System")
 @RestController
 @RequestMapping("/user")
 public class UserControllerCustomer {
@@ -18,6 +19,15 @@ public class UserControllerCustomer {
 
     public UserControllerCustomer (UserService userService){
         this.userService = userService;
+    }
+
+    // Create user
+    @Operation(summary = "Create a new customer", description = "Add a new customer to the system")
+    @PostMapping
+    public ResponseEntity<ResponseData> createUser(@RequestBody CreateCustomerRequest request) {
+        UserDTOByCustomer createdUser = userService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseData(201, true, "User created", createdUser, null, null));
     }
 
     // Update user
@@ -36,5 +46,4 @@ public class UserControllerCustomer {
                     .body(new ResponseData(400, false, e.getMessage(), null, null, null));
         }
     }
-
 }

@@ -21,13 +21,13 @@ public class OrderDetailMapper {
     }
 
     // Convert OrderDetailDTO to OrderDetail entity
-    public OrderDetail toOrderDetail(OrderDetailDTO orderDetailDTO) {
+    public OrderDetail toOrderDetail(OrderDetailDTO orderDetailDTO, String orderID) {
         if (orderDetailDTO == null) {
             return null;
         }
 
         OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setOrderID(orderDetailDTO.getOrderID());
+        orderDetail.setOrderID(orderID);
         orderDetail.setProductID(orderDetailDTO.getProductID());
         orderDetail.setQuantity(orderDetailDTO.getQuantity());
         orderDetail.setPrice(orderDetailDTO.getPrice());

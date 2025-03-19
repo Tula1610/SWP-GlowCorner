@@ -11,18 +11,13 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapperManager {
 
-    private final CounterServiceImpl counterServiceImpl;
-
-    public UserMapperManager(CounterServiceImpl counterServiceImpl) {
-        this.counterServiceImpl = counterServiceImpl;
-    }
-
     public UserDTOByManager toUserDTO(User user) {
         if (user == null) {
             return null;
         }
 
         return new UserDTOByManager(
+                user.getUserID(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),
@@ -32,29 +27,5 @@ public class UserMapperManager {
                 user.getRole(),
                 user.getOrders()
         );
-    }
-
-    public List<UserDTOByManager> toUserDTO(List<User> users) {
-        return users.stream().map(this::toUserDTO).collect(Collectors.toList());
-    }
-
-    // Convert UserDTO to User entity
-    public User toUser(UserDTOByManager userDTOByManager) {
-        if (userDTOByManager == null) {
-            return null;
-        }
-
-        User user = new User();
-        user.setUserID(counterServiceImpl.getNextUserID());
-        user.setFullName(userDTOByManager.getFullName());
-        user.setEmail(userDTOByManager.getEmail());
-        user.setPhone(userDTOByManager.getPhone());
-        user.setAddress(userDTOByManager.getAddress());
-        user.setSkinType(userDTOByManager.getSkinType());
-        user.setLoyalPoints(userDTOByManager.getLoyalPoints());
-        user.setRole(userDTOByManager.getRole());
-        user.setOrders(userDTOByManager.getOrders());
-
-        return user;
     }
 }
