@@ -1,8 +1,7 @@
-package com.glowcorner.backend.model.mapper.CreateMapper.Order;
+package com.glowcorner.backend.model.mapper.CreateMapper.Order.Manager;
 
 import com.glowcorner.backend.entity.mongoDB.Order;
 import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
-import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
 import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import org.springframework.stereotype.Component;
 

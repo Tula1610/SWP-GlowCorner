@@ -1,4 +1,4 @@
-package com.glowcorner.backend.model.mapper.CreateMapper.Order;
+package com.glowcorner.backend.model.mapper.CreateMapper.Order.Customer;
 
 import com.glowcorner.backend.entity.mongoDB.Order;
 import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
