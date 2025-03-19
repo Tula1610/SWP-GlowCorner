@@ -4,6 +4,7 @@ import com.glowcorner.backend.entity.mongoDB.Authentication;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.GoogleLoginDTO;
+import com.glowcorner.backend.model.DTO.LoginDTO;
 import com.glowcorner.backend.repository.AuthenticationRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
@@ -54,6 +55,20 @@ public class AuthenticationServiceImp implements AuthenticationService {
 
         // Tạo JWT token
         return jwtUtilHelper.generateToken(user.getEmail(), role.name());
+    }
+
+    @Override
+    public LoginDTO createAuthentication(String username, String password) {
+        Authentication authentication = new Authentication();
+        authentication.setUsername(username);
+        authentication.setPasswordHash(bCryptPasswordEncoder.encode(password));
+        authenticationRepository.save(authentication);
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setUsername(username);
+        loginDTO.setPassword(password);
+
+        return loginDTO;
     }
 
 }
