@@ -1,21 +1,25 @@
 package com.glowcorner.backend.controller;
 
 import com.glowcorner.backend.entity.mongoDB.User;
+import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.LoginDTO;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
 import com.glowcorner.backend.utils.JwtUtilHelper;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,119 +31,129 @@ import java.util.Optional;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final UserRepository userRepository;
+    private final JwtUtilHelper jwtUtilHelper;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String clientId;
 
-    @Autowired
-    private JwtUtilHelper jwtUtilHelper;
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    private String clientSecret;
 
-    // Login
+    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    private String redirectUri;
+
     @Operation(summary = "Login", description = "Authenticate user credentials", security = {})
     @PostMapping("/login")
     public ResponseEntity<ResponseData> login(@RequestBody LoginDTO loginDTO) {
         boolean isAuthenticated = authenticationService.login(loginDTO.getUsername(), loginDTO.getPassword());
-        if (isAuthenticated) {
-            return ResponseEntity.ok(new ResponseData(200, true, "Login successful", null, null, null));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseData(401, false, "Login failed", null, null, null));
+        if (!isAuthenticated) {
+            return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), "Login failed");
         }
-    }
 
-    @PostMapping("/login/google")
-    @Operation(summary = "Login with Google by Email", security = {})
-    public ResponseEntity<ResponseData> loginWithGoogle(@RequestParam("email") String email) {
-        // Tìm user trong database
-        Optional<User> userOpt = userRepository.findByEmail(email);
+        Optional<User> userOpt = userRepository.findByEmail(loginDTO.getUsername());
         if (userOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ResponseData(401, false, "User not found", null, null, null));
+            return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), "User not found");
         }
 
-        // Lấy thông tin user
         User user = userOpt.get();
         String fullName = user.getFullName() != null ? user.getFullName() : "N/A";
         String role = user.getRole().name();
+        String jwtToken = jwtUtilHelper.generateToken(loginDTO.getUsername(), role);
 
-        // Tạo JWT Token
-        String jwtToken = jwtUtilHelper.generateToken(email, role);
-
-        // Trả về response
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("email", email);
+        responseData.put("email", loginDTO.getUsername());
         responseData.put("fullName", fullName);
         responseData.put("role", role);
         responseData.put("jwtToken", jwtToken);
 
-        return ResponseEntity.ok(new ResponseData(200, true, "Login successful", responseData, null, null));
+        return ResponseUtil.success(responseData);
     }
 
-    @PostMapping("/login/token/google")
-    @Operation(summary = "Login with Google by JWT Token", security = {})
-    public ResponseEntity<ResponseData> loginWithGoogleByToken(@RequestParam("jwtToken") String token) {
-        // Kiểm tra token hợp lệ
-        if (!jwtUtilHelper.verifyToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ResponseData(401, false, "Invalid or expired token", null, null, null));
+    @GetMapping("/oauth2/callback")
+    public ResponseEntity<?> oauth2Callback(@RequestParam("code") String code) {
+        try {
+            Map<String, String> tokenResponse = getGoogleAccessToken(code);
+            if (tokenResponse == null || !tokenResponse.containsKey("access_token")) {
+                return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), "Failed to obtain access token");
+            }
+
+            String accessToken = tokenResponse.get("access_token");
+            Map<String, Object> userInfo = getGoogleUserInfo(accessToken);
+            if (userInfo == null || !userInfo.containsKey("email")) {
+                return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), "Failed to obtain user info");
+            }
+
+            String email = (String) userInfo.get("email");
+            String fullName = userInfo.containsKey("name") ? (String) userInfo.get("name") : "N/A";
+            User user = findOrCreateUser(email, fullName);
+
+            String role = user.getRole().name();
+            String jwtToken = jwtUtilHelper.generateToken(email, role);
+
+            String frontendRedirectUrl = buildFrontendRedirectUrl(jwtToken, role, email, fullName);
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create(frontendRedirectUrl))
+                    .build();
+
+        } catch (Exception e) {
+            return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error during Google login: " + e.getMessage());
         }
+    }
 
-        // Lấy email từ token
-        String email = jwtUtilHelper.getUsernameFromToken(token);
+    private Map<String, String> getGoogleAccessToken(String code) {
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, String> tokenRequest = new HashMap<>();
+        tokenRequest.put("code", code);
+        tokenRequest.put("client_id", clientId);
+        tokenRequest.put("client_secret", clientSecret);
+        tokenRequest.put("redirect_uri", redirectUri);
+        tokenRequest.put("grant_type", "authorization_code");
 
-        // Tìm user trong database
+        return restTemplate.postForObject("https://oauth2.googleapis.com/token", tokenRequest, Map.class);
+    }
+
+    private Map<String, Object> getGoogleUserInfo(String accessToken) {
+        RestTemplate restTemplate = new RestTemplate();
+        String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + accessToken;
+        return restTemplate.getForObject(userInfoUrl, Map.class);
+    }
+
+    private User findOrCreateUser(String email, String fullName) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ResponseData(401, false, "User not found", null, null, null));
+            User user = new User();
+            user.setEmail(email);
+            user.setFullName(fullName);
+            user.setRole(Role.CUSTOMER);
+            return userRepository.save(user);
         }
-
-        // Lấy thông tin user
-        User user = userOpt.get();
-        String fullName = user.getFullName() != null ? user.getFullName() : "N/A";
-        String role = user.getRole().name();
-
-        // Trả về response
-        Map<String, Object> responseData = new HashMap<>();
-        responseData.put("email", email);
-        responseData.put("fullName", fullName);
-        responseData.put("role", role);
-        responseData.put("jwtToken", token);
-
-        return ResponseEntity.ok(new ResponseData(200, true, "Login successful", responseData, null, null));
+        return userOpt.get();
     }
 
-    @PostMapping("/login/create")
-    @Operation(summary = "Create Authentication", description = "Create a new authentication", security = {})
-    public ResponseEntity<ResponseData> createAuthentication(@RequestBody LoginDTO loginDTO) {
-        LoginDTO newLoginDTO = authenticationService.createAuthentication(loginDTO.getUsername(), loginDTO.getPassword());
-        return ResponseEntity.ok(new ResponseData(200, true, "Create authentication successful", newLoginDTO, null, null));
+    private String buildFrontendRedirectUrl(String jwtToken, String role, String email, String fullName) throws Exception {
+        String encodedJwtToken = URLEncoder.encode(jwtToken, StandardCharsets.UTF_8.toString());
+        String encodedRole = URLEncoder.encode(role, StandardCharsets.UTF_8.toString());
+        String encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8.toString());
+        String encodedFullName = URLEncoder.encode(fullName, StandardCharsets.UTF_8.toString());
+
+        return UriComponentsBuilder
+                .fromUriString("http://localhost:3000/callback")
+                .queryParam("jwtToken", encodedJwtToken)
+                .queryParam("role", encodedRole)
+                .queryParam("email", encodedEmail)
+                .queryParam("fullName", encodedFullName)
+                .build()
+                .toUriString();
     }
 
-    @Hidden
-    @GetMapping(value = "/login/google", produces = MediaType.TEXT_HTML_VALUE)
-    public String loginWithGoogle(
-            @RequestParam("email") String email,
-            @RequestParam("role") String role,
-            @RequestParam("jwtToken") String jwtToken) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty()) {
-            return "<html><body><h1>Error</h1><p>User not found</p></body></html>";
+    private static class ResponseUtil {
+        static ResponseEntity<ResponseData> success(Object data) {
+            return ResponseEntity.ok(new ResponseData(200, true, "Success", data, null, null));
         }
 
-        User user = userOpt.get();
-        String fullName = user.getFullName() != null ? user.getFullName() : "N/A";
-
-        // Trả về HTML
-        return "<!DOCTYPE html>" +
-                "<html>" +
-                "<head><title>Login Success</title></head>" +
-                "<body>" +
-                "<h1>Login Successful!</h1>" +
-                "<p>Email: " + email + "</p>" +
-                "<p>Full Name: " + fullName + "</p>" +
-                "<p>Role: " + role + "</p>" +
-                "<p>JWT Token: " + jwtToken + "</p>" +
-                "</body>" +
-                "</html>";
+        static ResponseEntity<ResponseData> error(int status, String message) {
+            return ResponseEntity.status(status).body(new ResponseData(status, false, message, null, null, null));
+        }
     }
 }
