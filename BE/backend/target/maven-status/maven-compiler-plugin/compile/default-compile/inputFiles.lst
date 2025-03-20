@@ -84,6 +84,7 @@ D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\b
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\controller\FeedbackController\FeedbackController.java
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\enums\Role.java
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\model\mapper\Product\ProductMapper.java
+D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\model\DTO\request\User\Signup.java
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\entity\mongoDB\Cart.java
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\model\DTO\response\ResponseData.java
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\repository\Counter\CounterRepository.java
@@ -115,3 +116,4 @@ D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\b
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\utils\JwtUtilHelper.java
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\controller\SkinCareRoutineController\SkinCareRoutineController.java
 D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\entity\mongoDB\Authentication.java
+D:\khoi\SWP\swp-backend\SWP-GlowCorner\BE\backend\src\main\java\com\glowcorner\backend\model\DTO\Cart\CartDTO.java
