@@ -103,7 +103,7 @@ public class UserServiceImp implements UserService {
     // Delete a user
     @Override
     public void deleteUser(String userID) {
-        cartRepository.deleteByUserID(userID);
+        cartRepository.deleteCartByUserID(userID);
         userRepository.deleteUserByUserID(userID);
     }
 

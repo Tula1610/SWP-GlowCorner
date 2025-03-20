@@ -1,7 +1,9 @@
 com\glowcorner\backend\controller\OrderController\OrderController.class
 com\glowcorner\backend\controller\QuizController\QuizController.class
+com\glowcorner\backend\model\DTO\request\SkinCareRoutine\CreateRoutineRequest.class
 com\glowcorner\backend\service\implement\AnswerOptionServiceImp.class
 com\glowcorner\backend\config\SwaggerConfig.class
+com\glowcorner\backend\model\DTO\request\Feedback\CreateFeedbackRequest.class
 com\glowcorner\backend\service\implement\ProductServiceImp.class
 com\glowcorner\backend\model\mapper\User\UserMapperManager.class
 com\glowcorner\backend\service\implement\QuizServiceImp.class
@@ -17,6 +19,7 @@ com\glowcorner\backend\service\interfaces\OrderService.class
 com\glowcorner\backend\controller\UserController\UserControllerManager.class
 com\glowcorner\backend\repository\OrderDetailRepository.class
 com\glowcorner\backend\entity\mongoDB\Authentication.class
+com\glowcorner\backend\model\mapper\CreateMapper\SkinCareRoutine\CreateRoutineRequestMapper.class
 com\glowcorner\backend\model\mapper\CreateMapper\Order\Customer\CustomerOrderDetailMapper.class
 com\glowcorner\backend\service\implement\CartServiceImp.class
 com\glowcorner\backend\entity\mongoDB\CartItem.class
@@ -26,12 +29,15 @@ com\glowcorner\backend\repository\FeedbackRepository.class
 com\glowcorner\backend\model\DTO\Cart\CartItemDTO.class
 com\glowcorner\backend\service\interfaces\AuthenticationService.class
 com\glowcorner\backend\entity\mongoDB\Cart.class
+com\glowcorner\backend\model\DTO\request\Promotion\CreatePromotionRequest.class
 com\glowcorner\backend\model\mapper\Order\OrderMapper.class
 com\glowcorner\backend\repository\PromotionRepository.class
 com\glowcorner\backend\BackendApplication.class
+com\glowcorner\backend\model\DTO\request\Quiz\CreateAnswerOptionRequest.class
 com\glowcorner\backend\controller\UserController\UserControllerStaff.class
 com\glowcorner\backend\controller\FeedbackController\FeedbackController.class
 com\glowcorner\backend\utils\JwtUtilHelper.class
+com\glowcorner\backend\model\mapper\CreateMapper\Quiz\CreateAnswerOptionRequestMapper.class
 com\glowcorner\backend\model\DTO\request\User\CreateCustomerRequest.class
 com\glowcorner\backend\repository\SkinCareRoutineRepository.class
 com\glowcorner\backend\model\DTO\request\User\CreateUserRequest.class
@@ -46,6 +52,7 @@ com\glowcorner\backend\model\DTO\response\ResponseData.class
 com\glowcorner\backend\model\DTO\User\UserDTOByBeautyAdvisor.class
 com\glowcorner\backend\service\interfaces\FeedbackService.class
 com\glowcorner\backend\model\mapper\User\UserMapperBeautyAdvisor.class
+com\glowcorner\backend\model\mapper\CreateMapper\Promotion\CreatePromotionRequestMapper.class
 com\glowcorner\backend\service\interfaces\UserService.class
 com\glowcorner\backend\model\DTO\Cart\CartDTO$CartDTOBuilder.class
 com\glowcorner\backend\repository\OrderRepository.class
@@ -79,11 +86,13 @@ com\glowcorner\backend\model\DTO\Order\OrderDTO.class
 com\glowcorner\backend\repository\ProductRepository.class
 com\glowcorner\backend\model\mapper\Cart\CartMapper.class
 com\glowcorner\backend\entity\mongoDB\SkinCareRoutine.class
+com\glowcorner\backend\model\mapper\CreateMapper\Quiz\CreateQuizRequestMapper.class
 com\glowcorner\backend\entity\mongoDB\Order.class
 com\glowcorner\backend\model\DTO\GoogleLoginDTO.class
 com\glowcorner\backend\model\mapper\CreateMapper\Order\Customer\CustomerCreateOrderRequestMapper.class
 com\glowcorner\backend\model\DTO\request\User\Signup.class
 com\glowcorner\backend\controller\OrderController\CustomerOrderController.class
+com\glowcorner\backend\model\DTO\request\Quiz\CreateQuizRequest.class
 com\glowcorner\backend\model\mapper\CreateMapper\Product\CreateProductRequestMapper.class
 com\glowcorner\backend\service\implement\OrderServiceImp.class
 com\glowcorner\backend\model\DTO\request\Order\CustomerOrderDetailRequest.class
@@ -114,6 +123,7 @@ com\glowcorner\backend\repository\UserRepository.class
 com\glowcorner\backend\model\DTO\Order\OrderDetailDTO.class
 com\glowcorner\backend\model\DTO\ProductDTO.class
 com\glowcorner\backend\service\implement\CloundinaryServiceImp.class
+com\glowcorner\backend\model\mapper\CreateMapper\Feedback\CreateFeedbackRequestMapper.class
 com\glowcorner\backend\service\implement\AuthenticationServiceImp.class
 com\glowcorner\backend\entity\mongoDB\Promotion.class
 com\glowcorner\backend\model\DTO\User\UserDTOByCustomer.class
