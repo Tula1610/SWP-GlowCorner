@@ -72,6 +72,7 @@ com\glowcorner\backend\repository\AnswerOptionRepository.class
 com\glowcorner\backend\model\DTO\PromotionDTO.class
 com\glowcorner\backend\repository\CounterRepository.class
 com\glowcorner\backend\entity\mongoDB\User.class
+com\glowcorner\backend\service\interfaces\CloudinaryService.class
 com\glowcorner\backend\controller\UserController\UserControllerBeautyAdvisor.class
 com\glowcorner\backend\security\CustomUserDetailService.class
 com\glowcorner\backend\model\DTO\Order\OrderDTO.class
@@ -100,6 +101,7 @@ com\glowcorner\backend\service\implement\SkinCareRoutineServiceImp.class
 com\glowcorner\backend\model\DTO\request\Product\CreateProductRequest.class
 com\glowcorner\backend\model\mapper\CreateMapper\Order\Manager\CreateOrderRequestMapper.class
 com\glowcorner\backend\service\interfaces\CartService.class
+com\glowcorner\backend\config\CloudinaryConfig.class
 com\glowcorner\backend\model\mapper\CreateMapper\Order\Manager\CreateOrderDetailRequestMapper.class
 com\glowcorner\backend\service\interfaces\SkinCareRoutineService.class
 com\glowcorner\backend\entity\mongoDB\OrderDetail.class
@@ -110,7 +112,7 @@ com\glowcorner\backend\entity\mongoDB\Product.class
 com\glowcorner\backend\repository\UserRepository.class
 com\glowcorner\backend\model\DTO\Order\OrderDetailDTO.class
 com\glowcorner\backend\model\DTO\ProductDTO.class
+com\glowcorner\backend\service\implement\CloundinaryServiceImp.class
 com\glowcorner\backend\service\implement\AuthenticationServiceImp.class
 com\glowcorner\backend\entity\mongoDB\Promotion.class
-com\glowcorner\backend\model\DTO\User\UserDTOByCustomer.class
-com\glowcorner\backend\service\implement\UserServiceImp.class
+com\glo

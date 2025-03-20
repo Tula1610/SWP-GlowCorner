@@ -82,6 +82,7 @@ public class AuthenticationController {
         responseData.put("email", email);
         responseData.put("fullName", user.getFullName());
         responseData.put("role", role);
+        responseData.put("userID", user.getId());
         responseData.put("jwtToken", jwtToken);
 
         return ResponseUtil.success(responseData);
