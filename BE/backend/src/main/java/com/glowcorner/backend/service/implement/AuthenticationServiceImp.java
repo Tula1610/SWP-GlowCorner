@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -61,6 +62,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
         authenticationRepository.save(authentication);
 
         Cart cart = new Cart();
+        cart.setItems(new ArrayList<>());
         cart.setUserID(userID);
         cartRepository.save(cart);
         userRepository.save(user);

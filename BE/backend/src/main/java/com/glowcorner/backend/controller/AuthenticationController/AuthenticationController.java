@@ -27,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -189,6 +190,7 @@ public class AuthenticationController {
             user.setFullName(fullName);
             user.setRole(Role.CUSTOMER);
             Cart cart = new Cart();
+            cart.setItems(new ArrayList<>());
             cart.setUserID(user.getUserID());
             user.setCart(cart);
             cartRepository.save(cart);
