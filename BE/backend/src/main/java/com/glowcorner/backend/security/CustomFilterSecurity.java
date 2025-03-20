@@ -53,6 +53,7 @@ public class CustomFilterSecurity {
                 "/auth/login","/auth/login/token/google",
                 "/oauth2/authorization/google", "/login/oauth2/code/google", "/auth/login/google/**","/auth/oauth2/callback",
                 "/v3/api-docs/**",
+                "/auth/signup"
         };
 
         String[] adminUrls = {"/manager/users/**"};

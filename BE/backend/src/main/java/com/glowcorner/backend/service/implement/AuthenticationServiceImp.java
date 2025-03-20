@@ -28,6 +28,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
     private UserRepository userRepository;
     @Autowired
     private JwtUtilHelper jwtUtilHelper;
+    @Autowired
+    private CounterServiceImpl counterServiceImpl;
 
     @Override
     public boolean login(String username, String password) {
@@ -36,39 +38,61 @@ public class AuthenticationServiceImp implements AuthenticationService {
     }
 
     @Override
-    public String loginWithGoogle(GoogleLoginDTO googleLoginDTO) {
-        Optional<Authentication> existingUser = authenticationRepository.findByUsername(googleLoginDTO.getEmail());
-
-        User user;
+    public boolean signup(String username, String password) {
+        Optional<Authentication> existingUser = authenticationRepository.findByUsername(username);
         if (existingUser.isPresent()) {
-            user = existingUser.get().getUserID();
-        } else {
-            // Nếu user chưa tồn tại, tạo mới user mà không cần Authentication
-            user = new User();
-            user.setEmail(googleLoginDTO.getEmail());
-            user.setRole(Role.CUSTOMER); // Mặc định role là USER
-            userRepository.save(user);
+            return false;
         }
 
-        // Lấy role từ user
-        Role role = user.getRole();
+        String userID = counterServiceImpl.getNextUserID();
 
-        // Tạo JWT token
-        return jwtUtilHelper.generateToken(user.getEmail(), role.name());
-    }
+        User user = new User();
+        user.setUserID(userID);
+        user.setRole(Role.CUSTOMER); // Mặc định role là USER
 
-    @Override
-    public LoginDTO createAuthentication(String username, String password) {
         Authentication authentication = new Authentication();
+        authentication.setUserID(user);
         authentication.setUsername(username);
         authentication.setPasswordHash(bCryptPasswordEncoder.encode(password));
         authenticationRepository.save(authentication);
-
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setUsername(username);
-        loginDTO.setPassword(password);
-
-        return loginDTO;
+        userRepository.save(user);
+        return true;
     }
+
+//    @Override
+//    public String loginWithGoogle(GoogleLoginDTO googleLoginDTO) {
+//        Optional<Authentication> existingUser = authenticationRepository.findByUsername(googleLoginDTO.getEmail());
+//
+//        User user;
+//        if (existingUser.isPresent()) {
+//            user = existingUser.get().getUserID();
+//        } else {
+//            // Nếu user chưa tồn tại, tạo mới user mà không cần Authentication
+//            user = new User();
+//            user.setEmail(googleLoginDTO.getEmail());
+//            user.setRole(Role.CUSTOMER); // Mặc định role là USER
+//            userRepository.save(user);
+//        }
+//
+//        // Lấy role từ user
+//        Role role = user.getRole();
+//
+//        // Tạo JWT token
+//        return jwtUtilHelper.generateToken(user.getEmail(), role.name());
+//    }
+//
+//    @Override
+//    public LoginDTO createAuthentication(String username, String password) {
+//        Authentication authentication = new Authentication();
+//        authentication.setUsername(username);
+//        authentication.setPasswordHash(bCryptPasswordEncoder.encode(password));
+//        authenticationRepository.save(authentication);
+//
+//        LoginDTO loginDTO = new LoginDTO();
+//        loginDTO.setUsername(username);
+//        loginDTO.setPassword(password);
+//
+//        return loginDTO;
+//    }
 
 }
