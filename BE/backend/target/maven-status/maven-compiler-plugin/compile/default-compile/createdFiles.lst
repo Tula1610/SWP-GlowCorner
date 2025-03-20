@@ -82,6 +82,7 @@ com\glowcorner\backend\entity\mongoDB\SkinCareRoutine.class
 com\glowcorner\backend\entity\mongoDB\Order.class
 com\glowcorner\backend\model\DTO\GoogleLoginDTO.class
 com\glowcorner\backend\model\mapper\CreateMapper\Order\Customer\CustomerCreateOrderRequestMapper.class
+com\glowcorner\backend\model\DTO\request\User\Signup.class
 com\glowcorner\backend\controller\OrderController\CustomerOrderController.class
 com\glowcorner\backend\model\mapper\CreateMapper\Product\CreateProductRequestMapper.class
 com\glowcorner\backend\service\implement\OrderServiceImp.class
@@ -115,4 +116,5 @@ com\glowcorner\backend\model\DTO\ProductDTO.class
 com\glowcorner\backend\service\implement\CloundinaryServiceImp.class
 com\glowcorner\backend\service\implement\AuthenticationServiceImp.class
 com\glowcorner\backend\entity\mongoDB\Promotion.class
-com\glo
+com\glowcorner\backend\model\DTO\User\UserDTOByCustomer.class
+com\glowcorner\backend\service\implement\UserServiceImp.class

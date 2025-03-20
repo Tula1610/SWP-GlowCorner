@@ -7,6 +7,7 @@ import com.glowcorner.backend.utils.JwtUtilHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -48,7 +49,6 @@ public class CustomFilterSecurity {
         String[] publicUrls = {
                 "/swagger-ui/**", "/swagger-ui.html","/api-docs/**",
                 "/swagger-ui-custom/**","/swagger-ui-custom",
-                "/login.html","/login?error",
                 "/favicon.ico",
                 "/auth/login","/auth/login/token/google",
                 "/oauth2/authorization/google", "/login/oauth2/code/google", "/auth/login/google/**","/auth/oauth2/callback",
@@ -56,7 +56,10 @@ public class CustomFilterSecurity {
                 "/auth/signup"
         };
 
-        String[] adminUrls = {"/manager/users/**"};
+        String[] showUrls = {"/api/products","/api/orders","/api/cart","/api/categories","/api/skin-care-routines"};
+        String[] updateUrlsCustomer = {"/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
+        String[] adminUrls = {"/**"};
+
 
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -64,6 +67,8 @@ public class CustomFilterSecurity {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, showUrls).permitAll()
+                .requestMatchers(HttpMethod.PUT, updateUrlsCustomer).hasRole("CUSTOMER")
                 .requestMatchers(publicUrls).permitAll()
                 .requestMatchers(adminUrls).hasRole("MANAGER")
                 .anyRequest().authenticated()
