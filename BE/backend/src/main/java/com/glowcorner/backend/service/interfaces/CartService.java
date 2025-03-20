@@ -8,7 +8,7 @@ public interface CartService {
     /* Cart */
     CartDTO getCartByUserID(String userID);
 
-    void addItemToCart(String userID, String productID, int quantity);
+    void addItemToCart(String userID, String productID);
     void removeItemFromCart(String userID, String productID);
     void clearCart(String userID);
 
