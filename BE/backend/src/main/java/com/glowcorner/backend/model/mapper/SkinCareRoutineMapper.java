@@ -8,12 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SkinCareRoutineMapper {
 
-    private final CounterServiceImpl counterServiceImpl;
-
-    public SkinCareRoutineMapper(CounterServiceImpl counterServiceImpl) {
-        this.counterServiceImpl = counterServiceImpl;
-    }
-
     public SkinCareRoutineDTO toDTO(SkinCareRoutine skinCareRoutine) {
         if (skinCareRoutine == null) {
             return null;
@@ -26,16 +20,4 @@ public class SkinCareRoutineMapper {
         );
     }
 
-    public SkinCareRoutine toEntity(SkinCareRoutineDTO skinCareRoutineDTO) {
-        if (skinCareRoutineDTO == null){
-            return null;
-        }
-
-        SkinCareRoutine skinCareRoutine = new SkinCareRoutine();
-        skinCareRoutine.setRoutineID(counterServiceImpl.getNextProductID());
-        skinCareRoutine.setCategory(skinCareRoutineDTO.getCategory());
-        skinCareRoutine.setRoutineName(skinCareRoutineDTO.getRoutineName());
-        skinCareRoutine.setRoutineDescription(skinCareRoutineDTO.getRoutineDescription());
-        return skinCareRoutine;
-    }
 }

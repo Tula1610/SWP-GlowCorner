@@ -24,7 +24,7 @@ public class CustomerCreateOrderRequestMapper {
         }
 
         Order order = new Order();
-        order.setOrderID(counterService.getNextProductID());
+        order.setOrderID(counterService.getNextOrderID());
         order.setOrderDate(request.getOrderDate());
         order.setStatus(request.getStatus());
         order.setTotalAmount(request.getTotalAmount());

@@ -3,6 +3,8 @@ package com.glowcorner.backend.service.implement;
 import com.glowcorner.backend.entity.mongoDB.SkinCareRoutine;
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
+import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
+import com.glowcorner.backend.model.mapper.CreateMapper.SkinCareRoutine.CreateRoutineRequestMapper;
 import com.glowcorner.backend.model.mapper.SkinCareRoutineMapper;
 import com.glowcorner.backend.repository.SkinCareRoutineRepository;
 import com.glowcorner.backend.service.interfaces.SkinCareRoutineService;
@@ -17,9 +19,12 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
 
     private final SkinCareRoutineRepository skinCareRoutineRepository;
 
-    public SkinCareRoutineServiceImp(SkinCareRoutineMapper skinCareRoutineMapper, SkinCareRoutineRepository skinCareRoutineRepository) {
+    private final CreateRoutineRequestMapper createRoutineRequestMapper;
+
+    public SkinCareRoutineServiceImp(SkinCareRoutineMapper skinCareRoutineMapper, SkinCareRoutineRepository skinCareRoutineRepository, CreateRoutineRequestMapper createRoutineRequestMapper) {
         this.skinCareRoutineMapper = skinCareRoutineMapper;
         this.skinCareRoutineRepository = skinCareRoutineRepository;
+        this.createRoutineRequestMapper = createRoutineRequestMapper;
     }
 
     // Get all Skincare routine
@@ -60,8 +65,8 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
 
     // Create a routine
     @Override
-    public SkinCareRoutineDTO createSkinCareRoutine(SkinCareRoutineDTO skinCareRoutineDTO) {
-        SkinCareRoutine skinCareRoutine = skinCareRoutineMapper.toEntity(skinCareRoutineDTO);
+    public SkinCareRoutineDTO createSkinCareRoutine(CreateRoutineRequest request) {
+        SkinCareRoutine skinCareRoutine = createRoutineRequestMapper.fromCreateRequest(request);
         skinCareRoutine = skinCareRoutineRepository.save(skinCareRoutine);
         return skinCareRoutineMapper.toDTO(skinCareRoutine);
     }

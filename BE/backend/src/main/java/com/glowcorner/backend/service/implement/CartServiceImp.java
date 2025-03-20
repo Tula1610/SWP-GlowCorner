@@ -38,7 +38,7 @@ public class CartServiceImp implements CartService {
     // Add item to Cart
     @Override
     public void addItemToCart(String userID, String productID, int quantity) {
-        Cart cart = cartRepository.findById(userID)
+        Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         // Check if the item  already exists in cart
