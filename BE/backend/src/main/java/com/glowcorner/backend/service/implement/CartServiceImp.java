@@ -37,7 +37,7 @@ public class CartServiceImp implements CartService {
 
     // Add item to Cart
     @Override
-    public void addItemToCart(String userID, String productID, int quantity) {
+    public void addItemToCart(String userID, String productID) {
         Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
@@ -46,7 +46,7 @@ public class CartServiceImp implements CartService {
         for (CartItem cartItem : cart.getItems()) {
             if (cartItem.getProductID().equals(productID)) {
                 // Update the quantity
-                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
                 productExists = true;
                 break;
             }
@@ -56,7 +56,7 @@ public class CartServiceImp implements CartService {
         if (!productExists) {
             CartItemDTO itemDTO = new CartItemDTO();
             itemDTO.setUserID(userID);
-            itemDTO.setQuantity(quantity);
+            itemDTO.setQuantity(1);
             itemDTO.setProductID(productID);
             CartItem item = cartItemMapper.toCartItem(itemDTO);
             cart.getItems().add(item);
