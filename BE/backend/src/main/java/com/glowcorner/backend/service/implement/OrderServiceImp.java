@@ -19,6 +19,7 @@ import com.glowcorner.backend.service.interfaces.OrderService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,11 +101,31 @@ public class OrderServiceImp implements OrderService {
     // Customer create order
     @Override
     public OrderDTO customerCreateOrder(CustomerCreateOrderRequest request) {
+        // Bước 1: Chuyển request thành Order
         Order order = customerCreateOrderRequestMapper.fromCustomerCreateRequest(request);
-        order.setTotalAmount(calculateTotalAmount(order.getOrderDetails()));
+
+        // Bước 2: Lưu order để có được orderID
         order = orderRepository.save(order);
+
+        // Bước 3: Gán orderID vào từng orderDetail
+        List<OrderDetail> orderDetails = order.getOrderDetails().stream()
+                .map(orderDetail -> orderDetailMapper.toOrderDetail(orderDetail, order.getOrderID()))
+                .collect(Collectors.toList());
+
+        // Bước 4: Tính toán totalAmount dựa trên orderDetails
+        order.setTotalAmount(calculateTotalAmount(orderDetails));
+
+        // Bước 5: Lưu orderDetails vào DB
+        orderDetailRepository.saveAll(orderDetails);
+
+        // Bước 6: Cập nhật order với danh sách orderDetails
+        order.setOrderDetails(orderDetails);
+        order = orderRepository.save(order);
+
+        // Bước 7: Trả về DTO
         return orderMapper.toOrderDTO(order);
     }
+
 
     // Get all orders
     @Override

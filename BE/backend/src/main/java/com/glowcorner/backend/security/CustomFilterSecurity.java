@@ -59,7 +59,7 @@ public class CustomFilterSecurity {
         String[] showUrls = {"/api/products","/api/orders/user/**","/api/cart/**","/api/categories","/api/skin-care-routines"};
         String[] updateUrlsCustomer = {"/api/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
         String[] adminUrls = {"/**"};
-        String[] postUrls = {"/api/cart/**","/api/orders/user/**"};
+        String[] postUrls = {"/api/cart/**","/api/orders/**"};
         String[] deleteUrls = {"/api/cart/**"};
 
 
