@@ -2,12 +2,13 @@ package com.glowcorner.backend.service.interfaces;
 
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
+import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
 
 import java.util.List;
 
 public interface SkinCareRoutineService {
 
-    SkinCareRoutineDTO createSkinCareRoutine(SkinCareRoutineDTO skinCareRoutineDTO);
+    SkinCareRoutineDTO createSkinCareRoutine(CreateRoutineRequest request);
     SkinCareRoutineDTO updateSkinCareRoutine(String routineId, SkinCareRoutineDTO skinCareRoutineDTO);
     void deleteSkinCareRoutine(String routineId);
 

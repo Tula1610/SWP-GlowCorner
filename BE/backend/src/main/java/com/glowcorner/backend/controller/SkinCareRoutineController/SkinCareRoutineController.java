@@ -2,6 +2,7 @@ package com.glowcorner.backend.controller.SkinCareRoutineController;
 
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
+import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.SkinCareRoutineService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,8 +71,8 @@ public class SkinCareRoutineController {
     // Create new skincare routine
     @Operation(summary = "Create a new skincare routine", description = "Add a new skin care routine to the catalog")
     @PostMapping
-    public ResponseEntity<ResponseData> createSkinCareRoutine(@RequestBody SkinCareRoutineDTO skinCareRoutineDTO) {
-        SkinCareRoutineDTO createdRoutine = skinCareRoutineService.createSkinCareRoutine(skinCareRoutineDTO);
+    public ResponseEntity<ResponseData> createSkinCareRoutine(@RequestBody CreateRoutineRequest request) {
+        SkinCareRoutineDTO createdRoutine = skinCareRoutineService.createSkinCareRoutine(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseData(201, true, "Skin care routine created", createdRoutine, null, null));
     }
