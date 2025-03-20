@@ -2,14 +2,18 @@ package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.CartItem;
+import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.model.DTO.Cart.CartDTO;
 import com.glowcorner.backend.model.DTO.Cart.CartItemDTO;
 import com.glowcorner.backend.model.mapper.Cart.CartItemMapper;
 import com.glowcorner.backend.model.mapper.Cart.CartMapper;
 import com.glowcorner.backend.repository.CartItemRepository;
 import com.glowcorner.backend.repository.CartRepository;
+import com.glowcorner.backend.repository.ProductRepository;
 import com.glowcorner.backend.service.interfaces.CartService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CartServiceImp implements CartService {
@@ -21,12 +25,14 @@ public class CartServiceImp implements CartService {
     private final CartMapper cartMapper;
 
     private final CartItemMapper cartItemMapper;
+    private final ProductRepository productRepository;
 
-    public CartServiceImp(CartRepository cartRepository, CartItemRepository cartItemRepository, CartMapper cartMapper, CartItemMapper cartItemMapper) {
+    public CartServiceImp(CartRepository cartRepository, CartItemRepository cartItemRepository, CartMapper cartMapper, CartItemMapper cartItemMapper, ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.cartMapper = cartMapper;
         this.cartItemMapper = cartItemMapper;
+        this.productRepository = productRepository;
     }
 
     /* Cart */
@@ -51,6 +57,7 @@ public class CartServiceImp implements CartService {
             if (cartItem.getProductID().equals(productID)) {
                 // Update the quantity
                 cartItem.setQuantity(cartItem.getQuantity() + 1);
+                cartItem.setTotalAmount(calculateItemTotalAmount(userID, productID));
                 cartItemRepository.save(cartItem);
                 productExists = true;
                 break;
@@ -69,6 +76,7 @@ public class CartServiceImp implements CartService {
         }
 
         // Save the updated cart
+        cart.setTotalAmount(calculateCartTotalAmount(cart.getItems()));
         cartRepository.save(cart);
     }
 
@@ -129,6 +137,24 @@ public class CartServiceImp implements CartService {
         }
         throw new RuntimeException("Cart item not found");
 
+    }
+
+
+    /* Calculate Item Total Amount */
+    private Long calculateItemTotalAmount(String userID, String productID) {
+        Product product = productRepository.findByProductID(productID)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        CartItem item = cartItemRepository.findCartItemByUserIDAndProductID(userID, productID)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+        return product.getPrice() * item.getQuantity();
+    }
+
+
+    /* Calculate Cart Total Amount */
+    private Long calculateCartTotalAmount(List<CartItem> items) {
+        return items.stream()
+                .mapToLong(CartItem::getTotalAmount)
+                .sum();
     }
 
 }

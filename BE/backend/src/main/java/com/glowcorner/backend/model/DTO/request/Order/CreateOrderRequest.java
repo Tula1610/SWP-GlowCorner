@@ -17,7 +17,7 @@ public class CreateOrderRequest {
     String customerID;
     LocalDate orderDate;
     String status;
-    Integer totalAmount;
+    Long totalAmount;
     List<CreateOrderDetailRequest> orderDetails;
 
 }

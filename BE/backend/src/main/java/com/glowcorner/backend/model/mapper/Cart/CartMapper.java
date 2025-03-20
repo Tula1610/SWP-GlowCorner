@@ -23,7 +23,8 @@ public class CartMapper {
                 cart.getUserID(),
                 cart.getItems().stream()
                         .map(cartItemMapper::toCartItemDTO)
-                        .collect(java.util.stream.Collectors.toList())
+                        .collect(java.util.stream.Collectors.toList()),
+                cart.getTotalAmount()
         );
     }
 

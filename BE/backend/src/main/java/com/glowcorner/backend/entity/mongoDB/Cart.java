@@ -23,4 +23,6 @@ public class Cart {
     String userID; // Refers to the userID in the User collection
 
     List<CartItem> items; // List of products in the cart
+
+    Long totalAmount;
 }

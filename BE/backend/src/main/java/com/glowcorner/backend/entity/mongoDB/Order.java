@@ -24,7 +24,7 @@ public class Order {
 
     String status; // Status of the order (e.g., "Pending", "Completed")
 
-    Integer totalAmount; // Stored as an integer, representing the total cost of the order
+    Long totalAmount; // Stored as an integer, representing the total cost of the order
 
     List<OrderDetail> orderDetails; // List of OrderDetail objects
 }

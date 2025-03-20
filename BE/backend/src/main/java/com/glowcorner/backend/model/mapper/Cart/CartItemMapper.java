@@ -15,7 +15,8 @@ public class CartItemMapper {
         return new CartItemDTO(
                 cartItem.getUserID(),
                 cartItem.getProductID(),
-                cartItem.getQuantity()
+                cartItem.getQuantity(),
+                cartItem.getTotalAmount()
         );
     }
 
@@ -28,6 +29,7 @@ public class CartItemMapper {
         cartItem.setUserID(cartItemDTO.getUserID());
         cartItem.setProductID(cartItemDTO.getProductID());
         cartItem.setQuantity(cartItemDTO.getQuantity());
+        cartItem.setTotalAmount(cartItemDTO.getTotalAmount());
 
         return cartItem;
     }

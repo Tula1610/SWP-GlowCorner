@@ -14,6 +14,6 @@ public class OrderDetailDTO {
     String orderID;
     String productID;
     Integer quantity;
-    Integer price;
+    Long price;
 
 }

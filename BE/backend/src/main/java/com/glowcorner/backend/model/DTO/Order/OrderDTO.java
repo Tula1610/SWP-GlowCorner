@@ -18,7 +18,7 @@ public class OrderDTO {
     String customerID;
     LocalDate orderDate;
     String status;
-    Integer totalAmount;
+    Long totalAmount;
     List<OrderDetailDTO> orderDetails;
 
 }
