@@ -1,5 +1,6 @@
 package com.glowcorner.backend.controller.AuthenticationController;
 
+import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.LoginDTO;
@@ -7,7 +8,9 @@ import com.glowcorner.backend.model.DTO.request.User.Signup;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.repository.AuthenticationRepository;
 import com.glowcorner.backend.entity.mongoDB.Authentication;
+import com.glowcorner.backend.repository.CartRepository;
 import com.glowcorner.backend.repository.UserRepository;
+import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
 import com.glowcorner.backend.utils.JwtUtilHelper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +43,8 @@ public class AuthenticationController {
     private final JwtUtilHelper jwtUtilHelper;
     private final AuthenticationRepository authenticationRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CartRepository cartRepository;
+    private final CounterServiceImpl counterServiceImpl;
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
@@ -179,9 +185,15 @@ public class AuthenticationController {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
             User user = new User();
+            user.setUserID(counterServiceImpl.getNextUserID());
             user.setEmail(email);
             user.setFullName(fullName);
             user.setRole(Role.CUSTOMER);
+            Cart cart = new Cart();
+            cart.setItems(new ArrayList<>());
+            cart.setUserID(user.getUserID());
+            user.setCart(cart);
+            cartRepository.save(cart);
             return userRepository.save(user);
         }
         return userOpt.get();

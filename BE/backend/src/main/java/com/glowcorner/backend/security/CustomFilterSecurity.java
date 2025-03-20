@@ -63,14 +63,14 @@ public class CustomFilterSecurity {
 
 
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors().and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, showUrls).permitAll()
                 .requestMatchers(HttpMethod.PUT, updateUrlsCustomer).hasRole("CUSTOMER")
-                .requestMatchers(HttpMethod.POST, postUrls).hasAuthority("CUSTOMER")
+                .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
                 .requestMatchers(publicUrls).permitAll()
                 .requestMatchers(adminUrls).hasRole("MANAGER")
                 .anyRequest().authenticated()

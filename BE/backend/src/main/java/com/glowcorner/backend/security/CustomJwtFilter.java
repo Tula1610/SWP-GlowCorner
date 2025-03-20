@@ -35,7 +35,7 @@ public class CustomJwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if ("/auth/login".equals(path) || "/auth/signup".equals(path)) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod()) ||"/auth/login".equals(path) || "/auth/signup".equals(path)) {
             filterChain.doFilter(request, response);
             return;
         }
