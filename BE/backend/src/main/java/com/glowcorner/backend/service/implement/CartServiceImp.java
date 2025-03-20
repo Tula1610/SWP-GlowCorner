@@ -54,7 +54,12 @@ public class CartServiceImp implements CartService {
 
         // If the item does not exist, add it to the cart
         if (!productExists) {
-            cart.getItems().add(new CartItem(userID, productID, quantity));
+            CartItemDTO itemDTO = new CartItemDTO();
+            itemDTO.setUserID(userID);
+            itemDTO.setQuantity(quantity);
+            itemDTO.setProductID(productID);
+            CartItem item = cartItemMapper.toCartItem(itemDTO);
+            cart.getItems().add(item);
         }
 
         // Save the updated cart
