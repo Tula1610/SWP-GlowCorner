@@ -15,4 +15,6 @@ public class CartItemDTO {
     String productID;
     int quantity;
 
+    Long totalAmount;
+
 }

@@ -13,6 +13,6 @@ public class CustomerOrderDetailRequest {
 
     String productID;
     Integer quantity;
-    Integer price;
+    Long price;
 
 }

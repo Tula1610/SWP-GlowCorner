@@ -18,4 +18,6 @@ public class CartDTO {
     String userID;
 
     List<CartItemDTO> items;
+
+    Long totalAmount;
 }

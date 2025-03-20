@@ -21,4 +21,5 @@ public class CartItem {
     String productID;
     int quantity;
 
+    Long totalAmount;
 }

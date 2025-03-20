@@ -218,9 +218,9 @@ public class OrderServiceImp implements OrderService {
     }
 
     /* Calculate Total Amount */
-    private int calculateTotalAmount(List<OrderDetail> orderDetails) {
+    private Long calculateTotalAmount(List<OrderDetail> orderDetails) {
         return orderDetails.stream()
-                .mapToInt(detail -> detail.getQuantity() * detail.getPrice())
+                .mapToLong(detail -> detail.getQuantity() * detail.getPrice())
                 .sum();
     }
 }
