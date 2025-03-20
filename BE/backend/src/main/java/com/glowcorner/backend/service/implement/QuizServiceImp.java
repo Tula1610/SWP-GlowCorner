@@ -2,6 +2,8 @@ package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Quiz;
 import com.glowcorner.backend.model.DTO.QuizDTO;
+import com.glowcorner.backend.model.DTO.request.Quiz.CreateQuizRequest;
+import com.glowcorner.backend.model.mapper.CreateMapper.Quiz.CreateQuizRequestMapper;
 import com.glowcorner.backend.model.mapper.QuizMapper;
 import com.glowcorner.backend.repository.QuizRepository;
 import com.glowcorner.backend.service.interfaces.QuizService;
@@ -15,10 +17,12 @@ public class QuizServiceImp implements QuizService {
 
     private final QuizRepository quizRepository;
     private final QuizMapper quizMapper;
+    private final CreateQuizRequestMapper createQuizRequestMapper;
 
-    public QuizServiceImp(QuizRepository quizRepository, QuizMapper quizMapper) {
+    public QuizServiceImp(QuizRepository quizRepository, QuizMapper quizMapper, CreateQuizRequestMapper createQuizRequestMapper) {
         this.quizRepository = quizRepository;
         this.quizMapper = quizMapper;
+        this.createQuizRequestMapper = createQuizRequestMapper;
     }
 
     @Override
@@ -36,19 +40,18 @@ public class QuizServiceImp implements QuizService {
     }
 
     @Override
-    public QuizDTO createQuiz(QuizDTO quizDTO) {
-        return quizMapper.toDTO(quizRepository.save(quizMapper.toEntity(quizDTO)));
+    public QuizDTO createQuiz(CreateQuizRequest request) {
+        return quizMapper.toDTO(quizRepository.save(createQuizRequestMapper.fromCreateRequest(request)));
     }
 
     @Override
     public QuizDTO updateQuiz(String id, QuizDTO quizDTO) {
         try {
             // Find existing quiz
-            Quiz existingQuiz = quizRepository.findById(id)
+            Quiz existingQuiz = quizRepository.findQuizByQuestionId(id)
                     .orElseThrow(() -> new RuntimeException("Quiz not found"));
 
             // Update
-            if (quizDTO.getQuestionId() != null) existingQuiz.setQuestionId(quizDTO.getQuestionId());
             if (quizDTO.getOptionId() != null) existingQuiz.setOptionId(quizDTO.getOptionId());
             if (quizDTO.getQuizText() != null) existingQuiz.setQuizText(quizDTO.getQuizText());
 

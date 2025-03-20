@@ -7,5 +7,10 @@ public interface CounterService {
     String getNextOrderDetailID();
     String getNextSkinCareRoutineID();
 
+    String getNextFeedbackID();
+    String getNextQuestionID();
+    String getNextPromotionID();
+    String getNextOptionID();
+
     void updateCounter(String counterId, long sequence);
 }

@@ -2,7 +2,6 @@ package com.glowcorner.backend.model.mapper.User;
 
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
-import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import org.springframework.stereotype.Component;
 
 @Component

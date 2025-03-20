@@ -1,6 +1,7 @@
 package com.glowcorner.backend.controller.QuizController;
 
 import com.glowcorner.backend.model.DTO.AnswerOptionDTO;
+import com.glowcorner.backend.model.DTO.request.Quiz.CreateAnswerOptionRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.AnswerOptionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,8 +43,8 @@ public class AnswerOptionController {
 
     @Operation(summary = "Create a new answer option", description = "Add a new answer option to the catalog")
     @PostMapping
-    public ResponseEntity<ResponseData> createAnswerOption(@RequestBody AnswerOptionDTO answerOptionDTO) {
-        AnswerOptionDTO createdAnswerOption = answerOptionService.createAnswerOption(answerOptionDTO);
+    public ResponseEntity<ResponseData> createAnswerOption(@RequestBody CreateAnswerOptionRequest request) {
+        AnswerOptionDTO createdAnswerOption = answerOptionService.createAnswerOption(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseData(201, true, "Answer option created", createdAnswerOption, null, null));
     }

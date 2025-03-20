@@ -12,22 +12,10 @@ public class QuizMapper {
             return null;
         }
         return new QuizDTO(
-                quiz.getId(),
                 quiz.getQuestionId(),
                 quiz.getOptionId(),
                 quiz.getQuizText()
         );
     }
 
-    public Quiz toEntity(QuizDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        Quiz quiz = new Quiz();
-        quiz.setId(dto.getId());
-        quiz.setQuestionId(dto.getQuestionId());
-        quiz.setOptionId(dto.getOptionId());
-        quiz.setQuizText(dto.getQuizText());
-        return quiz;
-    }
 }

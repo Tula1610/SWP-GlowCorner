@@ -6,6 +6,7 @@ import com.glowcorner.backend.model.DTO.Cart.CartDTO;
 import com.glowcorner.backend.model.DTO.Cart.CartItemDTO;
 import com.glowcorner.backend.model.mapper.Cart.CartItemMapper;
 import com.glowcorner.backend.model.mapper.Cart.CartMapper;
+import com.glowcorner.backend.repository.CartItemRepository;
 import com.glowcorner.backend.repository.CartRepository;
 import com.glowcorner.backend.service.interfaces.CartService;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,15 @@ public class CartServiceImp implements CartService {
 
     private final CartRepository cartRepository;
 
+    private final CartItemRepository cartItemRepository;
+
     private final CartMapper cartMapper;
 
     private final CartItemMapper cartItemMapper;
 
-    public CartServiceImp(CartRepository cartRepository, CartMapper cartMapper, CartItemMapper cartItemMapper) {
+    public CartServiceImp(CartRepository cartRepository, CartItemRepository cartItemRepository, CartMapper cartMapper, CartItemMapper cartItemMapper) {
         this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
         this.cartMapper = cartMapper;
         this.cartItemMapper = cartItemMapper;
     }
@@ -47,6 +51,7 @@ public class CartServiceImp implements CartService {
             if (cartItem.getProductID().equals(productID)) {
                 // Update the quantity
                 cartItem.setQuantity(cartItem.getQuantity() + 1);
+                cartItemRepository.save(cartItem);
                 productExists = true;
                 break;
             }
@@ -59,6 +64,7 @@ public class CartServiceImp implements CartService {
             itemDTO.setQuantity(1);
             itemDTO.setProductID(productID);
             CartItem item = cartItemMapper.toCartItem(itemDTO);
+            cartItemRepository.save(item);
             cart.getItems().add(item);
         }
 

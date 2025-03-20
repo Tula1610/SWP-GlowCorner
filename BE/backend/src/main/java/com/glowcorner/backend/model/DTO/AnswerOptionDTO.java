@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnswerOptionDTO {
 
-    String id;
     String optionID;
     Category category;
     String optionText;

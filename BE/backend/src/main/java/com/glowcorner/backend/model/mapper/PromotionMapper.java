@@ -20,16 +20,4 @@ public class PromotionMapper {
         );
     }
 
-    public Promotion toEntity(PromotionDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        Promotion promotion = new Promotion();
-        promotion.setId(dto.getPromotionID());
-        promotion.setPromotionName(dto.getPromotionName());
-        promotion.setDiscount(dto.getDiscount());
-        promotion.setStartDate(dto.getStartDate());
-        promotion.setEndDate(dto.getEndDate());
-        return promotion;
-    }
 }

@@ -1,5 +1,6 @@
 package com.glowcorner.backend.service.implement;
 
+import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.entity.mongoDB.Authentication;
 import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
@@ -7,14 +8,16 @@ import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
 import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
-import com.glowcorner.backend.model.mapper.CreateMapper.User.CreateCustomerRequestMapper;
+import com.glowcorner.backend.model.mapper.CreateMapper.User.Customer.CreateCustomerRequestMapper;
+import com.glowcorner.backend.model.mapper.CreateMapper.User.Manager.CreateUserRequestMapper;
 import com.glowcorner.backend.model.mapper.User.*;
 import com.glowcorner.backend.repository.AuthenticationRepository;
+import com.glowcorner.backend.repository.CartRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,20 +32,31 @@ public class UserServiceImp implements UserService {
 
     private final UserMapperBeautyAdvisor userMapperBeautyAdvisor;
 
-    private final UserCreateRequestMapper userCreateRequestMapper;
+    private final CreateUserRequestMapper createUserRequestMapper;
 
     private final CreateCustomerRequestMapper customerCreateRequestMapper;
 
-    @Autowired
-    private AuthenticationRepository authenticationRepository;
+    private final AuthenticationRepository authenticationRepository;
 
-    public UserServiceImp(UserRepository userRepository, UserMapperManager userMapperManager, UserMapperCustomer userMapperCustomer, UserMapperBeautyAdvisor userMapperBeautyAdvisor, UserCreateRequestMapper userCreateRequestMapper, CreateCustomerRequestMapper customerCreateRequestMapper) {
+    private final CartRepository cartRepository;
+
+    public UserServiceImp(
+            UserRepository userRepository,
+            UserMapperManager userMapperManager,
+            UserMapperCustomer userMapperCustomer,
+            UserMapperBeautyAdvisor userMapperBeautyAdvisor,
+            CreateUserRequestMapper createUserRequestMapper,
+            CreateCustomerRequestMapper customerCreateRequestMapper,
+            AuthenticationRepository authenticationRepository,
+            CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.userMapperManager = userMapperManager;
         this.userMapperCustomer = userMapperCustomer;
         this.userMapperBeautyAdvisor = userMapperBeautyAdvisor;
-        this.userCreateRequestMapper = userCreateRequestMapper;
+        this.createUserRequestMapper = createUserRequestMapper;
         this.customerCreateRequestMapper = customerCreateRequestMapper;
+        this.authenticationRepository = authenticationRepository;
+        this.cartRepository = cartRepository;
     }
 
     /* Manager */
@@ -67,7 +81,7 @@ public class UserServiceImp implements UserService {
     // Create a new user
     @Override
     public UserDTOByManager createUser(CreateUserRequest request) {
-        User user = userCreateRequestMapper.fromCreateRequest(request);
+        User user = createUserRequestMapper.fromCreateRequest(request);
         user = userRepository.save(user);
         return userMapperManager.toUserDTO(user);
     }
@@ -115,7 +129,8 @@ public class UserServiceImp implements UserService {
     // Delete a user
     @Override
     public void deleteUser(String userID) {
-        userRepository.deleteById(userID);
+        cartRepository.deleteCartByUserID(userID);
+        userRepository.deleteUserByUserID(userID);
     }
 
     // Search user by name
@@ -134,6 +149,10 @@ public class UserServiceImp implements UserService {
     @Override
     public UserDTOByCustomer createUser(CreateCustomerRequest request) {
         User user = customerCreateRequestMapper.fromCreateRequest(request);
+        Cart cart = new Cart();
+        cart.setItems(new ArrayList<>());
+        user.setCart(cart);
+        cartRepository.save(cart);
         user = userRepository.save(user);
         return userMapperCustomer.toUserDTO(user);
     }

@@ -1,6 +1,7 @@
 package com.glowcorner.backend.controller.QuizController;
 
 import com.glowcorner.backend.model.DTO.QuizDTO;
+import com.glowcorner.backend.model.DTO.request.Quiz.CreateQuizRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,8 +43,8 @@ public class QuizController {
 
     @Operation(summary = "Create a new quiz", description = "Add a new quiz to the catalog")
     @PostMapping
-    public ResponseEntity<ResponseData> createQuiz(@RequestBody QuizDTO quizDTO) {
-        QuizDTO createdQuiz = quizService.createQuiz(quizDTO);
+    public ResponseEntity<ResponseData> createQuiz(@RequestBody CreateQuizRequest request) {
+        QuizDTO createdQuiz = quizService.createQuiz(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseData(201, true, "Quiz created", createdQuiz, null, null));
     }

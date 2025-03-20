@@ -2,6 +2,8 @@ package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Feedback;
 import com.glowcorner.backend.model.DTO.FeedbackDTO;
+import com.glowcorner.backend.model.DTO.request.Feedback.CreateFeedbackRequest;
+import com.glowcorner.backend.model.mapper.CreateMapper.Feedback.CreateFeedbackRequestMapper;
 import com.glowcorner.backend.model.mapper.FeedbackMapper;
 import com.glowcorner.backend.repository.FeedbackRepository;
 import com.glowcorner.backend.service.interfaces.FeedbackService;
@@ -15,10 +17,12 @@ public class FeedbackServiceImp implements FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final FeedbackMapper feedbackMapper;
+    private final CreateFeedbackRequestMapper createFeedbackRequestMapper;
 
-    public FeedbackServiceImp(FeedbackRepository feedbackRepository, FeedbackMapper feedbackMapper) {
+    public FeedbackServiceImp(FeedbackRepository feedbackRepository, FeedbackMapper feedbackMapper, CreateFeedbackRequestMapper createFeedbackRequestMapper) {
         this.feedbackRepository = feedbackRepository;
         this.feedbackMapper = feedbackMapper;
+        this.createFeedbackRequestMapper = createFeedbackRequestMapper;
     }
 
     @Override
@@ -36,8 +40,8 @@ public class FeedbackServiceImp implements FeedbackService {
     }
 
     @Override
-    public FeedbackDTO createFeedback(FeedbackDTO feedbackDTO) {
-        return feedbackMapper.toDTO(feedbackRepository.save(feedbackMapper.toEntity(feedbackDTO)));
+    public FeedbackDTO createFeedback(CreateFeedbackRequest request) {
+        return feedbackMapper.toDTO(feedbackRepository.save(createFeedbackRequestMapper.fromCreateRequest(request)));
     }
 
     @Override

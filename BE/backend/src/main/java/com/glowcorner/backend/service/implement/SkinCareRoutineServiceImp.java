@@ -75,7 +75,7 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
     @Override
     public SkinCareRoutineDTO updateSkinCareRoutine(String routineId, SkinCareRoutineDTO skinCareRoutineDTO) {
         try {
-            SkinCareRoutine existingRoutine = skinCareRoutineRepository.findById(routineId)
+            SkinCareRoutine existingRoutine = skinCareRoutineRepository.findByRoutineID(routineId)
                     .orElseThrow(() -> new RuntimeException("Skin care routine not found"));
 
             if (skinCareRoutineDTO.getCategory() != null) existingRoutine.setCategory(skinCareRoutineDTO.getCategory());

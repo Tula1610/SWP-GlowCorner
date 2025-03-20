@@ -2,6 +2,8 @@ package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Promotion;
 import com.glowcorner.backend.model.DTO.PromotionDTO;
+import com.glowcorner.backend.model.DTO.request.Promotion.CreatePromotionRequest;
+import com.glowcorner.backend.model.mapper.CreateMapper.Promotion.CreatePromotionRequestMapper;
 import com.glowcorner.backend.model.mapper.PromotionMapper;
 import com.glowcorner.backend.repository.PromotionRepository;
 import com.glowcorner.backend.service.interfaces.PromotionService;
@@ -14,10 +16,12 @@ public class PromotionServiceImp implements PromotionService {
 
     private final PromotionMapper promotionMapper;
     private final PromotionRepository promotionRepository;
+    private final CreatePromotionRequestMapper createPromotionRequestMapper;
 
-    public PromotionServiceImp(PromotionMapper promotionMapper, PromotionRepository promotionRepository) {
+    public PromotionServiceImp(PromotionMapper promotionMapper, PromotionRepository promotionRepository, CreatePromotionRequestMapper createPromotionRequestMapper) {
         this.promotionMapper = promotionMapper;
         this.promotionRepository = promotionRepository;
+        this.createPromotionRequestMapper = createPromotionRequestMapper;
     }
 
     @Override
@@ -45,8 +49,8 @@ public class PromotionServiceImp implements PromotionService {
     }
 
     @Override
-    public PromotionDTO createPromotion(PromotionDTO promotionDTO) {
-        Promotion promotion = promotionMapper.toEntity(promotionDTO);
+    public PromotionDTO createPromotion(CreatePromotionRequest request) {
+        Promotion promotion = createPromotionRequestMapper.fromCreateRequest(request);
         promotion = promotionRepository.save(promotion);
         return promotionMapper.toDTO(promotion);
     }
@@ -54,7 +58,7 @@ public class PromotionServiceImp implements PromotionService {
     @Override
     public PromotionDTO updatePromotion(String id, PromotionDTO promotionDTO) {
         try {
-            Promotion existingPromotion = promotionRepository.findById(id)
+            Promotion existingPromotion = promotionRepository.findPromotionByPromotionID(id)
                     .orElseThrow(() -> new RuntimeException("Promotion not found"));
 
             if (promotionDTO.getPromotionName() != null) existingPromotion.setPromotionName(promotionDTO.getPromotionName());

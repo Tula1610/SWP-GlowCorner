@@ -12,22 +12,10 @@ public class AnswerOptionMapper {
             return null;
         }
         return new AnswerOptionDTO(
-                answerOption.getId(),
                 answerOption.getOptionID(),
                 answerOption.getCategory(),
                 answerOption.getOptionText()
         );
     }
 
-    public AnswerOption toEntity(AnswerOptionDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        AnswerOption answerOption = new AnswerOption();
-        answerOption.setId(dto.getId());
-        answerOption.setOptionID(dto.getOptionID());
-        answerOption.setCategory(dto.getCategory());
-        answerOption.setOptionText(dto.getOptionText());
-        return answerOption;
-    }
 }

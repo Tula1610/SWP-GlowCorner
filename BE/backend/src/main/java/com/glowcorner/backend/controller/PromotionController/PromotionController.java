@@ -1,6 +1,7 @@
 package com.glowcorner.backend.controller.PromotionController;
 
 import com.glowcorner.backend.model.DTO.PromotionDTO;
+import com.glowcorner.backend.model.DTO.request.Promotion.CreatePromotionRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.PromotionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,8 +58,8 @@ public class PromotionController {
     // Create a new promotion
     @Operation(summary = "Create a new promotion", description = "Add a new promotion to the catalog")
     @PostMapping
-    public ResponseEntity<ResponseData> createPromotion(@RequestBody PromotionDTO promotionDTO) {
-        PromotionDTO createdPromotion = promotionService.createPromotion(promotionDTO);
+    public ResponseEntity<ResponseData> createPromotion(@RequestBody CreatePromotionRequest request) {
+        PromotionDTO createdPromotion = promotionService.createPromotion(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseData(201, true, "Promotion created", createdPromotion, null, null));
     }

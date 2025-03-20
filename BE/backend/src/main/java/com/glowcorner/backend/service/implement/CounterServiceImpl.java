@@ -92,6 +92,70 @@ public class CounterServiceImpl implements CounterService {
     }
     // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="getNextFeedbackID">
+    @Override
+    public String getNextFeedbackID() {
+        Counter counter = counterRepository.findById("feedbackID").orElse(null);
+        if (counter == null) {
+            counter = new Counter();
+            counter.setId("feedbackID");
+            counter.setSequence(1);
+        } else {
+            counter.setSequence(counter.getSequence() + 1);
+        }
+        counterRepository.save(counter);
+        return String.format("F%03d", counter.getSequence()); // "F001"
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="getNextQuestionID">
+    @Override
+    public String getNextQuestionID() {
+        Counter counter = counterRepository.findById("questionId").orElse(null);
+        if (counter == null) {
+            counter = new Counter();
+            counter.setId("questionId");
+            counter.setSequence(1);
+        } else {
+            counter.setSequence(counter.getSequence() + 1);
+        }
+        counterRepository.save(counter);
+        return String.format("Q%03d", counter.getSequence()); // "Q001"
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="getNextPromotionID">
+    @Override
+    public String getNextPromotionID() {
+        Counter counter = counterRepository.findById("promotionID").orElse(null);
+        if (counter == null) {
+            counter = new Counter();
+            counter.setId("promotionID");
+            counter.setSequence(1);
+        } else {
+            counter.setSequence(counter.getSequence() + 1);
+        }
+        counterRepository.save(counter);
+        return String.format("P%03d", counter.getSequence()); // "P001"
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="getNextOptionID">
+    @Override
+    public String getNextOptionID() {
+        Counter counter = counterRepository.findById("optionID").orElse(null);
+        if (counter == null) {
+            counter = new Counter();
+            counter.setId("optionID");
+            counter.setSequence(1);
+        } else {
+            counter.setSequence(counter.getSequence() + 1);
+        }
+        counterRepository.save(counter);
+        return String.format("O%03d", counter.getSequence()); // "O001"
+    }
+    // </editor-fold>
+
 
     // <editor-fold defaultstate="collapsed" desc="updateCounter">
     @Override

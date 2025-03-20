@@ -1,7 +1,10 @@
 package com.glowcorner.backend.service.implement;
 
+import com.glowcorner.backend.entity.mongoDB.AnswerOption;
 import com.glowcorner.backend.model.DTO.AnswerOptionDTO;
+import com.glowcorner.backend.model.DTO.request.Quiz.CreateAnswerOptionRequest;
 import com.glowcorner.backend.model.mapper.AnswerOptionMapper;
+import com.glowcorner.backend.model.mapper.CreateMapper.Quiz.CreateAnswerOptionRequestMapper;
 import com.glowcorner.backend.repository.AnswerOptionRepository;
 import com.glowcorner.backend.service.interfaces.AnswerOptionService;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,12 @@ public class AnswerOptionServiceImp implements AnswerOptionService {
 
     private final AnswerOptionRepository answerOptionRepository;
     private final AnswerOptionMapper answerOptionMapper;
+    private final CreateAnswerOptionRequestMapper createAnswerOptionRequestMapper;
 
-    public AnswerOptionServiceImp(AnswerOptionRepository answerOptionRepository, AnswerOptionMapper answerOptionMapper) {
+    public AnswerOptionServiceImp(AnswerOptionRepository answerOptionRepository, AnswerOptionMapper answerOptionMapper, CreateAnswerOptionRequestMapper createAnswerOptionRequestMapper) {
         this.answerOptionRepository = answerOptionRepository;
         this.answerOptionMapper = answerOptionMapper;
+        this.createAnswerOptionRequestMapper = createAnswerOptionRequestMapper;
     }
 
     @Override
@@ -35,17 +40,29 @@ public class AnswerOptionServiceImp implements AnswerOptionService {
     }
 
     @Override
-    public AnswerOptionDTO createAnswerOption(AnswerOptionDTO answerOptionDTO) {
-        return answerOptionMapper.toDTO(answerOptionRepository.save(answerOptionMapper.toEntity(answerOptionDTO)));
+    public AnswerOptionDTO createAnswerOption(CreateAnswerOptionRequest request) {
+        return answerOptionMapper.toDTO(answerOptionRepository.save(createAnswerOptionRequestMapper.fromCreateRequest(request)));
     }
 
     @Override
     public AnswerOptionDTO updateAnswerOption(String id, AnswerOptionDTO answerOptionDTO) {
-        if (!answerOptionRepository.existsById(id)) {
-            return null;
+        try {
+            // Find existing answer option
+            AnswerOption existingOption = answerOptionRepository.findAnswerOptionByOptionID(id)
+                    .orElseThrow(() -> new RuntimeException("Quiz not found"));
+
+            // Update
+            if (answerOptionDTO.getCategory() != null) existingOption.setCategory(answerOptionDTO.getCategory());
+            if (answerOptionDTO.getOptionText() != null) existingOption.setOptionText(answerOptionDTO.getOptionText());
+
+            // Save update
+            AnswerOption updateOption = answerOptionRepository.save(existingOption);
+
+            // Convert updated quiz entity to DTO
+            return answerOptionMapper.toDTO(updateOption);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail to update option: " + e.getMessage(), e);
         }
-        answerOptionDTO.setId(id);
-        return answerOptionMapper.toDTO(answerOptionRepository.save(answerOptionMapper.toEntity(answerOptionDTO)));
     }
 
     @Override

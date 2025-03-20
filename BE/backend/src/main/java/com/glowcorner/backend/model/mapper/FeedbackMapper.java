@@ -20,16 +20,4 @@ public class FeedbackMapper {
         );
     }
 
-    public Feedback toEntity(FeedbackDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        Feedback feedback = new Feedback();
-        feedback.setFeedbackID(dto.getFeedbackID());
-        feedback.setCustomerID(dto.getCustomerID());
-        feedback.setRating(dto.getRating());
-        feedback.setComment(dto.getComment());
-        feedback.setFeedbackDate(dto.getFeedbackDate());
-        return feedback;
-    }
 }

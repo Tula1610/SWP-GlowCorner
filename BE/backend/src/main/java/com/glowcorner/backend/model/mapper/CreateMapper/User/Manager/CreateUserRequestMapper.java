@@ -1,21 +1,20 @@
-package com.glowcorner.backend.model.mapper.CreateMapper.User;
+package com.glowcorner.backend.model.mapper.CreateMapper.User.Manager;
 
 import com.glowcorner.backend.entity.mongoDB.User;
-import com.glowcorner.backend.enums.Role;
-import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
+import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CreateCustomerRequestMapper {
+public class CreateUserRequestMapper {
 
     private final CounterServiceImpl counterServiceImpl;
 
-    public CreateCustomerRequestMapper(CounterServiceImpl counterServiceImpl) {
+    public CreateUserRequestMapper(CounterServiceImpl counterServiceImpl) {
         this.counterServiceImpl = counterServiceImpl;
     }
 
-    public User fromCreateRequest(CreateCustomerRequest request) {
+    public User fromCreateRequest(CreateUserRequest request) {
         if (request == null){
             return null;
         }
@@ -26,7 +25,8 @@ public class CreateCustomerRequestMapper {
         user.setFullName(request.getFullName());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
-        user.setRole(Role.CUSTOMER);
+        user.setRole(request.getRole());
+        user.setSkinType(request.getSkinType());
         return user;
     }
 

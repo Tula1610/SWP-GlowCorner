@@ -2,11 +2,8 @@ package com.glowcorner.backend.model.mapper.User;
 
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
-import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class UserMapperManager {

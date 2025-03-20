@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/user/{userID}/orders")
 public class CustomerOrderController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
     public CustomerOrderController (OrderService orderService) {
         this.orderService = orderService;
