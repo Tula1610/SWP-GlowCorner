@@ -44,7 +44,7 @@ public class UserControllerManager {
     }
 
     // Search user by name
-    @Operation(summary = "Search a user by name", description = "Search for a user using their name")
+    @Operation(summary = "Search users by name", description = "Search for users using name")
     @GetMapping("/search")
     public ResponseEntity<?> searchUserByName(@RequestParam String name) {
         List<UserDTOByManager> users = userService.searchUserByNameManager(name);

@@ -29,7 +29,7 @@ public class AnswerOptionServiceImp implements AnswerOptionService {
 
     @Override
     public AnswerOptionDTO getAnswerOptionById(String id) {
-        return answerOptionRepository.findById(id)
+        return answerOptionRepository.findAnswerOptionByOptionID(id)
                 .map(answerOptionMapper::toDTO)
                 .orElse(null);
     }

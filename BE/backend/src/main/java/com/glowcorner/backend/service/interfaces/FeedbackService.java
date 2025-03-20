@@ -8,11 +8,11 @@ public interface FeedbackService {
 
     List<FeedbackDTO> getAllFeedbacks();
 
-    FeedbackDTO getFeedbackById(int id);
+    FeedbackDTO getFeedbackById(String id);
 
     FeedbackDTO createFeedback(FeedbackDTO feedbackDTO);
 
-    FeedbackDTO updateFeedback(int id, FeedbackDTO feedbackDTO);
+    FeedbackDTO updateFeedback(String id, FeedbackDTO feedbackDTO);
 
-    void deleteFeedback(int id);
+    void deleteFeedback(String id);
 }

@@ -92,7 +92,7 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
     // Delete a routine
     @Override
     public void deleteSkinCareRoutine(String routineId) {
-        skinCareRoutineRepository.deleteById(routineId);
+        skinCareRoutineRepository.deleteSkinCareRoutineByRoutineID(routineId);
     }
 
 }

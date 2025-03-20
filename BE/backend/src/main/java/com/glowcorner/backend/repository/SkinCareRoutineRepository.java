@@ -13,5 +13,5 @@ public interface SkinCareRoutineRepository extends MongoRepository<SkinCareRouti
     Optional<SkinCareRoutine> findByRoutineID(String id);
     List<SkinCareRoutine> findByCategory(Category category);
     List<SkinCareRoutine> findByRoutineNameRegexIgnoreCase(String regex);
-    void deleteById(String id);
+    void deleteSkinCareRoutineByRoutineID(String routineID);
 }

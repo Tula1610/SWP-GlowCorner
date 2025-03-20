@@ -30,9 +30,18 @@ public class PromotionServiceImp implements PromotionService {
 
     @Override
     public PromotionDTO getPromotionById(String id) {
-        Promotion promotion = promotionRepository.findById(id)
+        Promotion promotion = promotionRepository.findPromotionByPromotionID(id)
                 .orElseThrow(() -> new RuntimeException("Promotion not found"));
         return promotionMapper.toDTO(promotion);
+    }
+
+    @Override
+    public List<PromotionDTO> getPromotionByName(String promotionName) {
+        String regex = ".*" + promotionName + ".*";
+        List<Promotion> promotions = promotionRepository.findPromotionByPromotionNameRegexIgnoreCase(regex);
+        return promotions.stream()
+                .map(promotionMapper::toDTO)
+                .toList();
     }
 
     @Override
@@ -62,6 +71,6 @@ public class PromotionServiceImp implements PromotionService {
 
     @Override
     public void deletePromotion(String id) {
-        promotionRepository.deleteById(id);
+        promotionRepository.deletePromotionByPromotionID(id);
     }
 }
