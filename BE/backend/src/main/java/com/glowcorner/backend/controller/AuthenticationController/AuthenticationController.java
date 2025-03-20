@@ -151,10 +151,10 @@ public class AuthenticationController {
             User user = findOrCreateUser(email, fullName);
 
             String role = user.getRole().name();
-            String userId = user.getUserID();
+            String userID = user.getUserID();
             String jwtToken = jwtUtilHelper.generateToken(email, role);
 
-            String frontendRedirectUrl = buildFrontendRedirectUrl(jwtToken, role, email, fullName, userId);
+            String frontendRedirectUrl = buildFrontendRedirectUrl(jwtToken, role, email, fullName, userID);
             return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create(frontendRedirectUrl))
                     .build();
@@ -200,12 +200,12 @@ public class AuthenticationController {
         return userOpt.get();
     }
 
-    private String buildFrontendRedirectUrl(String jwtToken, String role, String email, String fullName, String userId) throws Exception {
+    private String buildFrontendRedirectUrl(String jwtToken, String role, String email, String fullName, String userID) throws Exception {
         String encodedJwtToken = URLEncoder.encode(jwtToken, StandardCharsets.UTF_8.toString());
         String encodedRole = URLEncoder.encode(role, StandardCharsets.UTF_8.toString());
         String encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8.toString());
         String encodedFullName = URLEncoder.encode(fullName, StandardCharsets.UTF_8.toString());
-        String encodedUserId = URLEncoder.encode(userId, StandardCharsets.UTF_8.toString());
+        String encodedUserId = URLEncoder.encode(userID, StandardCharsets.UTF_8.toString());
 
         return UriComponentsBuilder
                 .fromUriString("http://localhost:3000/callback")
@@ -213,7 +213,7 @@ public class AuthenticationController {
                 .queryParam("role", encodedRole)
                 .queryParam("email", encodedEmail)
                 .queryParam("fullName", encodedFullName)
-                .queryParam("userId", encodedUserId)
+                .queryParam("userID", encodedUserId)
                 .build()
                 .toUriString();
     }
