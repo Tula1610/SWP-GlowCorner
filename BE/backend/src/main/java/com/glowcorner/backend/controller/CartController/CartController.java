@@ -36,8 +36,8 @@ public class CartController {
 
     // Add an item to a cart
     @Operation(summary = "Add an item to the cart", description = "Add an item to the cart using the user ID and product ID")
-    @PostMapping("/{userID}/add")
-    public ResponseEntity<ResponseData> addItemToCart(@PathVariable String userID, @RequestBody String productID, @RequestParam int quantity) {
+    @PostMapping("/{userID}/add/{productID}")
+    public ResponseEntity<ResponseData> addItemToCart(@PathVariable String userID, @PathVariable String productID, @RequestParam int quantity) {
         cartService.addItemToCart(userID, productID, quantity);
         return ResponseEntity.ok(new ResponseData(200, true, "Item added to the cart", null, null, null));
     }

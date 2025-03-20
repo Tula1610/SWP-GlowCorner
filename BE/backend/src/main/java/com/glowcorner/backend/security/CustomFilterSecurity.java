@@ -63,7 +63,7 @@ public class CustomFilterSecurity {
 
 
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors().and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
