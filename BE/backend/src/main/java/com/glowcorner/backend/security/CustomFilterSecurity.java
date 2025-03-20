@@ -59,6 +59,7 @@ public class CustomFilterSecurity {
         String[] showUrls = {"/api/products","/api/orders","/api/cart","/api/categories","/api/skin-care-routines"};
         String[] updateUrlsCustomer = {"/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
         String[] adminUrls = {"/**"};
+        String[] postUrls = {"/api/cart/**"};
 
 
         http
@@ -69,6 +70,7 @@ public class CustomFilterSecurity {
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, showUrls).permitAll()
                 .requestMatchers(HttpMethod.PUT, updateUrlsCustomer).hasRole("CUSTOMER")
+                .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
                 .requestMatchers(publicUrls).permitAll()
                 .requestMatchers(adminUrls).hasRole("MANAGER")
                 .anyRequest().authenticated()

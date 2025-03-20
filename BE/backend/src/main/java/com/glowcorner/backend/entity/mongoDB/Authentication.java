@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "authentication")
@@ -12,7 +13,8 @@ public class Authentication {
     @Id
     String id;
 
-    User userID;
+    @Field("userID")
+    String userID;
 
     String username;
 
