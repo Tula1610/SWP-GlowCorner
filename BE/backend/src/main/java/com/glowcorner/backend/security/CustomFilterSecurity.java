@@ -60,10 +60,11 @@ public class CustomFilterSecurity {
         String[] updateUrlsCustomer = {"/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
         String[] adminUrls = {"/**"};
         String[] postUrls = {"/api/cart/**"};
+        String[] deleteUrls = {"/api/cart/**"};
 
 
         http
-                .cors().and()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -71,6 +72,7 @@ public class CustomFilterSecurity {
                 .requestMatchers(HttpMethod.GET, showUrls).permitAll()
                 .requestMatchers(HttpMethod.PUT, updateUrlsCustomer).hasRole("CUSTOMER")
                 .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
+                .requestMatchers(HttpMethod.DELETE, deleteUrls).hasRole("CUSTOMER")
                 .requestMatchers(publicUrls).permitAll()
                 .requestMatchers(adminUrls).hasRole("MANAGER")
                 .anyRequest().authenticated()
