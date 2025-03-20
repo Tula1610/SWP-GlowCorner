@@ -51,7 +51,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
         user.setRole(Role.CUSTOMER); // Mặc định role là USER
 
         Authentication authentication = new Authentication();
-        authentication.setUserID(user);
+        authentication.setUserID(userID);
         authentication.setUsername(username);
         authentication.setPasswordHash(bCryptPasswordEncoder.encode(password));
         authenticationRepository.save(authentication);

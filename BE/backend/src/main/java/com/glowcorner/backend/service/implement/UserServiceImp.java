@@ -1,6 +1,7 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.User;
+import com.glowcorner.backend.entity.mongoDB.Authentication;
 import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
@@ -8,11 +9,14 @@ import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
 import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.User.CreateCustomerRequestMapper;
 import com.glowcorner.backend.model.mapper.User.*;
+import com.glowcorner.backend.repository.AuthenticationRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -28,6 +32,9 @@ public class UserServiceImp implements UserService {
     private final UserCreateRequestMapper userCreateRequestMapper;
 
     private final CreateCustomerRequestMapper customerCreateRequestMapper;
+
+    @Autowired
+    private AuthenticationRepository authenticationRepository;
 
     public UserServiceImp(UserRepository userRepository, UserMapperManager userMapperManager, UserMapperCustomer userMapperCustomer, UserMapperBeautyAdvisor userMapperBeautyAdvisor, UserCreateRequestMapper userCreateRequestMapper, CreateCustomerRequestMapper customerCreateRequestMapper) {
         this.userRepository = userRepository;
@@ -65,32 +72,45 @@ public class UserServiceImp implements UserService {
         return userMapperManager.toUserDTO(user);
     }
 
-    //Manager update a user
     @Override
     public UserDTOByManager updateUserByManager(String userID, UserDTOByManager userDTOByManager) {
-        //Find existing user
-        try{
+        try {
+            // Tìm user trong DB
             User existingUser = userRepository.findByUserID(userID)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            //Update
-            if(userDTOByManager.getFullName() != null) existingUser.setFullName(userDTOByManager.getFullName());
-            if(userDTOByManager.getEmail() != null) existingUser.setEmail(userDTOByManager.getEmail());
-            if(userDTOByManager.getPhone() != null) existingUser.setPhone(userDTOByManager.getPhone());
-            if(userDTOByManager.getAddress() != null) existingUser.setAddress(userDTOByManager.getAddress());
-            if(userDTOByManager.getSkinType() != null) existingUser.setSkinType(userDTOByManager.getSkinType());
-            if(userDTOByManager.getRole() != null) existingUser.setRole(userDTOByManager.getRole());
+            // Cập nhật thông tin user
+            if (userDTOByManager.getFullName() != null) existingUser.setFullName(userDTOByManager.getFullName());
+            if (userDTOByManager.getEmail() != null) existingUser.setEmail(userDTOByManager.getEmail());
+            if (userDTOByManager.getPhone() != null) existingUser.setPhone(userDTOByManager.getPhone());
+            if (userDTOByManager.getAddress() != null) existingUser.setAddress(userDTOByManager.getAddress());
+            if (userDTOByManager.getSkinType() != null) existingUser.setSkinType(userDTOByManager.getSkinType());
             if (userDTOByManager.getOrders() != null) existingUser.setOrders(userDTOByManager.getOrders());
 
-            //Save update
+            // Nếu có thay đổi role
+            if (userDTOByManager.getRole() != null && !userDTOByManager.getRole().equals(existingUser.getRole())) {
+                existingUser.setRole(userDTOByManager.getRole());
+
+                // Tìm authentication của user
+                Optional<Authentication> authOptional = authenticationRepository.findByUserID(existingUser.getUserID());
+                if (authOptional.isPresent()) {
+                    Authentication auth = new Authentication();
+                    auth.setUserID(existingUser.getUserID());
+                    authenticationRepository.save(auth);
+
+                }
+            }
+
+            // Lưu lại user
             User updatedUser = userRepository.save(existingUser);
 
-            //Convert updated user entity to DTO
             return userMapperManager.toUserDTO(updatedUser);
         } catch (Exception e) {
-            throw  new RuntimeException("Fail to update user: " + e.getMessage(), e);
+            throw new RuntimeException("Fail to update user: " + e.getMessage(), e);
         }
     }
+
+
 
     // Delete a user
     @Override

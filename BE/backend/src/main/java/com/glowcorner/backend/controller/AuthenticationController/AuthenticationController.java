@@ -67,7 +67,7 @@ public class AuthenticationController {
         }
 
         // 3️⃣ Kiểm tra và lấy thông tin User
-        User user = auth.getUserID(); // Giả sử Authentication có tham chiếu trực tiếp đến User
+        User user = userRepository.findByUserID(auth.getUserID()).orElse(null);
         if (user == null) {
             return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "User data missing");
         }
