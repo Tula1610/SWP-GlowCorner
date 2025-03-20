@@ -14,6 +14,7 @@ public class CustomerOrderDetailMapper {
         }
 
         OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderID(request.getOrderID());
         orderDetail.setProductID(request.getProductID());
         orderDetail.setQuantity(request.getQuantity());
         orderDetail.setPrice(request.getPrice());
