@@ -31,7 +31,7 @@ public class FeedbackController {
 
     @Operation(summary = "Get a feedback by ID", description = "Retrieve a single feedback using its ID")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseData> getFeedbackById(@PathVariable int id) {
+    public ResponseEntity<ResponseData> getFeedbackById(@PathVariable String id) {
         FeedbackDTO feedback = feedbackService.getFeedbackById(id);
         if (feedback == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -50,7 +50,7 @@ public class FeedbackController {
 
     @Operation(summary = "Update a feedback", description = "Update an existing feedback using its ID")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseData> updateFeedback(@PathVariable int id, @RequestBody FeedbackDTO feedbackDTO) {
+    public ResponseEntity<ResponseData> updateFeedback(@PathVariable String id, @RequestBody FeedbackDTO feedbackDTO) {
         FeedbackDTO updatedFeedback = feedbackService.updateFeedback(id, feedbackDTO);
         if (updatedFeedback == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -61,7 +61,7 @@ public class FeedbackController {
 
     @Operation(summary = "Delete a feedback by ID", description = "Remove a feedback from the system using its ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFeedback(@PathVariable int id) {
+    public ResponseEntity<Void> deleteFeedback(@PathVariable String id) {
         feedbackService.deleteFeedback(id);
         return ResponseEntity.noContent().build();
     }

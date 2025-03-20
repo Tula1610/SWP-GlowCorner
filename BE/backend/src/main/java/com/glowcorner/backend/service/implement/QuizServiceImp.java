@@ -30,7 +30,7 @@ public class QuizServiceImp implements QuizService {
 
     @Override
     public QuizDTO getQuizById(String id) {
-        return quizRepository.findById(id)
+        return quizRepository.findQuizByQuestionId(id)
                 .map(quizMapper::toDTO)
                 .orElse(null);
     }
@@ -64,6 +64,6 @@ public class QuizServiceImp implements QuizService {
 
     @Override
     public void deleteQuiz(String id) {
-        quizRepository.deleteById(id);
+        quizRepository.deleteQuizByQuestionId(id);
     }
 }

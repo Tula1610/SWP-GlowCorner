@@ -14,5 +14,5 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     List<User> findByFullNameRegexIgnoreCase(String regex);
 
-    void deleteById(String userID);
+    void deleteUserByUserID(String userID);
 }
