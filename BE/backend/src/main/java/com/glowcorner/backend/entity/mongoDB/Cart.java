@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class Cart {
     @Id
     String id;// Unique MongoDB document identifier
 
+    @Field("userID")
     String userID; // Refers to the userID in the User collection
 
     List<CartItem> items; // List of products in the cart
