@@ -14,7 +14,7 @@ import java.util.List;
 
 @Tag(name = "User Management System (Manager)", description = "Operations pertaining to users in the User Management System")
 @RestController
-@RequestMapping("/manager/users")
+@RequestMapping("/api/manager/users")
 public class UserControllerManager {
 
     private final UserService userService;
