@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User Management System (Customer)", description = "Operations pertaining to users in the User Management System")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserControllerCustomer {
 
     private final UserService userService;

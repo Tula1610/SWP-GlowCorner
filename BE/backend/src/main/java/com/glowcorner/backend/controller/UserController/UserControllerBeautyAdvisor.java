@@ -13,7 +13,7 @@ import java.util.List;
 
 @Tag(name = "User Management System (Beauty Advisor)", description = "Operations pertaining to users in the User Management System")
 @RestController
-@RequestMapping("/beautyAdvisor/users")
+@RequestMapping("/api/beautyAdvisor/users")
 public class UserControllerBeautyAdvisor {
 
     private final UserService userService;
