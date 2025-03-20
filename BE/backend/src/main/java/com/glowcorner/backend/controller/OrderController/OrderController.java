@@ -16,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "Order Management System", description = "Operations pertaining to orders in the Order Management System")
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/orders/manager")
 public class OrderController {
 
     private final OrderService orderService;
