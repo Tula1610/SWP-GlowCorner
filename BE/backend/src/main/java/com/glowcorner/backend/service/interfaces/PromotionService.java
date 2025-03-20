@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface PromotionService {
     List<PromotionDTO> getAllPromotions();
+    List<PromotionDTO> getPromotionByName(String promotionName);
     PromotionDTO getPromotionById(String id);
     PromotionDTO createPromotion(PromotionDTO promotionDTO);
     PromotionDTO updatePromotion(String id, PromotionDTO promotionDTO);

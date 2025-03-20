@@ -1,5 +1,6 @@
 package com.glowcorner.backend.service.implement;
 
+import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
@@ -8,6 +9,7 @@ import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
 import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.User.CreateCustomerRequestMapper;
 import com.glowcorner.backend.model.mapper.User.*;
+import com.glowcorner.backend.repository.CartRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
 
+    private final CartRepository cartRepository;
+
     private final UserMapperManager userMapperManager;
 
     private final UserMapperCustomer userMapperCustomer;
@@ -29,13 +33,14 @@ public class UserServiceImp implements UserService {
 
     private final CreateCustomerRequestMapper customerCreateRequestMapper;
 
-    public UserServiceImp(UserRepository userRepository, UserMapperManager userMapperManager, UserMapperCustomer userMapperCustomer, UserMapperBeautyAdvisor userMapperBeautyAdvisor, UserCreateRequestMapper userCreateRequestMapper, CreateCustomerRequestMapper customerCreateRequestMapper) {
+    public UserServiceImp(UserRepository userRepository, UserMapperManager userMapperManager, UserMapperCustomer userMapperCustomer, UserMapperBeautyAdvisor userMapperBeautyAdvisor, UserCreateRequestMapper userCreateRequestMapper, CreateCustomerRequestMapper customerCreateRequestMapper, CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.userMapperManager = userMapperManager;
         this.userMapperCustomer = userMapperCustomer;
         this.userMapperBeautyAdvisor = userMapperBeautyAdvisor;
         this.userCreateRequestMapper = userCreateRequestMapper;
         this.customerCreateRequestMapper = customerCreateRequestMapper;
+        this.cartRepository = cartRepository;
     }
 
     /* Manager */
@@ -60,7 +65,10 @@ public class UserServiceImp implements UserService {
     // Create a new user
     @Override
     public UserDTOByManager createUser(CreateUserRequest request) {
+        Cart newCart = new Cart();
+
         User user = userCreateRequestMapper.fromCreateRequest(request);
+        user.setCart(newCart);
         user = userRepository.save(user);
         return userMapperManager.toUserDTO(user);
     }
@@ -95,7 +103,8 @@ public class UserServiceImp implements UserService {
     // Delete a user
     @Override
     public void deleteUser(String userID) {
-        userRepository.deleteById(userID);
+        cartRepository.deleteByUserID(userID);
+        userRepository.deleteUserByUserID(userID);
     }
 
     // Search user by name

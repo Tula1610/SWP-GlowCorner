@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CartRepository extends MongoRepository<Cart, String> {
     Optional<Cart> findByUserID(String userID);
+    void deleteByUserID(String userID);
 }

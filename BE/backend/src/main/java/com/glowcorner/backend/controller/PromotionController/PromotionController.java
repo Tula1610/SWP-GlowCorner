@@ -42,6 +42,18 @@ public class PromotionController {
         return ResponseEntity.ok(new ResponseData(200, true, "Promotion found", promotion, null, null));
     }
 
+    // Search promotion by name
+    @Operation(summary = "Search promotions by name", description = "Search for promotions using name")
+    @GetMapping("/search")
+    public ResponseEntity<?> searchPromotionByName(@RequestParam String name) {
+        List<PromotionDTO> users = promotionService.getPromotionByName(name);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseData(404, false, "There is no user with name '" + name + "'.", null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "User found", users, null, null));
+    }
+
     // Create a new promotion
     @Operation(summary = "Create a new promotion", description = "Add a new promotion to the catalog")
     @PostMapping

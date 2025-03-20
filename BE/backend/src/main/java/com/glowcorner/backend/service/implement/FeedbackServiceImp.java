@@ -29,8 +29,8 @@ public class FeedbackServiceImp implements FeedbackService {
     }
 
     @Override
-    public FeedbackDTO getFeedbackById(int id) {
-        return feedbackRepository.findById(id)
+    public FeedbackDTO getFeedbackById(String id) {
+        return feedbackRepository.findFeedbackByFeedbackID(id)
                 .map(feedbackMapper::toDTO)
                 .orElse(null);
     }
@@ -41,10 +41,10 @@ public class FeedbackServiceImp implements FeedbackService {
     }
 
     @Override
-    public FeedbackDTO updateFeedback(int id, FeedbackDTO feedbackDTO) {
+    public FeedbackDTO updateFeedback(String id, FeedbackDTO feedbackDTO) {
         try {
             // Find existing feedback
-            Feedback existingFeedback = feedbackRepository.findById(id)
+            Feedback existingFeedback = feedbackRepository.findFeedbackByFeedbackID(id)
                     .orElseThrow(() -> new RuntimeException("Feedback not found"));
 
             // Update
@@ -64,7 +64,7 @@ public class FeedbackServiceImp implements FeedbackService {
     }
 
     @Override
-    public void deleteFeedback(int id) {
-        feedbackRepository.deleteById(id);
+    public void deleteFeedback(String id) {
+        feedbackRepository.deleteFeedbackByFeedbackID(id);
     }
 }
