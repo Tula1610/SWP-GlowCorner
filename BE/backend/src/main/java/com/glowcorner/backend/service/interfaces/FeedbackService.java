@@ -1,6 +1,7 @@
 package com.glowcorner.backend.service.interfaces;
 
 import com.glowcorner.backend.model.DTO.FeedbackDTO;
+import com.glowcorner.backend.model.DTO.request.Feedback.CreateFeedbackRequest;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface FeedbackService {
 
     FeedbackDTO getFeedbackById(String id);
 
-    FeedbackDTO createFeedback(FeedbackDTO feedbackDTO);
+    FeedbackDTO createFeedback(CreateFeedbackRequest request);
 
     FeedbackDTO updateFeedback(String id, FeedbackDTO feedbackDTO);
 

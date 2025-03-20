@@ -1,18 +1,19 @@
-package com.glowcorner.backend.model.DTO;
+package com.glowcorner.backend.model.DTO.request.Quiz;
 
+import com.glowcorner.backend.enums.Category;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.AccessLevel;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class QuizDTO {
+public class CreateAnswerOptionRequest {
 
-    String questionId;
-    String optionId;
-    String quizText;
+    Category category;
+    String optionText;
+
 }

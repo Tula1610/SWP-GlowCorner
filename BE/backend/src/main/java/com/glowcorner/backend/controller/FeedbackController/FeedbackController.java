@@ -1,6 +1,7 @@
 package com.glowcorner.backend.controller.FeedbackController;
 
 import com.glowcorner.backend.model.DTO.FeedbackDTO;
+import com.glowcorner.backend.model.DTO.request.Feedback.CreateFeedbackRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.FeedbackService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,8 +43,8 @@ public class FeedbackController {
 
     @Operation(summary = "Create a new feedback", description = "Add a new feedback to the catalog")
     @PostMapping
-    public ResponseEntity<ResponseData> createFeedback(@RequestBody FeedbackDTO feedbackDTO) {
-        FeedbackDTO createdFeedback = feedbackService.createFeedback(feedbackDTO);
+    public ResponseEntity<ResponseData> createFeedback(@RequestBody CreateFeedbackRequest request) {
+        FeedbackDTO createdFeedback = feedbackService.createFeedback(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseData(201, true, "Feedback created", createdFeedback, null, null));
     }
