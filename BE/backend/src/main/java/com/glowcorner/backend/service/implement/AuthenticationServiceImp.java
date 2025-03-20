@@ -1,11 +1,13 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Authentication;
+import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.GoogleLoginDTO;
 import com.glowcorner.backend.model.DTO.LoginDTO;
 import com.glowcorner.backend.repository.AuthenticationRepository;
+import com.glowcorner.backend.repository.CartRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
 import com.glowcorner.backend.utils.JwtUtilHelper;
@@ -30,6 +32,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
     private JwtUtilHelper jwtUtilHelper;
     @Autowired
     private CounterServiceImpl counterServiceImpl;
+    @Autowired
+    private CartRepository cartRepository;
 
     @Override
     public boolean login(String username, String password) {
@@ -55,6 +59,10 @@ public class AuthenticationServiceImp implements AuthenticationService {
         authentication.setUsername(username);
         authentication.setPasswordHash(bCryptPasswordEncoder.encode(password));
         authenticationRepository.save(authentication);
+
+        Cart cart = new Cart();
+        cart.setUserID(userID);
+        cartRepository.save(cart);
         userRepository.save(user);
         return true;
     }
