@@ -1,6 +1,8 @@
 package com.glowcorner.backend.controller.OrderController;
 
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
+import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
+import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
 import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.OrderService;
@@ -68,6 +70,14 @@ public class CustomerOrderController {
                     .body(new ResponseData(404, false, "No orders found with order date: " + orderDate, null, null, null));
         }
         return ResponseEntity.ok(new ResponseData(200, true, "Orders found", orders, null, null));
+    }
+
+    // Get order detail by order ID
+    @Operation(summary = "Get order info by order ID", description = "Retrieve detailed order information including customer info and order details")
+    @GetMapping("/{orderID}/details")
+    public ResponseEntity<ResponseData> getOrderDetailByOrderID(@PathVariable String userID, @PathVariable String orderID) {
+        OrderInfoDTO orderInfo = orderService.getOrderInfoByOrderID(userID, orderID);
+        return ResponseEntity.ok(new ResponseData(200, true, "Order details found", orderInfo, null, null));
     }
 
 }

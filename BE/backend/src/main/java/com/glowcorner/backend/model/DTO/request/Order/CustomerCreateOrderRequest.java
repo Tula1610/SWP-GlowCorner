@@ -15,9 +15,10 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class CustomerCreateOrderRequest {
 
+    String customerID;
     LocalDate orderDate;
     String status;
     Long totalAmount;
-    List<CustomerOrderDetailRequest> orderDetails;
+    private List<CustomerOrderDetailRequest> orderDetails;
 
 }

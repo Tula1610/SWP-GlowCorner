@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 public class CustomerOrderDetailMapper {
 
     // Convert OrderDetailDTO to OrderDetail entity
-    public OrderDetail toOrderDetail(CustomerOrderDetailRequest request) {
+    public OrderDetail toOrderDetail(CustomerOrderDetailRequest request, String orderID) {
         if (request == null) {
             return null;
         }
 
         OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setOrderID(request.getOrderID());
+        orderDetail.setOrderID(orderID);
         orderDetail.setProductID(request.getProductID());
         orderDetail.setQuantity(request.getQuantity());
         orderDetail.setPrice(request.getPrice());
