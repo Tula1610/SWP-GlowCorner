@@ -2,6 +2,7 @@ package com.glowcorner.backend.service.interfaces;
 
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
+import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
 import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
 import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
 
@@ -32,5 +33,7 @@ public interface OrderService {
 
     /* OrderDetail Query */
     List<OrderDetailDTO> getOrderDetailByOrderID(String orderID);
+
+    OrderInfoDTO getOrderInfoByOrderID(String userID, String orderID);
 
 }

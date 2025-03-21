@@ -2,10 +2,12 @@ package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Order;
 import com.glowcorner.backend.entity.mongoDB.OrderDetail;
+import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
+import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
 import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
 import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.Order.Manager.CreateOrderRequestMapper;
@@ -14,8 +16,11 @@ import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderMapper;
 import com.glowcorner.backend.repository.OrderDetailRepository;
 import com.glowcorner.backend.repository.OrderRepository;
+import com.glowcorner.backend.repository.ProductRepository;
 import com.glowcorner.backend.repository.UserRepository;
+import com.glowcorner.backend.service.interfaces.CounterService;
 import com.glowcorner.backend.service.interfaces.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -29,17 +34,23 @@ public class OrderServiceImp implements OrderService {
 
     private final OrderDetailRepository orderDetailRepository;
 
+    private final ProductRepository productRepository;
+
     private final UserRepository userRepository;
 
     private final OrderMapper orderMapper;
+
+    @Autowired
+    private CounterService counterService;
 
     private final OrderDetailMapper orderDetailMapper;
     private final CreateOrderRequestMapper createOrderRequestMapper;
     private final CustomerCreateOrderRequestMapper customerCreateOrderRequestMapper;
 
-    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, CreateOrderRequestMapper createOrderRequestMapper, CustomerCreateOrderRequestMapper customerCreateOrderRequestMapper) {
+    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductRepository productRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, CreateOrderRequestMapper createOrderRequestMapper, CustomerCreateOrderRequestMapper customerCreateOrderRequestMapper) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
+        this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
@@ -107,6 +118,8 @@ public class OrderServiceImp implements OrderService {
         orderDetailRepository.saveAll(orderDetails);
         return orderMapper.toOrderDTO(order);
     }
+
+
 
     // Get all orders
     @Override
@@ -198,6 +211,58 @@ public class OrderServiceImp implements OrderService {
         } catch (Exception e) {
             throw new RuntimeException("Fail to update order detail: " + e.getMessage(), e);
         }
+    }
+
+    // Get order info by order ID
+    @Override
+    public OrderInfoDTO getOrderInfoByOrderID(String userID, String orderID) {
+        // 1. Find the Order by orderID and userID
+        Order order = orderRepository.findByOrderIDAndCustomerID(orderID, userID)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // 2. Find all OrderDetails by orderID
+        List<OrderDetail> orderDetails = orderDetailRepository.findAllByOrderID(orderID);
+        if (orderDetails.isEmpty()) {
+            throw new RuntimeException("Order details not found");
+        }
+
+        // 3. Fetch User info by userID
+        User user = userRepository.findByUserID(userID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 4. Fetch Product info for each OrderDetail
+        List<OrderInfoDTO.OrderDetailItemDTO> orderDetailItems = orderDetails.stream().map(orderDetail -> {
+            // Fetch Product by productID
+            Product product = productRepository.findByProductID(orderDetail.getProductID())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            OrderInfoDTO.OrderDetailItemDTO item = new OrderInfoDTO.OrderDetailItemDTO();
+            item.setProductID(orderDetail.getProductID());
+            item.setQuantity(orderDetail.getQuantity());
+            item.setPrice(orderDetail.getPrice());
+            item.setName(product.getProductName());
+            item.setImage(product.getImage_url());
+            return item;
+        }).collect(Collectors.toList());
+
+        // 5. Calculate total amount
+        Long totalAmount = calculateTotalAmount(orderDetails);
+
+        // 6. Build the response
+        OrderInfoDTO response = new OrderInfoDTO();
+        response.setOrderID(orderID);
+
+        OrderInfoDTO.CustomerInfoDTO customerInfo = new OrderInfoDTO.CustomerInfoDTO();
+        customerInfo.setName(user.getFullName());
+        customerInfo.setEmail(user.getEmail());
+        customerInfo.setPhone(user.getPhone());
+        customerInfo.setAddress(user.getAddress());
+        response.setCustomerInfo(customerInfo);
+
+        response.setOrderDetails(orderDetailItems);
+        response.setTotalAmount(totalAmount);
+
+        return response;
     }
 
     // Delete order detail

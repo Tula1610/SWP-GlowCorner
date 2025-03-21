@@ -19,6 +19,6 @@ public class CustomerCreateOrderRequest {
     LocalDate orderDate;
     String status;
     Long totalAmount;
-    List<CustomerOrderDetailRequest> orderDetails;
+    private List<CustomerOrderDetailRequest> orderDetails;
 
 }
