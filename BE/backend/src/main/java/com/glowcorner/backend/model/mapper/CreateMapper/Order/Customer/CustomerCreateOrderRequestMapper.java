@@ -25,11 +25,12 @@ public class CustomerCreateOrderRequestMapper {
 
         Order order = new Order();
         order.setOrderID(counterService.getNextOrderID());
+        order.setCustomerID(request.getCustomerID());
         order.setOrderDate(request.getOrderDate());
         order.setStatus(request.getStatus());
         order.setTotalAmount(request.getTotalAmount());
         order.setOrderDetails(request.getOrderDetails().stream()
-                .map(customerOrderDetailMapper::toOrderDetail)
+                .map(detailRequest -> customerOrderDetailMapper.toOrderDetail(detailRequest, order.getOrderID()))
                 .collect(Collectors.toList())
         );
 

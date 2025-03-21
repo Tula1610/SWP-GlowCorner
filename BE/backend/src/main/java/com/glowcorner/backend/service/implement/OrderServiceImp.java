@@ -19,7 +19,6 @@ import com.glowcorner.backend.service.interfaces.OrderService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -104,6 +103,8 @@ public class OrderServiceImp implements OrderService {
         Order order = customerCreateOrderRequestMapper.fromCustomerCreateRequest(request);
         order.setTotalAmount(calculateTotalAmount(order.getOrderDetails()));
         order = orderRepository.save(order);
+        List<OrderDetail> orderDetails = order.getOrderDetails();
+        orderDetailRepository.saveAll(orderDetails);
         return orderMapper.toOrderDTO(order);
     }
 
