@@ -4,6 +4,8 @@ import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.LoginDTO;
+import com.glowcorner.backend.model.DTO.request.User.ChangePasswordRequest;
+import com.glowcorner.backend.model.DTO.request.User.ForgotPasswordRequest;
 import com.glowcorner.backend.model.DTO.request.User.Signup;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.repository.AuthenticationRepository;
@@ -225,6 +227,26 @@ public class AuthenticationController {
 
         static ResponseEntity<ResponseData> error(int status, String message) {
             return ResponseEntity.status(status).body(new ResponseData(status, false, message, null, null, null));
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ResponseData> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        try {
+            String response = authenticationService.forgotPassword(request);
+            return ResponseEntity.ok(new ResponseData(200, true, response, null, null, null));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ResponseData(400, false, e.getMessage(), null, null, null));
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ResponseData> changePassword(@RequestBody ChangePasswordRequest request) {
+        try {
+            String response = authenticationService.changePassword(request);
+            return ResponseEntity.ok(new ResponseData(200, true, response, null, null, null));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ResponseData(400, false, e.getMessage(), null, null, null));
         }
     }
 }

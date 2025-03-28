@@ -2,22 +2,29 @@ package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Authentication;
 import com.glowcorner.backend.entity.mongoDB.Cart;
+import com.glowcorner.backend.entity.mongoDB.PasswordResetToken;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.GoogleLoginDTO;
 import com.glowcorner.backend.model.DTO.LoginDTO;
+import com.glowcorner.backend.model.DTO.request.User.ChangePasswordRequest;
+import com.glowcorner.backend.model.DTO.request.User.ForgotPasswordRequest;
 import com.glowcorner.backend.repository.AuthenticationRepository;
 import com.glowcorner.backend.repository.CartRepository;
+import com.glowcorner.backend.repository.PasswordResetTokenRepository;
 import com.glowcorner.backend.repository.UserRepository;
 import com.glowcorner.backend.service.interfaces.AuthenticationService;
 import com.glowcorner.backend.utils.JwtUtilHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +37,9 @@ public class AuthenticationServiceImp implements AuthenticationService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private JwtUtilHelper jwtUtilHelper;
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+    @Autowired
+    private JavaMailSender javaMailSender;
     @Autowired
     private CounterServiceImpl counterServiceImpl;
     @Autowired
@@ -69,40 +78,56 @@ public class AuthenticationServiceImp implements AuthenticationService {
         return true;
     }
 
-//    @Override
-//    public String loginWithGoogle(GoogleLoginDTO googleLoginDTO) {
-//        Optional<Authentication> existingUser = authenticationRepository.findByUsername(googleLoginDTO.getEmail());
-//
-//        User user;
-//        if (existingUser.isPresent()) {
-//            user = existingUser.get().getUserID();
-//        } else {
-//            // Nếu user chưa tồn tại, tạo mới user mà không cần Authentication
-//            user = new User();
-//            user.setEmail(googleLoginDTO.getEmail());
-//            user.setRole(Role.CUSTOMER); // Mặc định role là USER
-//            userRepository.save(user);
-//        }
-//
-//        // Lấy role từ user
-//        Role role = user.getRole();
-//
-//        // Tạo JWT token
-//        return jwtUtilHelper.generateToken(user.getEmail(), role.name());
-//    }
-//
-//    @Override
-//    public LoginDTO createAuthentication(String username, String password) {
-//        Authentication authentication = new Authentication();
-//        authentication.setUsername(username);
-//        authentication.setPasswordHash(bCryptPasswordEncoder.encode(password));
-//        authenticationRepository.save(authentication);
-//
-//        LoginDTO loginDTO = new LoginDTO();
-//        loginDTO.setUsername(username);
-//        loginDTO.setPassword(password);
-//
-//        return loginDTO;
-//    }
+    public String forgotPassword(ForgotPasswordRequest request) {
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if (user.isEmpty()) {
+            throw new RuntimeException("Email not found.");
+        }
+
+        // Tạo passcode 6 số
+        String passcode = String.format("%06d", new Random().nextInt(999999));
+        PasswordResetToken token = new PasswordResetToken(passcode, request.getEmail());
+
+        // Xóa token cũ nếu tồn tại
+        PasswordResetToken existingToken = passwordResetTokenRepository.findByEmail(request.getEmail());
+        if (existingToken != null) {
+            passwordResetTokenRepository.delete(existingToken);
+        }
+
+        // Lưu token mới
+        passwordResetTokenRepository.save(token);
+
+        // Gửi email
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(request.getEmail());
+        message.setSubject("Password Reset Passcode");
+        message.setText("Your passcode is: " + passcode + ". It expires in 15 minutes.");
+        javaMailSender.send(message);
+
+        return "Passcode sent to your email.";
+    }
+
+    public String changePassword(ChangePasswordRequest request) {
+        PasswordResetToken token = passwordResetTokenRepository.findByToken(request.getPasscode());
+        if (token == null  || token.isExpired()) {
+            throw new RuntimeException("Invalid or expired passcode.");
+        }
+
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if (user.isEmpty()) {
+            throw new RuntimeException("User not found.");
+        }
+
+        Authentication existingAuth = authenticationRepository.findByUserID(user.get().getUserID()).get();
+        // Cập nhật mật khẩu
+        existingAuth.setPasswordHash(bCryptPasswordEncoder.encode(request.getNewPassword()));
+        authenticationRepository.save(existingAuth);
+
+        // Xóa token sau khi sử dụng
+        passwordResetTokenRepository.delete(token);
+
+        return "Password changed successfully.";
+    }
+
 
 }
