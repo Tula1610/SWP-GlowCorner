@@ -53,13 +53,15 @@ public class CustomFilterSecurity {
                 "/auth/login","/auth/login/token/google",
                 "/oauth2/authorization/google", "/login/oauth2/code/google", "/auth/login/google/**","/auth/oauth2/callback",
                 "/v3/api-docs/**",
-                "/auth/signup"
+                "/auth/signup",
+                "/auth/forgot-password",
+                "/auth/change-password",
         };
 
         String[] showUrls = {"/api/products","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines"};
-        String[] updateUrlsCustomer = {"/api/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
-        String[] postUrlsCustomer = {"/api/cart/**","/api/orders/**"};
-        String[] deleteUrlsCustomer = {"/api/cart/**"};
+        String[] updateUrls = {"/api/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
+        String[] postUrls = {"/api/cart/**","/api/orders/**"};
+        String[] deleteUrls = {"/api/cart/**"};
         String[] adminUrls = {"/**"};
 
         http
@@ -69,9 +71,9 @@ public class CustomFilterSecurity {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, showUrls).permitAll()
-                .requestMatchers(HttpMethod.PUT, updateUrlsCustomer).hasRole("CUSTOMER")
-                .requestMatchers(HttpMethod.POST, postUrlsCustomer).hasRole("CUSTOMER")
-                .requestMatchers(HttpMethod.DELETE, deleteUrlsCustomer).hasRole("CUSTOMER")
+                .requestMatchers(HttpMethod.PUT, updateUrls).hasAnyRole("CUSTOMER","STAFF")
+                .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
+                .requestMatchers(HttpMethod.DELETE, deleteUrls).hasRole("CUSTOMER")
                 .requestMatchers(publicUrls).permitAll()
                 .requestMatchers(adminUrls).hasRole("MANAGER")
                 .anyRequest().authenticated()
