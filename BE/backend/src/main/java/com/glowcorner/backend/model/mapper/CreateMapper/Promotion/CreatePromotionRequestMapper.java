@@ -21,6 +21,7 @@ public class CreatePromotionRequestMapper {
         Promotion promotion = new Promotion();
         promotion.setPromotionID(counterService.getNextPromotionID());
         promotion.setPromotionName(request.getPromotionName());
+        promotion.setProductID(request.getProductID());
         promotion.setDiscount(request.getDiscount());
         promotion.setStartDate(request.getStartDate());
         promotion.setEndDate(request.getEndDate());

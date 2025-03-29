@@ -55,13 +55,50 @@ public class PromotionController {
         return ResponseEntity.ok(new ResponseData(200, true, "User found", users, null, null));
     }
 
+    // Search promotion by productID
+    @Operation(summary = "Get a promotion by productID", description = "Retrieve a promotion by productID")
+    @GetMapping("/product/{id}")
+    public ResponseEntity<ResponseData> getPromotionByProductId(@PathVariable String id) {
+        PromotionDTO promotion = promotionService.getPromotionByProductID(id);
+        if (promotion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseData(404, false, "Promotion with productID: " + id + " not found", null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Promotion found", promotion, null, null));
+    }
+
+    // Search active promotion by productID
+    @Operation(summary = "Get active promotion by productID", description = "Retrieve the currently active promotion by productID")
+    @GetMapping("/active/product/{productID}")
+    public ResponseEntity<ResponseData> getActivePromotionByProductId(@PathVariable String productID) {
+        PromotionDTO promotion = promotionService.getActivePromotionByProductID(productID);
+        if (promotion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseData(404, false, "Promotion with productID: " + productID + " not found", null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Promotion found", promotion, null, null));
+    }
+
+    // Get active promotion
+    @Operation(summary = "Get active promotion", description = "Retrieve the currently active promotion")
+    @GetMapping("/active")
+    public ResponseEntity<ResponseData> getActivePromotion() {
+        List<PromotionDTO> promotion = promotionService.getActivePromotion();
+        return ResponseEntity.ok(new ResponseData(200, true, "Active promotion found", promotion, null, null));
+    }
+
     // Create a new promotion
     @Operation(summary = "Create a new promotion", description = "Add a new promotion to the catalog")
     @PostMapping
     public ResponseEntity<ResponseData> createPromotion(@RequestBody CreatePromotionRequest request) {
-        PromotionDTO createdPromotion = promotionService.createPromotion(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseData(201, true, "Promotion created", createdPromotion, null, null));
+        try {
+            PromotionDTO createdPromotion = promotionService.createPromotion(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResponseData(201, true, "Promotion created", createdPromotion, null, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseData(500, false, "Fail to create promotion: " + e.getMessage(), null, null, null));
+        }
     }
 
     // Update an existing promotion
@@ -77,7 +114,7 @@ public class PromotionController {
             return ResponseEntity.ok(new ResponseData(200, true, "Promotion updated", updatedPromotion, null, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseData(500, false, "Fail to update promotion with ID: " + id, null, null, null));
+                    .body(new ResponseData(500, false, "Fail to update promotion with ID: " + id + ". Error: " + e.getMessage(), null, null, null));
         }
     }
 
