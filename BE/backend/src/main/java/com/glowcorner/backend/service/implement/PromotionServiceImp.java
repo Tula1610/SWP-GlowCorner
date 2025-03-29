@@ -41,8 +41,7 @@ public class PromotionServiceImp implements PromotionService {
 
     @Override
     public List<PromotionDTO> getPromotionByName(String promotionName) {
-        String regex = ".*" + promotionName + ".*";
-        List<Promotion> promotions = promotionRepository.findPromotionByPromotionNameRegexIgnoreCase(regex);
+        List<Promotion> promotions = promotionRepository.findByPromotionNameContainingIgnoreCase(promotionName);
         return promotions.stream()
                 .map(promotionMapper::toDTO)
                 .toList();

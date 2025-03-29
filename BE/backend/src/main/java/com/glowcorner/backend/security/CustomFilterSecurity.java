@@ -58,7 +58,7 @@ public class CustomFilterSecurity {
                 "/auth/change-password",
         };
 
-        String[] showUrls = {"/api/products","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines"};
+        String[] showUrls = {"/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines"};
         String[] updateUrls = {"/api/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
         String[] postUrls = {"/api/cart/**","/api/orders/**"};
         String[] deleteUrls = {"/api/cart/**"};

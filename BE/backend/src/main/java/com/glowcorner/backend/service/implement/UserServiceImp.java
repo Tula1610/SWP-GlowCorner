@@ -136,8 +136,7 @@ public class UserServiceImp implements UserService {
     // Search user by name
     @Override
     public List<UserDTOByManager> searchUserByNameManager(String name) {
-        String regex = ".*" + name + ".*";
-        List<User> users = userRepository.findByFullNameRegexIgnoreCase(regex);
+        List<User> users = userRepository.findByFullNameContainingIgnoreCase(name);
         return users.stream()
                 .map(userMapperManager::toUserDTO)
                 .toList();
@@ -205,8 +204,7 @@ public class UserServiceImp implements UserService {
 
     // Get user by name
     public List<UserDTOByBeautyAdvisor> searchUserByNameBeautyAdvisor(String name) {
-        String regex = ".*" + name + ".*";
-        List<User> users = userRepository.findByFullNameRegexIgnoreCase(regex);
+        List<User> users = userRepository.findByFullNameContainingIgnoreCase(name);
         return users.stream()
                 .map(userMapperBeautyAdvisor::toUserDTO)
                 .toList();
