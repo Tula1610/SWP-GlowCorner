@@ -56,7 +56,7 @@ public class OrderController {
 
     // Delete order
     @Operation(summary = "Delete an order by ID", description = "Remove an order from the system using its ID")
-    @DeleteMapping("/{orderId}")
+    @DeleteMapping("/id/{orderId}")
     public ResponseEntity<Void> deleteOrder(@PathVariable String orderId) {
         orderService.deleteOrder(orderId);
         return ResponseEntity.noContent().build();
@@ -87,7 +87,7 @@ public class OrderController {
 
     // Get orders by customer id
     @Operation(summary = "Get orders by customer ID", description = "Retrieve a list of orders using the customer ID")
-    @GetMapping("/{customerID}")
+    @GetMapping("/customer/{customerID}")
     public ResponseEntity<ResponseData> getOrdersByCustomerID(@PathVariable String customerID) {
         List<OrderDTO> orders = orderService.getOrdersByCustomerID(customerID);
         if (orders.isEmpty()) {
@@ -99,7 +99,7 @@ public class OrderController {
 
     // Get orders by status
     @Operation(summary = "Get orders by status", description = "Retrieve a list of orders using the status")
-    @GetMapping("/{status}")
+    @GetMapping("/status/{status}")
     public ResponseEntity<ResponseData> getOrdersByStatus(@PathVariable String status) {
         List<OrderDTO> orders = orderService.getOrdersByStatus(status);
         if (orders.isEmpty()) {
@@ -111,7 +111,7 @@ public class OrderController {
 
     // Get orders by order date
     @Operation(summary = "Get orders by order date", description = "Retrieve a list of orders using the order date")
-    @GetMapping("/{orderDate}")
+    @GetMapping("/date/{orderDate}")
     public ResponseEntity<ResponseData> getOrdersByOrderDate(@PathVariable LocalDate orderDate) {
         List<OrderDTO> orders = orderService.getOrdersByOrderDate(orderDate);
         if (orders.isEmpty()) {
