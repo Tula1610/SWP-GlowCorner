@@ -48,8 +48,7 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
     // Search routine
     @Override
     public List<SkinCareRoutineDTO> getSkinCareRoutineByName(String name){
-        String regex = ".*" + name + ".*";
-        List<SkinCareRoutine> skinCareRoutines = skinCareRoutineRepository.findByRoutineNameRegexIgnoreCase(regex);
+        List<SkinCareRoutine> skinCareRoutines = skinCareRoutineRepository.findByRoutineNameContainingIgnoreCase(name);
         return skinCareRoutines.stream()
                 .map(skinCareRoutineMapper::toDTO)
                 .toList();

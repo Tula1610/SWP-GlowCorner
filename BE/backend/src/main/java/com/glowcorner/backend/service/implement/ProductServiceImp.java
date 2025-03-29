@@ -57,8 +57,7 @@ public class ProductServiceImp implements ProductService {
     // Get products by product name
     @Override
     public List<ProductDTO> getProductsByProductName(String productName) {
-        String regex = ".*" + productName + ".*";
-        List<Product> products = productRepository.findByProductNameRegexIgnoreCase(regex) ;
+        List<Product> products = productRepository.findByProductNameContainingIgnoreCase(productName) ;
         return products.stream()
                 .map(productMapper::toDTO)
                 .collect(Collectors.toList());

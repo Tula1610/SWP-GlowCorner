@@ -13,6 +13,6 @@ public interface PromotionRepository extends MongoRepository<Promotion, String> 
     void deletePromotionByPromotionID(String promotionID);
 
     Optional<Promotion> findPromotionByPromotionID(String promotionID);
-    List<Promotion> findPromotionByPromotionNameRegexIgnoreCase(String promotionName);
+    List<Promotion> findByPromotionNameContainingIgnoreCase(String promotionName);
 
 }

@@ -12,7 +12,7 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
     Optional<User> findByUserID(String userID);
 
-    List<User> findByFullNameRegexIgnoreCase(String regex);
+    List<User> findByFullNameContainingIgnoreCase(String fullName);
 
     void deleteUserByUserID(String userID);
 }

@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface SkinCareRoutineRepository extends MongoRepository<SkinCareRoutine, String> {
     Optional<SkinCareRoutine> findByRoutineID(String id);
     List<SkinCareRoutine> findByCategory(Category category);
-    List<SkinCareRoutine> findByRoutineNameRegexIgnoreCase(String regex);
+    List<SkinCareRoutine> findByRoutineNameContainingIgnoreCase(String routineName);
     void deleteSkinCareRoutineByRoutineID(String routineID);
 }
