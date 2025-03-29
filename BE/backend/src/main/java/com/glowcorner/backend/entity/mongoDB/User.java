@@ -1,7 +1,5 @@
 package com.glowcorner.backend.entity.mongoDB;
 
-
-
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.enums.Role;
 import lombok.*;
