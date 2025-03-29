@@ -17,6 +17,8 @@ public class Promotion {
 
     String promotionID;
 
+    String productID;
+
     String promotionName;
 
     int discount;

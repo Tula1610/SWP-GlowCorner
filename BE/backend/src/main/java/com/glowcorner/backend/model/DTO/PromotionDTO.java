@@ -16,6 +16,7 @@ public class PromotionDTO {
 
     String promotionID;
     String promotionName;
+    String productID;
     Integer discount;
     LocalDate startDate;
     LocalDate endDate;

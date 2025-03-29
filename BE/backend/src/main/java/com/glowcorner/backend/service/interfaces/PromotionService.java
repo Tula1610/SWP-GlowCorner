@@ -9,6 +9,10 @@ public interface PromotionService {
     List<PromotionDTO> getAllPromotions();
     List<PromotionDTO> getPromotionByName(String promotionName);
     PromotionDTO getPromotionById(String id);
+    PromotionDTO getPromotionByProductID(String productID);
+    List<PromotionDTO> getActivePromotion();
+    PromotionDTO getActivePromotionByProductID(String productID);
+
     PromotionDTO createPromotion(CreatePromotionRequest request);
     PromotionDTO updatePromotion(String id, PromotionDTO promotionDTO);
     void deletePromotion(String id);

@@ -14,6 +14,7 @@ public class PromotionMapper {
         return new PromotionDTO(
                 promotion.getPromotionID(),
                 promotion.getPromotionName(),
+                promotion.getProductID(),
                 promotion.getDiscount(),
                 promotion.getStartDate(),
                 promotion.getEndDate()
