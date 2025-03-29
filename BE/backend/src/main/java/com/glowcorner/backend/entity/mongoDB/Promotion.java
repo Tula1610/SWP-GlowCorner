@@ -24,4 +24,6 @@ public class Promotion {
     LocalDate startDate; // Maps SQL DATE type for the promotion start date
 
     LocalDate endDate; // Maps SQL DATE type for the promotion end date
+
+
 }
