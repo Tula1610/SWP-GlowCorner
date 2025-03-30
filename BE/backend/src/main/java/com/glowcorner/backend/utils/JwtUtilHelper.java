@@ -25,7 +25,7 @@ public class JwtUtilHelper {
                 .setSubject(data)
                 .addClaims(Map.of("role", role))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Hết hạn sau 1 giờ
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 12)) // Hết hạn sau 1 giờ
                 .signWith(key)
                 .compact();
     }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,17 +27,15 @@ public class SwaggerConfig {
                                 .name("MIT License")
                                 .url("https://mit-license.org")))
                 .components(new io.swagger.v3.oas.models.Components()
-                        .addSecuritySchemes("bearerAuth",new SecurityScheme()
+                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
-                                .bearerFormat("JWT")))
+                                .bearerFormat("JWT"))
+                        // Thêm schema cho MultipartFile
+                        .addSchemas("MultipartFile", new Schema()
+                                .type("string")
+                                .format("binary")
+                                .description("Upload file")))
                 .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement().addList("bearerAuth"));
     }
-
-//    @Bean
-//    public SwaggerUiConfigProperties swaggerUiConfigProperties() {
-//        SwaggerUiConfigProperties properties = new SwaggerUiConfigProperties();
-//        properties.setPath("/swagger-ui-custom");
-//        return properties;
-//    }
 }

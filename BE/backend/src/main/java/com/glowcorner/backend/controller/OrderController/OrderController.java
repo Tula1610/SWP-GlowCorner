@@ -103,9 +103,7 @@ public class OrderController {
     public ResponseEntity<ResponseData> getOrdersByStatus(@PathVariable String status) {
         List<OrderDTO> orders = orderService.getOrdersByStatus(status);
         if (orders.isEmpty()) {
-            return ResponseEntity.status(404)
-                    .body(new ResponseData(404, false, "There is no order with status: " + status, null, null, null));
-        }
+            return ResponseEntity.ok(new ResponseData(200, true, "Orders found", orders, null, null));        }
         return ResponseEntity.ok(new ResponseData(200, true, "Orders found", orders, null, null));
     }
 
