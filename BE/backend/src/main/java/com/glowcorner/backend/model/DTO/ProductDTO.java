@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.DTO;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,7 +14,7 @@ public class ProductDTO {
     String productName;
     String description;
     Long price;
-    Category category;
+    SkinType skinType;
     Float rating;
     String image_url;
 }

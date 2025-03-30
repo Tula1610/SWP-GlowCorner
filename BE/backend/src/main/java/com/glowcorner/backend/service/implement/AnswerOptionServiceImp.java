@@ -52,7 +52,7 @@ public class AnswerOptionServiceImp implements AnswerOptionService {
                     .orElseThrow(() -> new RuntimeException("Quiz not found"));
 
             // Update
-            if (answerOptionDTO.getCategory() != null) existingOption.setCategory(answerOptionDTO.getCategory());
+            if (answerOptionDTO.getSkinType() != null) existingOption.setSkinType(answerOptionDTO.getSkinType());
             if (answerOptionDTO.getOptionText() != null) existingOption.setOptionText(answerOptionDTO.getOptionText());
 
             // Save update

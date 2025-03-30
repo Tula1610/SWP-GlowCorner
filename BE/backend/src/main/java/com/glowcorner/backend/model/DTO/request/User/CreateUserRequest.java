@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.DTO.request.User;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Role;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ public class CreateUserRequest {
     String phone;
     String address;
     Role role;
-    Category skinType;
+    SkinType skinType;
 
 
 }

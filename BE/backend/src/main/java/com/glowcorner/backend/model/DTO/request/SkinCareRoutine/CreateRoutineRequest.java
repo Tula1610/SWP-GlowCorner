@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.DTO.request.SkinCareRoutine;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class CreateRoutineRequest {
 
-    Category category;
+    SkinType skinType;
     String routineName;
     String routineDescription;
 

@@ -13,7 +13,7 @@ public class SkinCareRoutineMapper {
         }
         return new SkinCareRoutineDTO(
             skinCareRoutine.getRoutineID(),
-            skinCareRoutine.getCategory(),
+            skinCareRoutine.getSkinType(),
             skinCareRoutine.getRoutineName(),
             skinCareRoutine.getRoutineDescription()
         );

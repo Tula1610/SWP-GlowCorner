@@ -1,7 +1,7 @@
 package com.glowcorner.backend.repository;
 
 import com.glowcorner.backend.entity.mongoDB.SkinCareRoutine;
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface SkinCareRoutineRepository extends MongoRepository<SkinCareRoutine, String> {
     Optional<SkinCareRoutine> findByRoutineID(String id);
-    List<SkinCareRoutine> findByCategory(Category category);
+    List<SkinCareRoutine> findByCategory(SkinType skinType);
     List<SkinCareRoutine> findByRoutineNameContainingIgnoreCase(String routineName);
     void deleteSkinCareRoutineByRoutineID(String routineID);
 }

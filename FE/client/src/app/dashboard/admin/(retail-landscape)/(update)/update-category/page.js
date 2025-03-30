@@ -26,7 +26,7 @@ import {
   useDeleteCategoryMutation,
   useGetCategoryQuery,
   useUpdateCategoryMutation,
-} from "@/services/category/categoryApi";
+} from "@/services/skinType/categoryApi";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
@@ -49,7 +49,7 @@ const Page = () => {
     [fetchCategoryData]
   );
 
-  const [category, setCategory] = useState({});
+  const [skinType, setCategory] = useState({});
   const [keynotes, setKeynotes] = useState([]);
   const [tags, setTags] = useState([]);
   const [thumbnail, setThumbnail] = useState(null);
@@ -168,7 +168,7 @@ const Page = () => {
       formData.append("thumbnail", thumbnail);
     }
 
-    updateCategory({ id: category?._id, body: formData });
+    updateCategory({ id: skinType?._id, body: formData });
   }
 
   return (
@@ -182,8 +182,8 @@ const Page = () => {
           {/* thumbnail */}
           <div className="w-fit flex flex-col gap-y-4 p-4 border rounded">
             <Image
-              src={thumbnailPreview || category?.thumbnail?.url}
-              alt={category?.thumbnail?.public_id || "thumbnail"}
+              src={thumbnailPreview || skinType?.thumbnail?.url}
+              alt={skinType?.thumbnail?.public_id || "thumbnail"}
               width={96}
               height={96}
               className="w-full h-24 object-cover rounded"
@@ -215,9 +215,9 @@ const Page = () => {
                 type="text"
                 name="title"
                 id="title"
-                value={category?.title}
+                value={skinType?.title}
                 onChange={(e) =>
-                  setCategory({ ...category, title: e.target.value })
+                  setCategory({ ...skinType, title: e.target.value })
                 }
                 maxlength="100"
               />
@@ -230,9 +230,9 @@ const Page = () => {
                 name="description"
                 id="description"
                 rows="4"
-                value={category?.description}
+                value={skinType?.description}
                 onChange={(e) =>
-                  setCategory({ ...category, description: e.target.value })
+                  setCategory({ ...skinType, description: e.target.value })
                 }
                 maxlength="500"
               />

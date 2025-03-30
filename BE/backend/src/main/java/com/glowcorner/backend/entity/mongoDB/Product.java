@@ -1,5 +1,6 @@
 package com.glowcorner.backend.entity.mongoDB;
 
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Category;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +25,8 @@ public class Product {
     String description;
 
     Long price;
+
+    SkinType skinType;
 
     Category category;
 

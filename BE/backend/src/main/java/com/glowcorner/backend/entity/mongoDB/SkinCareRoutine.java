@@ -1,10 +1,12 @@
 package com.glowcorner.backend.entity.mongoDB;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +19,11 @@ public class SkinCareRoutine {
 
     String routineID;
 
-    Category category;
+    SkinType skinType;
 
     String routineName;
 
     String routineDescription;
+
+    List<Product> products;
 }

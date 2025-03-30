@@ -2,7 +2,7 @@ package com.glowcorner.backend.model.DTO.User;
 
 
 import com.glowcorner.backend.entity.mongoDB.Order;
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class UserDTOByManager {
     String email;
     String phone;
     String address;
-    Category skinType;
+    SkinType skinType;
     int loyalPoints;
 
     Role role;

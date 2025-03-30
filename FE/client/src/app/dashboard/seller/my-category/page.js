@@ -25,7 +25,7 @@ import {
   useAddCategoryMutation,
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
-} from "@/services/category/categoryApi";
+} from "@/services/skinType/categoryApi";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -36,7 +36,7 @@ const Page = () => {
 
   return (
     <Dashboard>
-      {userInfo?.category ? <UpdateCategory /> : <AddCategory />}
+      {userInfo?.skinType ? <UpdateCategory /> : <AddCategory />}
     </Dashboard>
   );
 };
@@ -202,7 +202,7 @@ const AddCategory = () => {
               <input
                 type="text"
                 name="keynotes"
-                placeholder="Enter category keynote"
+                placeholder="Enter skinType keynote"
                 className="flex-1"
                 value={keynote}
                 onChange={(event) =>
@@ -243,7 +243,7 @@ const AddCategory = () => {
               <input
                 type="text"
                 name="tags"
-                placeholder="Enter category tag"
+                placeholder="Enter skinType tag"
                 className="flex-1"
                 value={tag}
                 onChange={(event) => handleTagChange(index, event.target.value)}
@@ -274,8 +274,8 @@ const AddCategory = () => {
 };
 
 const UpdateCategory = () => {
-  const categoryInfo = useSelector((state) => state.auth.user.category);
-  const [category, setCategory] = useState({});
+  const categoryInfo = useSelector((state) => state.auth.user.skinType);
+  const [skinType, setCategory] = useState({});
   const [keynotes, setKeynotes] = useState([]);
   const [tags, setTags] = useState([]);
   const [thumbnail, setThumbnail] = useState(null);
@@ -364,7 +364,7 @@ const UpdateCategory = () => {
       formData.append("thumbnail", thumbnail);
     }
 
-    updateCategory({ id: category?._id, body: formData });
+    updateCategory({ id: skinType?._id, body: formData });
   }
 
   return (
@@ -377,8 +377,8 @@ const UpdateCategory = () => {
         {/* thumbnail */}
         <div className="w-fit flex flex-col gap-y-4 p-4 border rounded">
           <Image
-            src={thumbnailPreview || category?.thumbnail?.url}
-            alt={category?.thumbnail?.public_id || "thumbnail"}
+            src={thumbnailPreview || skinType?.thumbnail?.url}
+            alt={skinType?.thumbnail?.public_id || "thumbnail"}
             width={96}
             height={96}
             className="w-full h-24 object-cover rounded"
@@ -410,9 +410,9 @@ const UpdateCategory = () => {
               type="text"
               name="title"
               id="title"
-              value={category?.title}
+              value={skinType?.title}
               onChange={(e) =>
-                setCategory({ ...category, title: e.target.value })
+                setCategory({ ...skinType, title: e.target.value })
               }
               maxlength="100"
             />
@@ -425,9 +425,9 @@ const UpdateCategory = () => {
               name="description"
               id="description"
               rows="4"
-              value={category?.description}
+              value={skinType?.description}
               onChange={(e) =>
-                setCategory({ ...category, description: e.target.value })
+                setCategory({ ...skinType, description: e.target.value })
               }
               maxlength="500"
             />
@@ -531,7 +531,7 @@ const UpdateCategory = () => {
 
 const DeleteCategory = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const categoryInfo = useSelector((state) => state.auth.user.category);
+  const categoryInfo = useSelector((state) => state.auth.user.skinType);
   const [deleteCategory, { isLoading, data, error }] =
     useDeleteCategoryMutation();
 

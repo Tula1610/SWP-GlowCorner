@@ -1,6 +1,6 @@
 package com.glowcorner.backend.service.interfaces;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
 
@@ -14,6 +14,6 @@ public interface ProductService {
 
     ProductDTO getProductById(String productId);
     List<ProductDTO> getAllProducts();
-    List<ProductDTO> getProductsByCategory(Category category);
+    List<ProductDTO> getProductsByCategory(SkinType skinType);
     List<ProductDTO> getProductsByProductName(String productName);
 }

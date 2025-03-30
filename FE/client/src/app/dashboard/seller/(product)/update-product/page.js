@@ -20,7 +20,7 @@ import Plus from "@/components/icons/Plus";
 import Dashboard from "@/components/shared/layouts/Dashboard";
 import useGetColors from "@/libs/useGetColors";
 import { useGetBrandsQuery } from "@/services/brand/brandApi";
-import { useGetCategoriesQuery } from "@/services/category/categoryApi";
+import { useGetCategoriesQuery } from "@/services/skinType/categoryApi";
 import {
   useGetProductQuery,
   useUpdateProductMutation,
@@ -262,7 +262,7 @@ const Page = () => {
       setProductPrice(product?.price);
       setProductSummary(product?.summary);
       setProductBrand(product?.brand?._id);
-      setProductCategory(product?.category?._id);
+      setProductCategory(product?.skinType?._id);
       setProductCampaign(product?.campaign);
       setProductVariations(product?.variations);
       setProductFeatures(product?.features);
@@ -324,7 +324,7 @@ const Page = () => {
     );
 
     formData.append("brand", productBrand);
-    formData.append("category", productCategory);
+    formData.append("skinType", productCategory);
 
     updateProduct({ id, body: formData });
   }
@@ -638,27 +638,27 @@ const Page = () => {
           </label>
         </div>
 
-        {/* category and brand */}
+        {/* skinType and brand */}
         <div className="w-full flex flex-col gap-y-4 p-4 border rounded">
-          {/* category */}
-          <label htmlFor="category" className="w-full flex flex-col gap-y-1">
+          {/* skinType */}
+          <label htmlFor="skinType" className="w-full flex flex-col gap-y-1">
             <span className="text-sm">Category*</span>
             {fetchingCategories ? (
               <p className="text-sm">Loading...</p>
             ) : (
               <select
-                name="category"
-                id="category"
+                name="skinType"
+                id="skinType"
                 className="w-full"
                 value={productCategory}
                 onChange={(e) => setProductCategory(e.target.value)}
               >
                 <option value={productCategory} disabled>
-                  {product?.category?.title}
+                  {product?.skinType?.title}
                 </option>
-                {categories.map((category) => (
-                  <option key={category._id} value={category._id}>
-                    {category.title}
+                {categories.map((skinType) => (
+                  <option key={skinType._id} value={skinType._id}>
+                    {skinType.title}
                   </option>
                 ))}
               </select>

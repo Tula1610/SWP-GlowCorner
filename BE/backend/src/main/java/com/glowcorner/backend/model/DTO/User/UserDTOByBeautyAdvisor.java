@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.DTO.User;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +15,6 @@ public class UserDTOByBeautyAdvisor {
     String fullName;
     String email;
     String phone;
-    Category skinType;
+    SkinType skinType;
 
 }

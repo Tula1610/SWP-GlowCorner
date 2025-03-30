@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.DTO.request.Quiz;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateAnswerOptionRequest {
 
-    Category category;
+    SkinType skinType;
     String optionText;
 }

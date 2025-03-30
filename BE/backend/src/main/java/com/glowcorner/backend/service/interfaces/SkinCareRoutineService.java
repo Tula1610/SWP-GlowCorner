@@ -1,6 +1,6 @@
 package com.glowcorner.backend.service.interfaces;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
 import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
 
@@ -14,7 +14,7 @@ public interface SkinCareRoutineService {
 
 
     List<SkinCareRoutineDTO> getAllSkinCareRoutines();
-    List<SkinCareRoutineDTO> getSkinCareRoutineByCategory(Category category);
+    List<SkinCareRoutineDTO> getSkinCareRoutineByCategory(SkinType skinType);
     List<SkinCareRoutineDTO> getSkinCareRoutineByName(String name);
     SkinCareRoutineDTO getSkinCareRoutineById(String routineId);
 }
