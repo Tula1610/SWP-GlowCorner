@@ -1,6 +1,6 @@
 package com.glowcorner.backend.entity.mongoDB;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -28,7 +28,7 @@ public class User {
 
     String address;
 
-    Category skinType;
+    SkinType skinType;
 
     int loyalPoints;
 
@@ -44,6 +44,8 @@ public class User {
     //One to Many
     List<Order> orders;
 
+    //One to one
+    SkinCareRoutine skinCareRoutine;
 
 
 }

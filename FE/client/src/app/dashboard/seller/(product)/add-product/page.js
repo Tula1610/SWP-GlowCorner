@@ -20,7 +20,7 @@ import Plus from "@/components/icons/Plus";
 import Dashboard from "@/components/shared/layouts/Dashboard";
 import useGetColors from "@/libs/useGetColors";
 import { useGetBrandsQuery } from "@/services/brand/brandApi";
-import { useGetCategoriesQuery } from "@/services/category/categoryApi";
+import { useGetCategoriesQuery } from "@/services/skinType/categoryApi";
 import { useAddProductMutation } from "@/services/product/productApi";
 import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
@@ -240,7 +240,7 @@ const Page = () => {
     );
 
     formData.append("brand", event.target.brand.value);
-    formData.append("category", event.target.category.value);
+    formData.append("skinType", event.target.skinType.value);
     formData.append("store", user?.store?._id);
 
     addProduct(formData);
@@ -524,27 +524,27 @@ const Page = () => {
           </label>
         </div>
 
-        {/* category and brand */}
+        {/* skinType and brand */}
         <div className="w-full flex flex-col gap-y-4 p-4 border rounded">
-          {/* category */}
-          <label htmlFor="category" className="w-full flex flex-col gap-y-1">
+          {/* skinType */}
+          <label htmlFor="skinType" className="w-full flex flex-col gap-y-1">
             <span className="text-sm">Category*</span>
             {fetchingCategories ? (
               <p className="text-sm">Loading...</p>
             ) : (
               <select
-                name="category"
-                id="category"
+                name="skinType"
+                id="skinType"
                 className="w-full"
-                defaultValue={user?.category?._id}
+                defaultValue={user?.skinType?._id}
                 required
               >
-                <option value={user?.category?._id} disabled>
-                  {user?.category?.title}
+                <option value={user?.skinType?._id} disabled>
+                  {user?.skinType?.title}
                 </option>
-                {categories.map((category) => (
-                  <option key={category._id} value={category._id}>
-                    {category.title}
+                {categories.map((skinType) => (
+                  <option key={skinType._id} value={skinType._id}>
+                    {skinType.title}
                   </option>
                 ))}
               </select>

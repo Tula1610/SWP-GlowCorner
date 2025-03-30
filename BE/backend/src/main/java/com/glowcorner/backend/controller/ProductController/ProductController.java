@@ -1,7 +1,7 @@
 package com.glowcorner.backend.controller.ProductController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
@@ -56,12 +56,12 @@ public class ProductController {
 
     // Get products by category
     @Operation(summary = "Get products by category", description = "Retrieve a list of products using their category")
-    @GetMapping("/category/{category}")
-    public ResponseEntity<ResponseData> getProductsByCategory(@PathVariable Category category) {
-        List<ProductDTO> products = productService.getProductsByCategory(category);
+    @GetMapping("/category/{skinType}")
+    public ResponseEntity<ResponseData> getProductsByCategory(@PathVariable SkinType skinType) {
+        List<ProductDTO> products = productService.getProductsByCategory(skinType);
         if (products.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseData(404, false, "There is no product in category: " + category, null, null, null));
+                    .body(new ResponseData(404, false, "There is no product in category: " + skinType, null, null, null));
         }
         return ResponseEntity.ok(new ResponseData(200, true, "Products found", products, null, null));
     }
@@ -111,7 +111,6 @@ public class ProductController {
                     .body(new ResponseData(500, false, "Failed to create product: " + e.getMessage(), null, null, null));
         }
     }
-
 
 
     // Update product

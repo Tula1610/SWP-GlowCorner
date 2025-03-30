@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.DTO;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class SkinCareRoutineDTO {
 
     String routineID;
-    Category category;
+    SkinType skinType;
     String routineName;
     String routineDescription;
 

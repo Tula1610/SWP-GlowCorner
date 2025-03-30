@@ -13,7 +13,7 @@ public class AnswerOptionMapper {
         }
         return new AnswerOptionDTO(
                 answerOption.getOptionID(),
-                answerOption.getCategory(),
+                answerOption.getSkinType(),
                 answerOption.getOptionText()
         );
     }

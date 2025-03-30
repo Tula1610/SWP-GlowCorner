@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.DTO;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,6 @@ import lombok.AccessLevel;
 public class AnswerOptionDTO {
 
     String optionID;
-    Category category;
+    SkinType skinType;
     String optionText;
 }

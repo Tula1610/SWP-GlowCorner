@@ -1,7 +1,7 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Product;
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.Product.CreateProductRequestMapper;
@@ -47,8 +47,8 @@ public class ProductServiceImp implements ProductService {
 
     // Get products by category
     @Override
-    public List<ProductDTO> getProductsByCategory(Category category) {
-        List<Product> products = productRepository.findByCategory(category);
+    public List<ProductDTO> getProductsByCategory(SkinType skinType) {
+        List<Product> products = productRepository.findByCategory(skinType);
         return products.stream()
                 .map(productMapper::toDTO)
                 .collect(Collectors.toList());
@@ -83,7 +83,7 @@ public class ProductServiceImp implements ProductService {
             if (productDTO.getProductName() != null) existingProduct.setProductName(productDTO.getProductName());
             if (productDTO.getDescription() != null) existingProduct.setDescription(productDTO.getDescription());
             if (productDTO.getPrice() != null) existingProduct.setPrice(productDTO.getPrice());
-            if (productDTO.getCategory() != null) existingProduct.setCategory(productDTO.getCategory());
+            if (productDTO.getSkinType() != null) existingProduct.setSkinType(productDTO.getSkinType());
             if (productDTO.getRating() != null) existingProduct.setRating(productDTO.getRating());
             if (productDTO.getImage_url() != null) existingProduct.setImage_url(productDTO.getImage_url());
 

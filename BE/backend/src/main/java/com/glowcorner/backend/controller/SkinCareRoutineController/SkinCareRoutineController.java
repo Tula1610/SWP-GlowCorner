@@ -1,6 +1,6 @@
 package com.glowcorner.backend.controller.SkinCareRoutineController;
 
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
 import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
@@ -46,12 +46,12 @@ public class SkinCareRoutineController {
 
     // Get skincare routine by category
     @Operation(summary = "Get skincare routines by category", description = "Retrieve a list of skin care routines using their category")
-    @GetMapping("/category/{category}")
-    public ResponseEntity<ResponseData> getSkinCareRoutineByCategory(@PathVariable Category category) {
-        List<SkinCareRoutineDTO> routines = skinCareRoutineService.getSkinCareRoutineByCategory(category);
+    @GetMapping("/category/{skinType}")
+    public ResponseEntity<ResponseData> getSkinCareRoutineByCategory(@PathVariable SkinType skinType) {
+        List<SkinCareRoutineDTO> routines = skinCareRoutineService.getSkinCareRoutineByCategory(skinType);
         if (routines.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseData(404, false, "There is no skin care routine in category: " + category, null, null, null));
+                    .body(new ResponseData(404, false, "There is no skin care routine in category: " + skinType, null, null, null));
         }
         return ResponseEntity.ok(new ResponseData(200, true, "Skin care routines found", routines, null, null));
     }

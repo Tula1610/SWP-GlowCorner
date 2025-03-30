@@ -21,7 +21,7 @@ public class CreateRoutineRequestMapper {
 
         SkinCareRoutine skinCareRoutine = new SkinCareRoutine();
         skinCareRoutine.setRoutineID(counterServiceImpl.getNextSkinCareRoutineID());
-        skinCareRoutine.setCategory(request.getCategory());
+        skinCareRoutine.setSkinType(request.getSkinType());
         skinCareRoutine.setRoutineName(request.getRoutineName());
         skinCareRoutine.setRoutineDescription(request.getRoutineDescription());
         return skinCareRoutine;

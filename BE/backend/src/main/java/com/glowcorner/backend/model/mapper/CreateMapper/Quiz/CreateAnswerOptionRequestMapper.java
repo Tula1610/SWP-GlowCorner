@@ -20,7 +20,7 @@ public class CreateAnswerOptionRequestMapper {
         }
         AnswerOption answerOption = new AnswerOption();
         answerOption.setOptionID(counterService.getNextOptionID());
-        answerOption.setCategory(request.getCategory());
+        answerOption.setSkinType(request.getSkinType());
         answerOption.setOptionText(request.getOptionText());
         return answerOption;
     }

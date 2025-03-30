@@ -1,7 +1,7 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.SkinCareRoutine;
-import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
 import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.SkinCareRoutine.CreateRoutineRequestMapper;
@@ -38,8 +38,8 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
 
     // Get skincare routine by category
     @Override
-    public List<SkinCareRoutineDTO> getSkinCareRoutineByCategory(Category category) {
-        List<SkinCareRoutine> skinCareRoutines = skinCareRoutineRepository.findByCategory(category);
+    public List<SkinCareRoutineDTO> getSkinCareRoutineByCategory(SkinType skinType) {
+        List<SkinCareRoutine> skinCareRoutines = skinCareRoutineRepository.findByCategory(skinType);
         return skinCareRoutines.stream()
                 .map(skinCareRoutineMapper::toDTO)
                 .toList();
@@ -77,7 +77,7 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
             SkinCareRoutine existingRoutine = skinCareRoutineRepository.findByRoutineID(routineId)
                     .orElseThrow(() -> new RuntimeException("Skin care routine not found"));
 
-            if (skinCareRoutineDTO.getCategory() != null) existingRoutine.setCategory(skinCareRoutineDTO.getCategory());
+            if (skinCareRoutineDTO.getSkinType() != null) existingRoutine.setSkinType(skinCareRoutineDTO.getSkinType());
             if (skinCareRoutineDTO.getRoutineName() != null) existingRoutine.setRoutineName(skinCareRoutineDTO.getRoutineName());
             if (skinCareRoutineDTO.getRoutineDescription() != null) existingRoutine.setRoutineDescription(skinCareRoutineDTO.getRoutineDescription());
 

@@ -200,7 +200,7 @@ function AddStore() {
               <input
                 type="text"
                 name="keynotes"
-                placeholder="Enter category keynote"
+                placeholder="Enter skinType keynote"
                 className="flex-1"
                 value={keynote}
                 onChange={(event) =>
@@ -241,7 +241,7 @@ function AddStore() {
               <input
                 type="text"
                 name="tags"
-                placeholder="Enter category tag"
+                placeholder="Enter skinType tag"
                 className="flex-1"
                 value={tag}
                 onChange={(event) => handleTagChange(index, event.target.value)}

@@ -2,7 +2,7 @@
 "use client";
 
 import { useGetBrandsQuery } from "@/services/brand/brandApi";
-import { useGetCategoriesQuery } from "@/services/category/categoryApi";
+import { useGetCategoriesQuery } from "@/services/skinType/categoryApi";
 import { useGetStoresQuery } from "@/services/store/storeApi";
 import React, { useEffect } from "react";
 import { AiOutlineReload } from "react-icons/ai";
@@ -41,7 +41,7 @@ const FilterSidebar = () => {
   const filter = useSelector((state) => state.filter);
 
   const brand = searchParams.get("brand");
-  const category = searchParams.get("category");
+  const skinType = searchParams.get("skinType");
   const store = searchParams.get("store");
 
   const brands = brandsData?.data || [];
@@ -76,8 +76,8 @@ const FilterSidebar = () => {
               dispatch(clearFilter());
 
               // Uncheck all checkboxes for categories
-              categories.forEach((category) => {
-                document.getElementById(category._id).checked = false;
+              categories.forEach((skinType) => {
+                document.getElementById(skinType._id).checked = false;
               });
 
               // Uncheck all checkboxes for brands
@@ -110,28 +110,28 @@ const FilterSidebar = () => {
               </>
             ) : (
               <>
-                {categories.map((category) => (
+                {categories.map((skinType) => (
                   <Link
-                    key={category._id}
-                    href={`/products?category=${category._id}&brand=${brand}&store=${store}`}
+                    key={skinType._id}
+                    href={`/products?skinType=${skinType._id}&brand=${brand}&store=${store}`}
                   >
                     <label
-                      htmlFor={category._id}
+                      htmlFor={skinType._id}
                       className="text-sm flex flex-row items-center gap-x-1.5"
-                      onChange={() => dispatch(setCategory(category._id))}
+                      onChange={() => dispatch(setCategory(skinType._id))}
                     >
                       <input
                         type="radio"
-                        name="category"
-                        id={category._id}
-                        value={category._id}
+                        name="skinType"
+                        id={skinType._id}
+                        value={skinType._id}
                         checked={
-                          category._id === filter.category ||
-                          category._id === category
+                          skinType._id === filter.skinType ||
+                          skinType._id === skinType
                         }
                         className="rounded-secondary checked:bg-primary checked:text-black checked:outline-none checked:ring-0 checked:border-0 focus:outline-none focus:ring-0 focus:border-1 focus:text-black"
                       />
-                      {category.title}
+                      {skinType.title}
                     </label>
                   </Link>
                 ))}
@@ -155,7 +155,7 @@ const FilterSidebar = () => {
                 {brands.map((brand) => (
                   <Link
                     key={brand._id}
-                    href={`/products?category=${category}&brand=${brand._id}&store=${store}`}
+                    href={`/products?skinType=${skinType}&brand=${brand._id}&store=${store}`}
                   >
                     <label
                       htmlFor={brand._id}
@@ -194,7 +194,7 @@ const FilterSidebar = () => {
                 {stores.map((store) => (
                   <Link
                     key={store._id}
-                    href={`/products?category=${category}&brand=${brand}&store=${store._id}`}
+                    href={`/products?skinType=${skinType}&brand=${brand}&store=${store._id}`}
                   >
                     <label
                       htmlFor={store._id}
