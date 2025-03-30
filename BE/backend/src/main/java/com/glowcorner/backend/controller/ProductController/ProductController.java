@@ -1,5 +1,6 @@
 package com.glowcorner.backend.controller.ProductController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
@@ -7,8 +8,12 @@ import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.CloudinaryService;
 import com.glowcorner.backend.service.interfaces.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,11 +80,25 @@ public class ProductController {
 
     // Create a new product
     @Operation(summary = "Create a new product", description = "Add a new product to the catalog")
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseData> createProduct(
-            @RequestPart("product") CreateProductRequest request,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) {
+            @RequestPart("product") @Parameter(
+                    description = "Product data in JSON format",
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CreateProductRequest.class)
+                    )
+            ) String productJson, // Nhận dữ liệu dưới dạng String
+            @RequestPart(value = "image", required = false) @Parameter(
+                    description = "Product image file",
+                    content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE)
+            ) MultipartFile imageFile) {
         try {
+            // Parse JSON string thành CreateProductRequest
+            ObjectMapper objectMapper = new ObjectMapper();
+            CreateProductRequest request = objectMapper.readValue(productJson, CreateProductRequest.class);
+
             if (imageFile != null && !imageFile.isEmpty()) {
                 String imageUrl = cloudinaryService.uploadFile(imageFile);
                 request.setImage_url(imageUrl);
@@ -88,9 +107,12 @@ public class ProductController {
             ProductDTO created = productService.createProduct(request);
             return ResponseEntity.ok(new ResponseData(200, true, "Product created successfully", created, null, null));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseData(500, false, "Failed to create product: " + e.getMessage(), null, null, null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseData(500, false, "Failed to create product: " + e.getMessage(), null, null, null));
         }
     }
+
+
 
     // Update product
     @Operation(summary = "Update a product", description = "Update an existing product using its ID")
