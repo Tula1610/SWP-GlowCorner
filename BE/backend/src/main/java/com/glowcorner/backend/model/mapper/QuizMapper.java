@@ -13,7 +13,6 @@ public class QuizMapper {
         }
         return new QuizDTO(
                 quiz.getQuestionId(),
-                quiz.getOptionId(),
                 quiz.getQuizText()
         );
     }

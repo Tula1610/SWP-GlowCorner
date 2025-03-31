@@ -52,7 +52,6 @@ public class QuizServiceImp implements QuizService {
                     .orElseThrow(() -> new RuntimeException("Quiz not found"));
 
             // Update
-            if (quizDTO.getOptionId() != null) existingQuiz.setOptionId(quizDTO.getOptionId());
             if (quizDTO.getQuizText() != null) existingQuiz.setQuizText(quizDTO.getQuizText());
 
             // Save update

@@ -17,8 +17,6 @@ public class Quiz {
 
     String questionId;
 
-    String optionId;
-
     String quizText;
 
 }

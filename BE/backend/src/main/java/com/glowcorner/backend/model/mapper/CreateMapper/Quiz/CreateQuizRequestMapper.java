@@ -20,7 +20,6 @@ public class CreateQuizRequestMapper {
         }
         Quiz quiz = new Quiz();
         quiz.setQuestionId(counterService.getNextQuestionID());
-        quiz.setOptionId(request.getOptionId());
         quiz.setQuizText(request.getQuizText());
         return quiz;
     }

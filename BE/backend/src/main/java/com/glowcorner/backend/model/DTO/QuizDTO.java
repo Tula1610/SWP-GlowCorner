@@ -13,6 +13,5 @@ import lombok.AccessLevel;
 public class QuizDTO {
 
     String questionId;
-    String optionId;
     String quizText;
 }
