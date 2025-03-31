@@ -14,7 +14,7 @@ public interface SkinCareRoutineService {
 
 
     List<SkinCareRoutineDTO> getAllSkinCareRoutines();
-    List<SkinCareRoutineDTO> getSkinCareRoutineByCategory(SkinType skinType);
+    List<SkinCareRoutineDTO> getSkinCareRoutineBySkinType(SkinType skinType);
     List<SkinCareRoutineDTO> getSkinCareRoutineByName(String name);
     SkinCareRoutineDTO getSkinCareRoutineById(String routineId);
 }

@@ -2,6 +2,7 @@ package com.glowcorner.backend.controller.ProductController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glowcorner.backend.enums.SkinType;
+import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
@@ -18,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "Product Management System", description = "Operations pertaining to products in the Product Management System")
 @RestController
@@ -54,17 +57,72 @@ public class ProductController {
         return ResponseEntity.ok(new ResponseData(200, true, "Product found", product, null, null));
     }
 
+    // Get products by skinType
+    @Operation(summary = "Get products by category", description = "Retrieve a list of products using their category")
+    @GetMapping("/skinType/{skinType}")
+    public ResponseEntity<ResponseData> getProductsByCategory(@PathVariable SkinType skinType) {
+        List<ProductDTO> products = productService.getProductsBySkinType(skinType);
+        if (products.isEmpty()) {
+            return ResponseEntity.ok(new ResponseData(404,true,"Products found", null,null,null) )   ;    }
+        return ResponseEntity.ok(new ResponseData(200, true, "Products found", products, null, null));
+    }
+
     // Get products by category
     @Operation(summary = "Get products by category", description = "Retrieve a list of products using their category")
-    @GetMapping("/category/{skinType}")
-    public ResponseEntity<ResponseData> getProductsByCategory(@PathVariable SkinType skinType) {
-        List<ProductDTO> products = productService.getProductsByCategory(skinType);
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ResponseData> getProductsByCategory(@PathVariable Category category) {
+        List<ProductDTO> products = productService.getProductsByCategory(category);
         if (products.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseData(404, false, "There is no product in category: " + skinType, null, null, null));
+            return ResponseEntity.ok(new ResponseData(404, true, "There is no product in category", null, null, null));
         }
         return ResponseEntity.ok(new ResponseData(200, true, "Products found", products, null, null));
     }
+
+    // Get products by filter
+    @Operation(summary = "Get products by filter", description = "Retrieve a list of products using filter criteria")
+    @GetMapping("/filter")
+    public ResponseEntity<ResponseData> filterProducts(
+            @RequestParam(value = "skinTypes", required = false) String skinTypes,
+            @RequestParam(value = "categories", required = false) String categories,
+            @RequestParam(value = "minPrice", required = false) Long minPrice,
+            @RequestParam(value = "maxPrice", required = false) Long maxPrice
+    ) {
+        // Kiểm tra giá trị maxPrice
+        if (maxPrice != null && (maxPrice <= 0 || maxPrice == Long.MAX_VALUE)) {
+            maxPrice = null;
+        }
+
+        // Chuyển đổi skinTypes từ chuỗi (ví dụ: "Dry,Oily") thành List<SkinType>
+        List<SkinType> skinTypeList = skinTypes != null
+                ? Arrays.stream(skinTypes.split(","))
+                .map(String::trim)
+                // Chuyển đổi từ "Dry" thành "DRY" để khớp với enum
+                .map(skinType -> skinType.toUpperCase())
+                .map(SkinType::valueOf)
+                .collect(Collectors.toList())
+                : null;
+
+        // Chuyển đổi categories từ chuỗi (ví dụ: "Cleanser,Toner") thành List<Category>
+        List<Category> categoryList = categories != null
+                ? Arrays.stream(categories.split(","))
+                .map(String::trim)
+                // Chuyển đổi từ "Cleanser" thành "CLEANSER" để khớp với enum
+                .map(category -> category.toUpperCase())
+                .map(Category::valueOf)
+                .collect(Collectors.toList())
+                : null;
+
+        // Gọi service để lấy danh sách sản phẩm
+        List<ProductDTO> products = productService.getProductsByFilter(skinTypeList, categoryList, minPrice, maxPrice);
+
+        // Kiểm tra nếu không tìm thấy sản phẩm
+        if (products == null || products.isEmpty()) {
+            return ResponseEntity.ok(new ResponseData(404, true, "There is no product matching the filter criteria", null, null, null));
+        }
+
+        return ResponseEntity.ok(new ResponseData(200, true, "Products found", products, null, null));
+    }
+
 
     // Get products by product name
     @Operation(summary = "Get products by name", description = "Retrieve a list of products using their name")
