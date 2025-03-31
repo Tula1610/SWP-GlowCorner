@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateQuizRequest {
 
-    String optionId;
+    String optionID;
     String quizText;
 
 }

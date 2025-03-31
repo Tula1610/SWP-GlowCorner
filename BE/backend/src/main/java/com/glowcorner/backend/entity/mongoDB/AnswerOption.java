@@ -15,6 +15,8 @@ public class AnswerOption {
     @Id
     String id;
 
+    String questionId;
+
     String optionID;
 
     SkinType skinType;

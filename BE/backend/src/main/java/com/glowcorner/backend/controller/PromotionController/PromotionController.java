@@ -26,9 +26,12 @@ public class PromotionController {
     // Get all promotion
     @Operation(summary = "Get all promotions", description = "Retrieve a list of all available promotions")
     @GetMapping
-    public ResponseEntity<List<PromotionDTO>> getAllPromotions() {
+    public ResponseEntity<ResponseData> getAllPromotions() {
         List<PromotionDTO> promotions = promotionService.getAllPromotions();
-        return ResponseEntity.ok(promotions);
+        if (promotions.isEmpty()) {
+            return ResponseEntity.ok(new ResponseData(404, true, "Promotions found", null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Promotions found", promotions, null, null));
     }
 
     // Get a promotion by ID

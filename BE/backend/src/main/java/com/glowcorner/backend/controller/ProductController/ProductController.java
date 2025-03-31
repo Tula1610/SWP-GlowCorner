@@ -40,9 +40,12 @@ public class ProductController {
     // Get all products
     @Operation(summary = "Get all products", description = "Retrieve a list of all available products")
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+    public ResponseEntity<ResponseData> getAllProducts() {
         List<ProductDTO> products = productService.getAllProducts();
-        return ResponseEntity.ok(products);
+        if (products.isEmpty()) {
+            return ResponseEntity.ok(new ResponseData(404, true, "Products found", null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Products found", products, null, null));
     }
 
     // Get product by id
@@ -92,7 +95,6 @@ public class ProductController {
             maxPrice = null;
         }
 
-        // Chuyển đổi skinTypes từ chuỗi (ví dụ: "Dry,Oily") thành List<SkinType>
         List<SkinType> skinTypeList = skinTypes != null
                 ? Arrays.stream(skinTypes.split(","))
                 .map(String::trim)
@@ -100,7 +102,6 @@ public class ProductController {
                 .collect(Collectors.toList())
                 : null;
 
-        // Chuyển đổi categories từ chuỗi (ví dụ: "Cleanser,Toner") thành List<Category>
         List<Category> categoryList = categories != null
                 ? Arrays.stream(categories.split(","))
                 .map(String::trim)
