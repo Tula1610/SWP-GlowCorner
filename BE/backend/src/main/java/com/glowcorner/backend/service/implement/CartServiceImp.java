@@ -101,6 +101,8 @@ public class CartServiceImp implements CartService {
         Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
         cart.getItems().clear();
+        cart.setTotalAmount(0L);
+        cart.setDiscountedTotalAmount(null);
         cartRepository.save(cart);
         for (CartItem cartItem: cartItemRepository.findCartItemsByUserID(userID)){
             if (cartItem.getUserID().equals(userID)){
