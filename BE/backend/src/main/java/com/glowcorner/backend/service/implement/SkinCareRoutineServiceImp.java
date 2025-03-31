@@ -38,8 +38,8 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
 
     // Get skincare routine by category
     @Override
-    public List<SkinCareRoutineDTO> getSkinCareRoutineByCategory(SkinType skinType) {
-        List<SkinCareRoutine> skinCareRoutines = skinCareRoutineRepository.findByCategory(skinType);
+    public List<SkinCareRoutineDTO> getSkinCareRoutineBySkinType(SkinType skinType) {
+        List<SkinCareRoutine> skinCareRoutines = skinCareRoutineRepository.findBySkinType(skinType);
         return skinCareRoutines.stream()
                 .map(skinCareRoutineMapper::toDTO)
                 .toList();

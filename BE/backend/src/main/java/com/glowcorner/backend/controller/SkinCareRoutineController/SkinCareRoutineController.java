@@ -48,7 +48,7 @@ public class SkinCareRoutineController {
     @Operation(summary = "Get skincare routines by category", description = "Retrieve a list of skin care routines using their category")
     @GetMapping("/category/{skinType}")
     public ResponseEntity<ResponseData> getSkinCareRoutineByCategory(@PathVariable SkinType skinType) {
-        List<SkinCareRoutineDTO> routines = skinCareRoutineService.getSkinCareRoutineByCategory(skinType);
+        List<SkinCareRoutineDTO> routines = skinCareRoutineService.getSkinCareRoutineBySkinType(skinType);
         if (routines.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseData(404, false, "There is no skin care routine in category: " + skinType, null, null, null));

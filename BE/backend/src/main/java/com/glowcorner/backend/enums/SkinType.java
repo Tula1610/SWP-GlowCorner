@@ -6,5 +6,4 @@ public enum SkinType {
     COMBINATION,
     SENSITIVE,
     NORMAL
-
 }
