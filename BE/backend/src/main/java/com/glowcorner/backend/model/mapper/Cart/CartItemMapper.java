@@ -16,7 +16,8 @@ public class CartItemMapper {
                 cartItem.getUserID(),
                 cartItem.getProductID(),
                 cartItem.getQuantity(),
-                cartItem.getTotalAmount()
+                cartItem.getTotalAmount(),
+                cartItem.getDiscountedTotalAmount()
         );
     }
 
@@ -30,6 +31,7 @@ public class CartItemMapper {
         cartItem.setProductID(cartItemDTO.getProductID());
         cartItem.setQuantity(cartItemDTO.getQuantity());
         cartItem.setTotalAmount(cartItemDTO.getTotalAmount());
+        cartItem.setDiscountedTotalAmount(cartItemDTO.getDiscountedTotalAmount());
 
         return cartItem;
     }

@@ -3,7 +3,6 @@ package com.glowcorner.backend.service.implement;
 import com.glowcorner.backend.entity.mongoDB.Promotion;
 import com.glowcorner.backend.model.DTO.PromotionDTO;
 import com.glowcorner.backend.model.DTO.request.Promotion.CreatePromotionRequest;
-import com.glowcorner.backend.model.mapper.CreateMapper.Promotion.CreatePromotionRequestMapper;
 import com.glowcorner.backend.model.mapper.PromotionMapper;
 import com.glowcorner.backend.repository.PromotionRepository;
 import com.glowcorner.backend.service.interfaces.PromotionService;
@@ -17,12 +16,12 @@ public class PromotionServiceImp implements PromotionService {
 
     private final PromotionMapper promotionMapper;
     private final PromotionRepository promotionRepository;
-    private final CreatePromotionRequestMapper createPromotionRequestMapper;
+    private final CounterServiceImpl counterServiceImpl;
 
-    public PromotionServiceImp(PromotionMapper promotionMapper, PromotionRepository promotionRepository, CreatePromotionRequestMapper createPromotionRequestMapper) {
+    public PromotionServiceImp(PromotionMapper promotionMapper, PromotionRepository promotionRepository, CounterServiceImpl counterServiceImpl) {
         this.promotionMapper = promotionMapper;
         this.promotionRepository = promotionRepository;
-        this.createPromotionRequestMapper = createPromotionRequestMapper;
+        this.counterServiceImpl = counterServiceImpl;
     }
 
     @Override
@@ -58,7 +57,7 @@ public class PromotionServiceImp implements PromotionService {
     @Override
     public List<PromotionDTO> getActivePromotion(){
         LocalDate now = LocalDate.now();
-        List<Promotion> promotion = promotionRepository.findByStartDateAfterAndEndDateBefore(now, now);
+        List<Promotion> promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(now, now);
         return promotion.stream()
                 .map(promotionMapper::toDTO)
                 .toList();
@@ -67,24 +66,32 @@ public class PromotionServiceImp implements PromotionService {
     @Override
     public PromotionDTO getActivePromotionByProductID(String productID) {
         LocalDate now = LocalDate.now();
-        Promotion promotion = promotionRepository.findByStartDateAfterAndEndDateBeforeAndProductID(now, now, productID)
+        Promotion promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(now, now, productID)
                 .orElseThrow(() -> new RuntimeException("No active promotion found"));
         return promotionMapper.toDTO(promotion);
     }
 
     @Override
     public PromotionDTO createPromotion(CreatePromotionRequest request) {
-        LocalDate startDate = request.getStartDate();
-        LocalDate endDate = request.getEndDate();
-        String productID = request.getProductID();
+        Promotion promotion = new Promotion();
+        promotion.setPromotionID(counterServiceImpl.getNextPromotionID());
+        promotion.setPromotionName(request.getPromotionName());
 
-        boolean exists = promotionRepository.countByProductIDAndDateRangeOverlap(productID, startDate, endDate) > 0;
+        if (request.getDiscount() < 5 || request.getDiscount() > 20) {
+            throw new RuntimeException("A promotion should be at least 5% and at most 20%");
+        }
+        promotion.setDiscount(request.getDiscount());
+
+        promotion.setStartDate(request.getStartDate());
+        promotion.setEndDate(request.getEndDate());
+        promotion.setProductID(request.getProductID());
+        boolean exists = promotionRepository.countByProductIDAndDateRangeOverlap(promotion.getProductID(), promotion.getStartDate(), promotion.getEndDate()) > 0;
         if (exists) {
             throw new RuntimeException("A promotion already exists within the given date range for the same product.");
         }
 
-        Promotion promotion = createPromotionRequestMapper.fromCreateRequest(request);
         promotion = promotionRepository.save(promotion);
+
         return promotionMapper.toDTO(promotion);
     }
 

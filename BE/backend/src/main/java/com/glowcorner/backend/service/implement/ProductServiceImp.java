@@ -192,7 +192,7 @@ public class ProductServiceImp implements ProductService {
     // Calculator
     private void calculateDiscountedPrice(ProductDTO productDTO) {
         LocalDate now = LocalDate.now();
-        Optional<Promotion> activePromotion = promotionRepository.findByStartDateAfterAndEndDateBeforeAndProductID(now, now, productDTO.getProductID());
+        Optional<Promotion> activePromotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(now, now, productDTO.getProductID());
         if (activePromotion.isPresent()) {
             Promotion promotion = activePromotion.get();
             long discountedPrice = productDTO.getPrice() - (productDTO.getPrice() * promotion.getDiscount() / 100);

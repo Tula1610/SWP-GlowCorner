@@ -22,4 +22,5 @@ public class CartItem {
     int quantity;
 
     Long totalAmount;
+    Long discountedTotalAmount;
 }

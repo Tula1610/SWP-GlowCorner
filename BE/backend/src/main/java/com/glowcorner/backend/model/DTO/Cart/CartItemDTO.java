@@ -16,5 +16,6 @@ public class CartItemDTO {
     int quantity;
 
     Long totalAmount;
+    Long discountedTotalAmount;
 
 }

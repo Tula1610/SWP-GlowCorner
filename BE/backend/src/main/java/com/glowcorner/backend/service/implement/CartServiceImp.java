@@ -47,7 +47,7 @@ public class CartServiceImp implements CartService {
 
     // Add item to Cart
     @Override
-    public void addItemToCart(String userID, String productID) {
+    public void addItemToCart(String userID, String productID, int quantity) {
         Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
@@ -56,8 +56,8 @@ public class CartServiceImp implements CartService {
         for (CartItem cartItem : cart.getItems()) {
             if (cartItem.getProductID().equals(productID)) {
                 // Update the quantity
-                cartItem.setQuantity(cartItem.getQuantity() + 1);
-                cartItem.setTotalAmount(calculateItemTotalAmount(userID, productID));
+                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+                updateCartItemAmounts(cartItem, productID);
                 cartItemRepository.save(cartItem);
                 productExists = true;
                 break;
@@ -70,16 +70,17 @@ public class CartServiceImp implements CartService {
             Product product = productRepository.findByProductID(productID)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
             itemDTO.setUserID(userID);
-            itemDTO.setQuantity(1);
+            itemDTO.setQuantity(quantity);
             itemDTO.setProductID(productID);
-            itemDTO.setTotalAmount(product.getPrice());
             CartItem item = cartItemMapper.toCartItem(itemDTO);
+            updateCartItemAmounts(item, productID);
             cartItemRepository.save(item);
             cart.getItems().add(item);
         }
 
         // Save the updated cart
         cart.setTotalAmount(calculateCartTotalAmount(cart.getItems()));
+        cart.setDiscountedTotalAmount(calculateCartDiscountedTotalAmount(cart.getItems()));
         cartRepository.save(cart);
     }
 
@@ -131,32 +132,50 @@ public class CartServiceImp implements CartService {
         Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
+        boolean itemFound = false;
         for (CartItem cartItem : cart.getItems()) {
             if (cartItem.getProductID().equals(productID)) {
                 cartItem.setQuantity(quantity);
-                cartRepository.save(cart);
+                updateCartItemAmounts(cartItem, productID);
+                cartItemRepository.save(cartItem);
+                itemFound = true;
                 break;
             }
         }
-        throw new RuntimeException("Cart item not found");
+        if (!itemFound) {
+            throw new RuntimeException("Cart item not found");
+        }
 
+        cart.setTotalAmount(calculateCartTotalAmount(cart.getItems()));
+        cart.setDiscountedTotalAmount(calculateCartDiscountedTotalAmount(cart.getItems()));
+        cartRepository.save(cart);
     }
 
 
-    /* Calculate Item Total Amount */
-    private Long calculateItemTotalAmount(String userID, String productID) {
+    /* Update cart item amount */
+    private void updateCartItemAmounts(CartItem cartItem, String productID) {
         Product product = productRepository.findByProductID(productID)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        CartItem item = cartItemRepository.findCartItemByUserIDAndProductID(userID, productID)
-                .orElseThrow(() -> new RuntimeException("Cart item not found"));
-        return product.getPrice() * item.getQuantity();
+        cartItem.setTotalAmount(product.getPrice() * cartItem.getQuantity());
+        if (product.getDiscountedPrice() != null) {
+            cartItem.setDiscountedTotalAmount(product.getDiscountedPrice() * cartItem.getQuantity());
+        } else {
+            cartItem.setDiscountedTotalAmount(null);
+        }
     }
-
 
     /* Calculate Cart Total Amount */
     private Long calculateCartTotalAmount(List<CartItem> items) {
         return items.stream()
                 .mapToLong(CartItem::getTotalAmount)
+                .sum();
+    }
+
+    /* Calculate Cart discounted total amount */
+    private Long calculateCartDiscountedTotalAmount(List<CartItem> items) {
+        return items.stream()
+                .filter(item -> item.getDiscountedTotalAmount() != null)
+                .mapToLong(CartItem::getDiscountedTotalAmount)
                 .sum();
     }
 
