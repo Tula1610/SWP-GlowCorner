@@ -71,11 +71,11 @@ public class CustomFilterSecurity {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(publicUrls).permitAll()
-                .requestMatchers(adminUrls).hasRole("MANAGER")
                 .requestMatchers(HttpMethod.GET, showUrls).permitAll()
                 .requestMatchers(HttpMethod.PUT, updateUrls).hasAnyRole("CUSTOMER","STAFF")
                 .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
                 .requestMatchers(HttpMethod.DELETE, deleteUrls).hasRole("CUSTOMER")
+                .requestMatchers(adminUrls).hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login(oauth2 -> oauth2
