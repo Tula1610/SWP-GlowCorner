@@ -25,4 +25,5 @@ public class Cart {
     List<CartItem> items; // List of products in the cart
 
     Long totalAmount;
+    Long discountedTotalAmount;
 }

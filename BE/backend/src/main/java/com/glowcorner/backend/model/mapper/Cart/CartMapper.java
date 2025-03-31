@@ -24,7 +24,8 @@ public class CartMapper {
                 cart.getItems().stream()
                         .map(cartItemMapper::toCartItemDTO)
                         .collect(java.util.stream.Collectors.toList()),
-                cart.getTotalAmount()
+                cart.getTotalAmount(),
+                cart.getDiscountedTotalAmount()
         );
     }
 

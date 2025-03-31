@@ -20,4 +20,5 @@ public class CartDTO {
     List<CartItemDTO> items;
 
     Long totalAmount;
+    Long discountedTotalAmount;
 }
