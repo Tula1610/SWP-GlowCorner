@@ -14,12 +14,13 @@ public class CreateAnswerOptionRequestMapper {
         this.counterService = counterService;
     }
 
-    public AnswerOption fromCreateRequest(CreateAnswerOptionRequest request) {
+    public AnswerOption fromCreateRequest(CreateAnswerOptionRequest request, String quizID) {
         if (request == null) {
             return null;
         }
         AnswerOption answerOption = new AnswerOption();
         answerOption.setOptionID(counterService.getNextOptionID());
+        answerOption.setQuestionId(quizID);
         answerOption.setSkinType(request.getSkinType());
         answerOption.setOptionText(request.getOptionText());
         return answerOption;

@@ -15,9 +15,9 @@ public class AnswerOption {
     @Id
     String id;
 
-    String questionId;
-
     String optionID;
+
+    String questionId;
 
     SkinType skinType;
 

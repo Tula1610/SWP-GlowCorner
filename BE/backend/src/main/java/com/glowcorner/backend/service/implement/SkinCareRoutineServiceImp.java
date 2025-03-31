@@ -1,6 +1,6 @@
 package com.glowcorner.backend.service.implement;
 
-import com.glowcorner.backend.entity.mongoDB.SkinCareRoutine;
+import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
 import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;

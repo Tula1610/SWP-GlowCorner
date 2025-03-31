@@ -1,5 +1,6 @@
 package com.glowcorner.backend.entity.mongoDB;
 
+import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Role;
 import lombok.*;

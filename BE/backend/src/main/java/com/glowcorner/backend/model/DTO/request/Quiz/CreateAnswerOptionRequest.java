@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateAnswerOptionRequest {
 
+    String questionID;
     SkinType skinType;
     String optionText;
 }

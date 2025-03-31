@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.mapper;
 
-import com.glowcorner.backend.entity.mongoDB.SkinCareRoutine;
+import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
 import org.springframework.stereotype.Component;
 

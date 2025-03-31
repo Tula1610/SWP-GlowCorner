@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -14,4 +16,5 @@ public class QuizDTO {
 
     String questionId;
     String quizText;
+    List<AnswerOptionDTO> answerOptionDTOS;
 }

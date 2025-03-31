@@ -1,11 +1,11 @@
 package com.glowcorner.backend.entity.mongoDB;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Data
 @Document(collection = "quiz")
@@ -18,5 +18,7 @@ public class Quiz {
     String questionId;
 
     String quizText;
+
+    List<AnswerOption> options;
 
 }

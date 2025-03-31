@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface AnswerOptionRepository extends MongoRepository<AnswerOption, String> {
     Optional<AnswerOption> findAnswerOptionByOptionID(String optionID);
+    void deleteAllByQuestionId(String questionID);
 }
