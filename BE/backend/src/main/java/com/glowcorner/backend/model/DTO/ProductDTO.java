@@ -15,7 +15,8 @@ public class ProductDTO {
     String productName;
     String description;
     Long price;
-    String skinType;
+    Long discountedPrice;
+    SkinType skinType;
     Category category;
     Float rating;
     String image_url;

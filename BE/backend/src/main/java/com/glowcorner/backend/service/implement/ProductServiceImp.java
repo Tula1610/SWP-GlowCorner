@@ -1,6 +1,7 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.Product;
+import com.glowcorner.backend.entity.mongoDB.Promotion;
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.ProductDTO;
@@ -8,6 +9,7 @@ import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.Product.CreateProductRequestMapper;
 import com.glowcorner.backend.model.mapper.Product.ProductMapper;
 import com.glowcorner.backend.repository.ProductRepository;
+import com.glowcorner.backend.repository.PromotionRepository;
 import com.glowcorner.backend.service.interfaces.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -15,7 +17,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,13 +31,16 @@ public class ProductServiceImp implements ProductService {
 
     private final ProductMapper productMapper;
 
+    private final PromotionRepository promotionRepository;
+
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public ProductServiceImp(ProductRepository productRepository, CreateProductRequestMapper createProductRequestMapper, ProductMapper productMapper) {
+    public ProductServiceImp(ProductRepository productRepository, CreateProductRequestMapper createProductRequestMapper, ProductMapper productMapper, PromotionRepository promotionRepository) {
         this.productRepository = productRepository;
         this.createProductRequestMapper = createProductRequestMapper;
         this.productMapper = productMapper;
+        this.promotionRepository = promotionRepository;
     }
 
     // Get all products
@@ -41,16 +48,22 @@ public class ProductServiceImp implements ProductService {
     public List<ProductDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(productMapper::toDTO)
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
                 .collect(Collectors.toList());
     }
 
     // Get product by ID
     @Override
     public ProductDTO getProductById(String productId) {
-        if (productRepository.findByProductID(productId).isPresent())
-            return productMapper.toDTO(productRepository.findByProductID(productId).get());
-        return null;
+        Product product = productRepository.findByProductID(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        ProductDTO productDTO = productMapper.toDTO(product);
+        calculateDiscountedPrice(productDTO);
+        return productDTO;
     }
 
     // Get products by category
@@ -58,7 +71,11 @@ public class ProductServiceImp implements ProductService {
     public List<ProductDTO> getProductsBySkinType(SkinType skinType) {
         List<Product> products = productRepository.findBySkinType(skinType);
         return products.stream()
-                .map(productMapper::toDTO)
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -67,16 +84,24 @@ public class ProductServiceImp implements ProductService {
     public List<ProductDTO> getProductsByCategory(Category category) {
         List<Product> products = productRepository.findByCategory(category);
         return products.stream()
-                .map(productMapper::toDTO)
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
                 .collect(Collectors.toList());
     }
 
     // Get products by product name
     @Override
     public List<ProductDTO> getProductsByProductName(String productName) {
-        List<Product> products = productRepository.findByProductNameContainingIgnoreCase(productName) ;
+        List<Product> products = productRepository.findByProductNameContainingIgnoreCase(productName);
         return products.stream()
-                .map(productMapper::toDTO)
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -115,7 +140,11 @@ public class ProductServiceImp implements ProductService {
         // Thực hiện truy vấn
         List<Product> products = mongoTemplate.find(query, Product.class);
         return products.stream()
-                .map(productMapper::toDTO)
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -139,11 +168,8 @@ public class ProductServiceImp implements ProductService {
             if (productDTO.getProductName() != null) existingProduct.setProductName(productDTO.getProductName());
             if (productDTO.getDescription() != null) existingProduct.setDescription(productDTO.getDescription());
             if (productDTO.getPrice() != null) existingProduct.setPrice(productDTO.getPrice());
-            if (productDTO.getSkinType() != null) {
-                String skinTypeStr = productDTO.getSkinType().toUpperCase();
-                SkinType skinTypeEnum = SkinType.valueOf(skinTypeStr);
-                existingProduct.setSkinType(skinTypeEnum);
-            };
+            if (productDTO.getSkinType() != null) existingProduct.setSkinType(productDTO.getSkinType());
+            if (productDTO.getCategory() != null) existingProduct.setCategory(productDTO.getCategory());
             if (productDTO.getRating() != null) existingProduct.setRating(productDTO.getRating());
             if (productDTO.getImage_url() != null) existingProduct.setImage_url(productDTO.getImage_url());
 
@@ -163,5 +189,16 @@ public class ProductServiceImp implements ProductService {
         productRepository.deleteByProductID(productId);
     }
 
-
+    // Calculator
+    private void calculateDiscountedPrice(ProductDTO productDTO) {
+        LocalDate now = LocalDate.now();
+        Optional<Promotion> activePromotion = promotionRepository.findByStartDateAfterAndEndDateBeforeAndProductID(now, now, productDTO.getProductID());
+        if (activePromotion.isPresent()) {
+            Promotion promotion = activePromotion.get();
+            long discountedPrice = productDTO.getPrice() - (productDTO.getPrice() * promotion.getDiscount() / 100);
+            productDTO.setDiscountedPrice(discountedPrice);
+        } else {
+            productDTO.setDiscountedPrice(null);
+        }
+    }
 }

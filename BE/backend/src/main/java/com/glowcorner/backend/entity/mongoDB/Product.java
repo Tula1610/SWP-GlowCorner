@@ -26,6 +26,8 @@ public class Product {
 
     Long price;
 
+    Long discountedPrice;
+
     SkinType skinType;
 
     Category category;

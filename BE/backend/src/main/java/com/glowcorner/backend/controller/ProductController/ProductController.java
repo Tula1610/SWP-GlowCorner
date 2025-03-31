@@ -96,8 +96,6 @@ public class ProductController {
         List<SkinType> skinTypeList = skinTypes != null
                 ? Arrays.stream(skinTypes.split(","))
                 .map(String::trim)
-                // Chuyển đổi từ "Dry" thành "DRY" để khớp với enum
-                .map(skinType -> skinType.toUpperCase())
                 .map(SkinType::valueOf)
                 .collect(Collectors.toList())
                 : null;
@@ -106,8 +104,6 @@ public class ProductController {
         List<Category> categoryList = categories != null
                 ? Arrays.stream(categories.split(","))
                 .map(String::trim)
-                // Chuyển đổi từ "Cleanser" thành "CLEANSER" để khớp với enum
-                .map(category -> category.toUpperCase())
                 .map(Category::valueOf)
                 .collect(Collectors.toList())
                 : null;
