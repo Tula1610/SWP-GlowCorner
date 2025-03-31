@@ -3,6 +3,7 @@ package com.glowcorner.backend.service.implement;
 import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.CartItem;
 import com.glowcorner.backend.entity.mongoDB.Product;
+import com.glowcorner.backend.entity.mongoDB.Promotion;
 import com.glowcorner.backend.model.DTO.Cart.CartDTO;
 import com.glowcorner.backend.model.DTO.Cart.CartItemDTO;
 import com.glowcorner.backend.model.mapper.Cart.CartItemMapper;
@@ -10,9 +11,11 @@ import com.glowcorner.backend.model.mapper.Cart.CartMapper;
 import com.glowcorner.backend.repository.CartItemRepository;
 import com.glowcorner.backend.repository.CartRepository;
 import com.glowcorner.backend.repository.ProductRepository;
+import com.glowcorner.backend.repository.PromotionRepository;
 import com.glowcorner.backend.service.interfaces.CartService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -25,14 +28,18 @@ public class CartServiceImp implements CartService {
     private final CartMapper cartMapper;
 
     private final CartItemMapper cartItemMapper;
+
     private final ProductRepository productRepository;
 
-    public CartServiceImp(CartRepository cartRepository, CartItemRepository cartItemRepository, CartMapper cartMapper, CartItemMapper cartItemMapper, ProductRepository productRepository) {
+    private final PromotionRepository promotionRepository;
+
+    public CartServiceImp(CartRepository cartRepository, CartItemRepository cartItemRepository, CartMapper cartMapper, CartItemMapper cartItemMapper, ProductRepository productRepository, PromotionRepository promotionRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.cartMapper = cartMapper;
         this.cartItemMapper = cartItemMapper;
         this.productRepository = productRepository;
+        this.promotionRepository = promotionRepository;
     }
 
     /* Cart */
@@ -40,9 +47,21 @@ public class CartServiceImp implements CartService {
     // Get Cart by UserID
     @Override
     public CartDTO getCartByUserID(String userID) {
-        if(cartRepository.findByUserID(userID).isPresent())
-            return cartMapper.toCartDTO(cartRepository.findByUserID(userID).get());
-        return null;
+        Cart cart = cartRepository.findByUserID(userID)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        CartDTO cartDTO = cartMapper.toCartDTO(cart);
+        cartDTO.setDiscountedTotalAmount(cart.getDiscountedTotalAmount());
+
+        cartDTO.getItems().forEach(cartItemDTO -> {
+            CartItem cartItem = cart.getItems().stream()
+                    .filter(item -> item.getProductID().equals(cartItemDTO.getProductID()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Cart item not found"));
+            cartItemDTO.setDiscountedTotalAmount(cartItem.getDiscountedTotalAmount());
+        });
+
+        return cartDTO;
     }
 
     // Add item to Cart
@@ -101,6 +120,8 @@ public class CartServiceImp implements CartService {
         Cart cart = cartRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
         cart.getItems().clear();
+        cart.setTotalAmount(0L);
+        cart.setDiscountedTotalAmount(null);
         cartRepository.save(cart);
         for (CartItem cartItem: cartItemRepository.findCartItemsByUserID(userID)){
             if (cartItem.getUserID().equals(userID)){
@@ -119,7 +140,11 @@ public class CartServiceImp implements CartService {
 
         for (CartItem cartItem : cart.getItems()) {
             if (cartItem.getProductID().equals(productID)) {
-                return cartItemMapper.toCartItemDTO(cartItem);
+                CartItemDTO cartItemDTO = cartItemMapper.toCartItemDTO(cartItem);
+                if (cartItem.getDiscountedTotalAmount() != null){
+                    cartItemDTO.setDiscountedTotalAmount(cartItem.getDiscountedTotalAmount());
+                }
+                return cartItemDTO;
             }
         }
 
@@ -152,13 +177,17 @@ public class CartServiceImp implements CartService {
     }
 
 
+
     /* Update cart item amount */
     private void updateCartItemAmounts(CartItem cartItem, String productID) {
         Product product = productRepository.findByProductID(productID)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         cartItem.setTotalAmount(product.getPrice() * cartItem.getQuantity());
-        if (product.getDiscountedPrice() != null) {
-            cartItem.setDiscountedTotalAmount(product.getDiscountedPrice() * cartItem.getQuantity());
+
+        Promotion promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(LocalDate.now(), LocalDate.now(), productID)
+                .orElse(null);
+        if (promotion != null) {
+            cartItem.setDiscountedTotalAmount((product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100)) * cartItem.getQuantity());
         } else {
             cartItem.setDiscountedTotalAmount(null);
         }
@@ -174,8 +203,16 @@ public class CartServiceImp implements CartService {
     /* Calculate Cart discounted total amount */
     private Long calculateCartDiscountedTotalAmount(List<CartItem> items) {
         return items.stream()
-                .filter(item -> item.getDiscountedTotalAmount() != null)
-                .mapToLong(CartItem::getDiscountedTotalAmount)
+                .mapToLong(item -> {
+                    Promotion promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(LocalDate.now(), LocalDate.now(), item.getProductID())
+                            .orElse(null);
+                    if (promotion != null) {
+                        Product product = productRepository.findByProductID(item.getProductID())
+                                .orElseThrow(() -> new RuntimeException("Product not found"));
+                        return (product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100)) * item.getQuantity();
+                    }
+                    return 0L;
+                })
                 .sum();
     }
 

@@ -1,9 +1,7 @@
 package com.glowcorner.backend.controller.OrderController;
 
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
-import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
-import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,10 +25,10 @@ public class CustomerOrderController {
     }
 
     // Create order
-    @Operation(summary = "Create a new order", description = "Add a new order to the system")
+    @Operation(summary = "Create a new order *from cart*", description = "Add a new order to the system")
     @PostMapping
-    public ResponseEntity<ResponseData> createOrder(@PathVariable String userID, @RequestBody CustomerCreateOrderRequest request) {
-        OrderDTO createdOrder = orderService.customerCreateOrder(request);
+    public ResponseEntity<ResponseData> createOrder(@PathVariable String userID) {
+        OrderDTO createdOrder = orderService.customerCreateOrder(userID);
         createdOrder.setCustomerID(userID);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseData(201, true, "Order created", createdOrder, null, null));

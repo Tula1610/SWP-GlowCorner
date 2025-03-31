@@ -23,5 +23,5 @@ public class OrderDetail {
 
     int quantity;
 
-    Long price;
+    Long totalAmount;
 }

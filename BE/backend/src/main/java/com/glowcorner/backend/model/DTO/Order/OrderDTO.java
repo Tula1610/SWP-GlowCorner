@@ -1,5 +1,6 @@
 package com.glowcorner.backend.model.DTO.Order;
 
+import com.glowcorner.backend.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class OrderDTO {
     String orderID;
     String customerID;
     LocalDate orderDate;
-    String status;
+    OrderStatus status;
     Long totalAmount;
     List<OrderDetailDTO> orderDetails;
 
