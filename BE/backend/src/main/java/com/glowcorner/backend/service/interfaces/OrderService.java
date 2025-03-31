@@ -1,10 +1,9 @@
 package com.glowcorner.backend.service.interfaces;
 
+import com.glowcorner.backend.enums.OrderStatus;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
-import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
-import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,9 +11,8 @@ import java.util.List;
 public interface OrderService {
 
     /* Order CRUD */
-    OrderDTO createOrder(CreateOrderRequest request);
-    OrderDTO customerCreateOrder(CustomerCreateOrderRequest request);
-    OrderDTO updateOrder(String orderId, OrderDTO orderDTO);
+    OrderDTO customerCreateOrder(String userID);
+    OrderDTO updateOrder(String orderId, OrderStatus status);
     void deleteOrder(String orderId);
 
     /* Order Query */

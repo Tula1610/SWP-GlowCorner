@@ -16,7 +16,7 @@ public class OrderDetailMapper {
             orderDetail.getOrderID(),
             orderDetail.getProductID(),
             orderDetail.getQuantity(),
-            orderDetail.getPrice()
+            orderDetail.getTotalAmount()
         );
     }
 
@@ -30,7 +30,7 @@ public class OrderDetailMapper {
         orderDetail.setOrderID(orderID);
         orderDetail.setProductID(orderDetailDTO.getProductID());
         orderDetail.setQuantity(orderDetailDTO.getQuantity());
-        orderDetail.setPrice(orderDetailDTO.getPrice());
+        orderDetail.setTotalAmount(orderDetailDTO.getTotalAmount());
 
         return orderDetail;
     }

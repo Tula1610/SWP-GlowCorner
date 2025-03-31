@@ -1,8 +1,8 @@
 package com.glowcorner.backend.controller.OrderController;
 
+import com.glowcorner.backend.enums.OrderStatus;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
-import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,21 +28,12 @@ public class OrderController {
     /* Order CRUD
     * */
 
-    // Create order
-    @Operation(summary = "Create a new order", description = "Add a new order to the system")
-    @PostMapping
-    public ResponseEntity<ResponseData> createOrder(@RequestBody CreateOrderRequest request) {
-        OrderDTO createdOrder = orderService.createOrder(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseData(201, true, "Order created", createdOrder, null, null));
-    }
-
     // Update order
     @Operation(summary = "Update an existing order", description = "Update an existing order using its ID")
     @PutMapping("/{orderId}")
-    public ResponseEntity<ResponseData> updateOrder(@PathVariable String orderId, @RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<ResponseData> updateOrder(@PathVariable String orderId, @RequestBody OrderStatus status) {
         try {
-            OrderDTO updatedOrder = orderService.updateOrder(orderId, orderDTO);
+            OrderDTO updatedOrder = orderService.updateOrder(orderId, status);
             if (updatedOrder == null) {
                 return ResponseEntity.status(404)
                         .body(new ResponseData(404, false, "Order with ID: " + orderId + " not found", null, null, null));

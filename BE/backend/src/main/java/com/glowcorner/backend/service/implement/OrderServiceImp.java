@@ -1,26 +1,15 @@
 package com.glowcorner.backend.service.implement;
 
-import com.glowcorner.backend.entity.mongoDB.Order;
-import com.glowcorner.backend.entity.mongoDB.OrderDetail;
-import com.glowcorner.backend.entity.mongoDB.Product;
-import com.glowcorner.backend.entity.mongoDB.User;
+import com.glowcorner.backend.entity.mongoDB.*;
+import com.glowcorner.backend.enums.OrderStatus;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
-import com.glowcorner.backend.model.DTO.request.Order.CreateOrderRequest;
-import com.glowcorner.backend.model.DTO.request.Order.CustomerCreateOrderRequest;
-import com.glowcorner.backend.model.mapper.CreateMapper.Order.Manager.CreateOrderRequestMapper;
-import com.glowcorner.backend.model.mapper.CreateMapper.Order.Customer.CustomerCreateOrderRequestMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderMapper;
-import com.glowcorner.backend.repository.OrderDetailRepository;
-import com.glowcorner.backend.repository.OrderRepository;
-import com.glowcorner.backend.repository.ProductRepository;
-import com.glowcorner.backend.repository.UserRepository;
-import com.glowcorner.backend.service.interfaces.CounterService;
+import com.glowcorner.backend.repository.*;
 import com.glowcorner.backend.service.interfaces.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,58 +29,94 @@ public class OrderServiceImp implements OrderService {
 
     private final OrderMapper orderMapper;
 
-    @Autowired
-    private CounterService counterService;
-
     private final OrderDetailMapper orderDetailMapper;
-    private final CreateOrderRequestMapper createOrderRequestMapper;
-    private final CustomerCreateOrderRequestMapper customerCreateOrderRequestMapper;
 
-    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductRepository productRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, CreateOrderRequestMapper createOrderRequestMapper, CustomerCreateOrderRequestMapper customerCreateOrderRequestMapper) {
+    private final CartRepository cartRepository;
+
+    private final PromotionRepository promotionRepository;
+    private final CounterServiceImpl counterServiceImpl;
+
+    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductRepository productRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, CartRepository cartRepository, PromotionRepository promotionRepository, CounterServiceImpl counterServiceImpl) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
-        this.createOrderRequestMapper = createOrderRequestMapper;
-        this.customerCreateOrderRequestMapper = customerCreateOrderRequestMapper;
+        this.cartRepository = cartRepository;
+        this.promotionRepository = promotionRepository;
+        this.counterServiceImpl = counterServiceImpl;
     }
 
     /* Order
     * */
 
-    // Create order
+    // Customer create order
     @Override
-    public OrderDTO createOrder(CreateOrderRequest request) {
-        User user = userRepository.findByUserID(request.getCustomerID())
+    public OrderDTO customerCreateOrder(String userID) {
+        User user = userRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         if (user.getRole() != Role.CUSTOMER) {
             throw new IllegalArgumentException("Customer ID required!");
         }
 
-        Order order = createOrderRequestMapper.fromCreateRequest(request);
-        order.setTotalAmount(calculateTotalAmount(order.getOrderDetails()));
+        Cart cart = cartRepository.findByUserID(userID)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        Order order = new Order();
+        order.setOrderID(counterServiceImpl.getNextOrderID());
+        order.setCustomerID(userID);
+        order.setOrderDate(LocalDate.now());
+        order.setStatus(OrderStatus.PENDING);
+
+        final String orderID = order.getOrderID();
+
+        List<OrderDetail> orderDetails = cart.getItems().stream().map(cartItem -> {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrderID(orderID);
+            orderDetail.setProductID(cartItem.getProductID());
+            orderDetail.setQuantity(cartItem.getQuantity());
+
+            // Apply promotion if available
+            Promotion promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(LocalDate.now(), LocalDate.now(), cartItem.getProductID())
+                    .orElse(null);
+            if (promotion != null) {
+                Product product = productRepository.findByProductID(cartItem.getProductID())
+                        .orElseThrow(() -> new RuntimeException("Product not found"));
+                orderDetail.setTotalAmount((product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100)) * cartItem.getQuantity());
+            } else {
+                orderDetail.setTotalAmount(cartItem.getTotalAmount());
+            }
+
+            return orderDetail;
+        }).collect(Collectors.toList());
+
+        // Set order details and calculate total amount
+        order.setOrderDetails(orderDetails);
+        order.setTotalAmount(calculateTotalAmount(orderDetails));
+
+        // Save order and order details
         order = orderRepository.save(order);
+        orderDetailRepository.saveAll(orderDetails);
+
+        // Clear the cart
+        cart.getItems().clear();
+        cart.setTotalAmount(0L);
+        cart.setDiscountedTotalAmount(null);
+        cartRepository.save(cart);
+
         return orderMapper.toOrderDTO(order);
     }
 
     // Update order
     @Override
-    public OrderDTO updateOrder(String orderId, OrderDTO orderDTO) {
+    public OrderDTO updateOrder(String orderId, OrderStatus status) {
         // Find existing order
         Order existingOrder = orderRepository.findByOrderID(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         // Update
-        if (orderDTO.getCustomerID() != null) existingOrder.setCustomerID(orderDTO.getCustomerID());
-        if (orderDTO.getOrderDate() != null) existingOrder.setOrderDate(orderDTO.getOrderDate());
-        if (orderDTO.getStatus() != null) existingOrder.setStatus(orderDTO.getStatus());
-        if (orderDTO.getTotalAmount() != null) existingOrder.setTotalAmount(calculateTotalAmount(existingOrder.getOrderDetails()));
-        if (orderDTO.getOrderDetails() != null)
-            existingOrder.setOrderDetails(orderDTO.getOrderDetails().stream()
-                .map(orderDetailDTO -> orderDetailMapper.toOrderDetail(orderDetailDTO, orderId))
-                .collect(Collectors.toList()));
+        existingOrder.setStatus(status);
 
         // Save
         Order savedOrder = orderRepository.save(existingOrder);
@@ -106,17 +131,6 @@ public class OrderServiceImp implements OrderService {
         Order existingOrder = orderRepository.findByOrderID(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         orderRepository.delete(existingOrder);
-    }
-
-    // Customer create order
-    @Override
-    public OrderDTO customerCreateOrder(CustomerCreateOrderRequest request) {
-        Order order = customerCreateOrderRequestMapper.fromCustomerCreateRequest(request);
-        order.setTotalAmount(calculateTotalAmount(order.getOrderDetails()));
-        order = orderRepository.save(order);
-        List<OrderDetail> orderDetails = order.getOrderDetails();
-        orderDetailRepository.saveAll(orderDetails);
-        return orderMapper.toOrderDTO(order);
     }
 
 
@@ -165,6 +179,7 @@ public class OrderServiceImp implements OrderService {
                 .collect(Collectors.toList());
     }
 
+
     // \\ For customer \\
     // Get orders by status and customerID
     public List<OrderDTO> getOrdersByStatusAndCustomerID(String status, String userID) {
@@ -181,6 +196,8 @@ public class OrderServiceImp implements OrderService {
                 .map(orderMapper::toOrderDTO)
                 .collect(Collectors.toList());
     }
+
+
 
     /* OrderDetail
     * */
@@ -204,7 +221,7 @@ public class OrderServiceImp implements OrderService {
             if (orderDetailDTO.getOrderID() != null) existingOrderDetail.setOrderID(orderDetailDTO.getOrderID());
             if (orderDetailDTO.getProductID() != null) existingOrderDetail.setProductID(orderDetailDTO.getProductID());
             if (orderDetailDTO.getQuantity() != null) existingOrderDetail.setQuantity(orderDetailDTO.getQuantity());
-            if (orderDetailDTO.getPrice() != null) existingOrderDetail.setPrice(orderDetailDTO.getPrice());
+            if (orderDetailDTO.getTotalAmount() != null) existingOrderDetail.setTotalAmount(orderDetailDTO.getTotalAmount());
 
             existingOrderDetail = orderDetailRepository.save(existingOrderDetail);
             return orderDetailMapper.toOrderDetailDTO(existingOrderDetail);
@@ -239,7 +256,7 @@ public class OrderServiceImp implements OrderService {
             OrderInfoDTO.OrderDetailItemDTO item = new OrderInfoDTO.OrderDetailItemDTO();
             item.setProductID(orderDetail.getProductID());
             item.setQuantity(orderDetail.getQuantity());
-            item.setPrice(orderDetail.getPrice());
+            item.setPrice(orderDetail.getTotalAmount());
             item.setName(product.getProductName());
             item.setImage(product.getImage_url());
             return item;
@@ -284,10 +301,11 @@ public class OrderServiceImp implements OrderService {
                 .collect(Collectors.toList());
     }
 
+
     /* Calculate Total Amount */
     private Long calculateTotalAmount(List<OrderDetail> orderDetails) {
         return orderDetails.stream()
-                .mapToLong(detail -> detail.getQuantity() * detail.getPrice())
+                .mapToLong(OrderDetail::getTotalAmount)
                 .sum();
     }
 }
