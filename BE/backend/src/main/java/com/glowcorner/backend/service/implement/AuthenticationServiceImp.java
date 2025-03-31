@@ -52,7 +52,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
     }
 
     @Override
-    public boolean signup(String username, String password) {
+    public boolean signup(String username, String password, String email) {
         Optional<Authentication> existingUser = authenticationRepository.findByUsername(username);
         if (existingUser.isPresent()) {
             return false;
@@ -62,6 +62,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
 
         User user = new User();
         user.setUserID(userID);
+        user.setEmail(email);
         user.setRole(Role.CUSTOMER); // Mặc định role là USER
 
         Authentication authentication = new Authentication();

@@ -126,7 +126,7 @@ public class AuthenticationController {
     @Operation(summary = "Signup", description = "Create a new user", security = {})
     @PostMapping("/signup")
     public ResponseEntity<ResponseData> signup(@RequestBody Signup Signup) {
-        boolean isCreated = authenticationService.signup(Signup.getUsername(), Signup.getPassword());
+        boolean isCreated = authenticationService.signup(Signup.getUsername(), Signup.getPassword(), Signup.getEmail());
         if (!isCreated) {
             return ResponseUtil.error(HttpStatus.BAD_REQUEST.value(), "User already exists");
         }

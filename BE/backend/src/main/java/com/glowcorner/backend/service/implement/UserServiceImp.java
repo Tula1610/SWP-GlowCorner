@@ -131,6 +131,7 @@ public class UserServiceImp implements UserService {
     public void deleteUser(String userID) {
         cartRepository.deleteCartByUserID(userID);
         userRepository.deleteUserByUserID(userID);
+        authenticationRepository.deleteByUserID(userID);
     }
 
     // Search user by name
