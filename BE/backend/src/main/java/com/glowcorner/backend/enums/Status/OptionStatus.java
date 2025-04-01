@@ -1,7 +1,6 @@
 package com.glowcorner.backend.enums.Status;
 
-
-public enum FeedbackStatus {
+public enum OptionStatus {
     ACTIVE,
     DISABLE
 }

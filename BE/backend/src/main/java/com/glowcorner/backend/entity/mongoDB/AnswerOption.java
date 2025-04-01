@@ -2,6 +2,7 @@ package com.glowcorner.backend.entity.mongoDB;
 
 
 import com.glowcorner.backend.enums.SkinType;
+import com.glowcorner.backend.enums.Status.OptionStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
@@ -22,4 +23,6 @@ public class AnswerOption {
     SkinType skinType;
 
     String optionText;
+
+    OptionStatus status;
 }
