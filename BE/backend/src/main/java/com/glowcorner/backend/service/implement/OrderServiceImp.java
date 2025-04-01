@@ -118,6 +118,19 @@ public class OrderServiceImp implements OrderService {
         // Update
         existingOrder.setStatus(status);
 
+        // If the order is completed, add loyalty points to the user
+        if (status == OrderStatus.COMPLETED) {
+            User user = userRepository.findByUserID(existingOrder.getCustomerID())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Calculate loyalty points (1 point for every $1 paid)
+            long loyaltyPoints = existingOrder.getTotalAmount();
+            user.setLoyalPoints((int) (user.getLoyalPoints() + loyaltyPoints));
+
+            // Save the updated user
+            userRepository.save(user);
+        }
+
         // Save
         Order savedOrder = orderRepository.save(existingOrder);
 
