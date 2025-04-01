@@ -219,6 +219,130 @@ public class ProductServiceImp implements ProductService {
    }
 
 
+   /* Customer */
+
+   // Get all active products
+   @Override
+   public List<ProductDTO> getAllActiveProducts() {
+       List<Product> products = productRepository.findAll()
+               .stream()
+               .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
+               .collect(Collectors.toList());
+       return products.stream()
+               .map(product -> {
+                   ProductDTO productDTO = productMapper.toDTO(product);
+                   calculateDiscountedPrice(productDTO);
+                   return productDTO;
+               })
+               .collect(Collectors.toList());
+   }
+
+    // Get active product by ID
+    @Override
+    public ProductDTO getActiveProductById(String productId) {
+        Product product = productRepository.findByProductID(productId)
+                .filter(p -> p.getStatus() == ProductStatus.ACTIVE)
+                .orElseThrow(() -> new RuntimeException("Product not found or not active"));
+        ProductDTO productDTO = productMapper.toDTO(product);
+        calculateDiscountedPrice(productDTO);
+        return productDTO;
+    }
+
+    // Get active products by skin types
+    @Override
+    public List<ProductDTO> getActiveProductsBySkinType(SkinType skinType) {
+        List<Product> products = productRepository.findBySkinTypesIn(skinType)
+                .stream()
+                .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
+                .collect(Collectors.toList());
+        return products.stream()
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Get active products by category
+    @Override
+    public List<ProductDTO> getActiveProductsByCategory(Category category) {
+        List<Product> products = productRepository.findByCategory(category)
+                .stream()
+                .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
+                .collect(Collectors.toList());
+        return products.stream()
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Get active products by product name
+    @Override
+    public List<ProductDTO> getActiveProductsByProductName(String productName) {
+        List<Product> products = productRepository.findByProductNameContainingIgnoreCase(productName)
+                .stream()
+                .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
+                .collect(Collectors.toList());
+        return products.stream()
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Get active products by filter
+    @Override
+    public List<ProductDTO> getActiveProductsByFilter(
+            List<SkinType> skinTypes,
+            List<Category> categories,
+            Long minPrice,
+            Long maxPrice
+    ) {
+        Query query = new Query();
+
+        // Filter by skinType (if any)
+        if (skinTypes != null && !skinTypes.isEmpty()) {
+            query.addCriteria(Criteria.where("skinType").in(skinTypes));
+        }
+
+        // Filter by category (if any)
+        if (categories != null && !categories.isEmpty()) {
+            query.addCriteria(Criteria.where("category").in(categories));
+        }
+
+        // Filter by price range (combine gte and lte in one Criteria)
+        if (minPrice != null || maxPrice != null) {
+            Criteria priceCriteria = Criteria.where("price");
+            if (minPrice != null) {
+                priceCriteria.gte(minPrice);
+            }
+            if (maxPrice != null) {
+                priceCriteria.lte(maxPrice);
+            }
+            query.addCriteria(priceCriteria);
+        }
+
+        // Filter by status ACTIVE
+        query.addCriteria(Criteria.where("status").is(ProductStatus.ACTIVE));
+
+        // Execute query
+        List<Product> products = mongoTemplate.find(query, Product.class);
+        return products.stream()
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    calculateDiscountedPrice(productDTO);
+                    return productDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+
    // Calculator
    private void calculateDiscountedPrice(ProductDTO productDTO) {
        LocalDate now = LocalDate.now();

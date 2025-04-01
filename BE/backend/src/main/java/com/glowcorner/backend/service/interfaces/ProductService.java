@@ -22,4 +22,15 @@ public interface ProductService {
                                          Long minPrice,
                                          Long maxPrice);
     List<ProductDTO> getProductsByProductName(String productName);
+
+    // Methods for active products
+    List<ProductDTO> getAllActiveProducts();
+    ProductDTO getActiveProductById(String productId);
+    List<ProductDTO> getActiveProductsBySkinType(SkinType skinType);
+    List<ProductDTO> getActiveProductsByCategory(Category category);
+    List<ProductDTO> getActiveProductsByProductName(String productName);
+    List<ProductDTO> getActiveProductsByFilter(List<SkinType> skinTypes,
+                                               List<Category> categories,
+                                               Long minPrice,
+                                               Long maxPrice);
 }

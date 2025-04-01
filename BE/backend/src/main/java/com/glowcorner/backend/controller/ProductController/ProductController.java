@@ -1,7 +1,6 @@
 package com.glowcorner.backend.controller.ProductController;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Category;
@@ -50,7 +49,6 @@ public class ProductController {
             }
             return ResponseEntity.ok(new ResponseData(200, true, "Products found", products, null, null));
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseData(500, false, "Failed to retrieve products: " + e.getMessage(), null, null, null));
         }
@@ -162,7 +160,7 @@ public class ProductController {
             System.out.println("Received image file: " + (imageFile != null ? imageFile.getOriginalFilename() : "No file"));
 
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true);
+            objectMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // Bỏ qua các trường không nhận diện
             CreateProductRequest request = objectMapper.readValue(productJson, CreateProductRequest.class);
 
@@ -175,7 +173,6 @@ public class ProductController {
             ProductDTO created = productService.createProduct(request);
             return ResponseEntity.ok(new ResponseData(200, true, "Product created successfully", created, null, null));
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseData(500, false, "Failed to create product: " + e.getMessage(), null, null, null));
         }
