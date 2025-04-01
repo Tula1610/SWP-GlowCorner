@@ -1,6 +1,6 @@
 package com.glowcorner.backend.model.DTO.Order;
 
-import com.glowcorner.backend.enums.OrderStatus;
+import com.glowcorner.backend.enums.Status.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

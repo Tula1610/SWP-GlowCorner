@@ -3,6 +3,7 @@ package com.glowcorner.backend.entity.mongoDB;
 import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Role;
+import com.glowcorner.backend.enums.Status.UserStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
@@ -33,8 +34,9 @@ public class User {
 
     int loyalPoints;
 
-    //One to one
     Role role;
+
+    UserStatus status;
 
     //One to One
     Authentication authentication;

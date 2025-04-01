@@ -1,6 +1,7 @@
 package com.glowcorner.backend.model.mapper.CreateMapper.User.Manager;
 
 import com.glowcorner.backend.entity.mongoDB.User;
+import com.glowcorner.backend.enums.Status.UserStatus;
 import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 import com.glowcorner.backend.service.implement.CounterServiceImpl;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class CreateUserRequestMapper {
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
         user.setRole(request.getRole());
+        user.setStatus(UserStatus.ACTIVE);
         user.setSkinType(request.getSkinType());
         return user;
     }

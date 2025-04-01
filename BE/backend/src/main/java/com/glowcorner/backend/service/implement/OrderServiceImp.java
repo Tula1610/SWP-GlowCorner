@@ -1,7 +1,7 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.*;
-import com.glowcorner.backend.enums.OrderStatus;
+import com.glowcorner.backend.enums.Status.OrderStatus;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
@@ -143,7 +143,8 @@ public class OrderServiceImp implements OrderService {
     public void deleteOrder(String orderId) {
         Order existingOrder = orderRepository.findByOrderID(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-        orderRepository.delete(existingOrder);
+        existingOrder.setStatus(OrderStatus.DISABLE);
+        orderRepository.save(existingOrder);
     }
 
 

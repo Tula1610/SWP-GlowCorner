@@ -2,6 +2,7 @@ package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.AnswerOption;
 import com.glowcorner.backend.entity.mongoDB.Quiz;
+import com.glowcorner.backend.enums.Status.QuizStatus;
 import com.glowcorner.backend.model.DTO.QuizDTO;
 import com.glowcorner.backend.model.DTO.request.Quiz.CreateQuizRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.Quiz.CreateQuizRequestMapper;
@@ -105,8 +106,10 @@ public class QuizServiceImp implements QuizService {
 
     @Override
     public void deleteQuiz(String id) {
-        answerOptionRepository.deleteAllByQuestionId(id);
-        quizRepository.deleteQuizByQuestionId(id);
+        Quiz existingQuiz = quizRepository.findQuizByQuestionId(id)
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+        existingQuiz.setStatus(QuizStatus.DISABLE); // Assuming QuizStatus enum has DISABLE status
+        quizRepository.save(existingQuiz);
     }
 
     @Override

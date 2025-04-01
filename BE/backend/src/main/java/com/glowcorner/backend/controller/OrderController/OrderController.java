@@ -1,6 +1,6 @@
 package com.glowcorner.backend.controller.OrderController;
 
-import com.glowcorner.backend.enums.OrderStatus;
+import com.glowcorner.backend.enums.Status.OrderStatus;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
 import com.glowcorner.backend.model.DTO.response.ResponseData;

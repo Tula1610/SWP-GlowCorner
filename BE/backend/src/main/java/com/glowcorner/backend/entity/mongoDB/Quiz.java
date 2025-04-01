@@ -1,5 +1,6 @@
 package com.glowcorner.backend.entity.mongoDB;
 
+import com.glowcorner.backend.enums.Status.QuizStatus;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
@@ -20,5 +21,7 @@ public class Quiz {
     String quizText;
 
     List<AnswerOption> options;
+
+    QuizStatus status;
 
 }

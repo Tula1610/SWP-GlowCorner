@@ -1,6 +1,6 @@
 package com.glowcorner.backend.entity.mongoDB;
 
-import com.glowcorner.backend.enums.OrderStatus;
+import com.glowcorner.backend.enums.Status.OrderStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;

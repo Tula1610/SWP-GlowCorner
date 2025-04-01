@@ -3,6 +3,7 @@ package com.glowcorner.backend.service.implement;
 import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.entity.mongoDB.Authentication;
+import com.glowcorner.backend.enums.Status.UserStatus;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import com.glowcorner.backend.model.DTO.User.UserDTOByStaff;
@@ -125,9 +126,10 @@ public class UserServiceImp implements UserService {
     // Delete a user
     @Override
     public void deleteUser(String userID) {
-        cartRepository.deleteCartByUserID(userID);
-        userRepository.deleteUserByUserID(userID);
-        authenticationRepository.deleteByUserID(userID);
+        User existingUser = userRepository.findByUserID(userID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        existingUser.setStatus(UserStatus.DISABLE); // Assuming UserStatus enum has DISABLE status
+        userRepository.save(existingUser);
     }
 
     // Search user by name

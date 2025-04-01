@@ -1,8 +1,9 @@
-package com.glowcorner.backend.enums;
+package com.glowcorner.backend.enums.Status;
 
 public enum OrderStatus {
     PENDING,
     PROCESSING,
     COMPLETED,
-    CANCELLED
+    CANCELLED,
+    DISABLE
 }
