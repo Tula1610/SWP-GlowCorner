@@ -13,6 +13,8 @@ public interface SkinCareRoutineService {
     void deleteSkinCareRoutine(String routineId);
     SkinCareRoutineDTO deleteProductFromRoutine(String routineId, String productId);
 
+    SkinCareRoutineDTO applyRoutineToUser(String userID, String skinCareRoutineID);
+
 
     List<SkinCareRoutineDTO> getAllSkinCareRoutines();
     List<SkinCareRoutineDTO> getSkinCareRoutineBySkinType(SkinType skinType);

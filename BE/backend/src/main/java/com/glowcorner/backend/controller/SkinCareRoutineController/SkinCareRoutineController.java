@@ -95,6 +95,18 @@ public class SkinCareRoutineController {
         }
     }
 
+    @Operation(summary = "Apply a skincare routine to a user", description = "Assign a skincare routine to a user using their IDs")
+    @PostMapping("/{skinCareRoutineID}/apply-to-user/{userID}")
+    public ResponseEntity<ResponseData> applyRoutineToUser(@PathVariable String userID, @PathVariable String skinCareRoutineID) {
+        try {
+            SkinCareRoutineDTO appliedRoutine = skinCareRoutineService.applyRoutineToUser(userID, skinCareRoutineID);
+            return ResponseEntity.ok(new ResponseData(200, true, "Skincare routine applied to user", appliedRoutine, null, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseData(500, false, "Fail to apply skincare routine to user", null, null, null));
+        }
+    }
+
     // Delete a skincare routine
     @Operation(summary = "Delete a skincare routine by ID", description = "Remove a skin care routine from the system using its ID")
     @DeleteMapping("/{id}")
