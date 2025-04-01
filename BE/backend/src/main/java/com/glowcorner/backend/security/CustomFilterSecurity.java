@@ -77,7 +77,7 @@ public class CustomFilterSecurity {
                 .authorizeHttpRequests()
                 .requestMatchers(publicUrls).permitAll()
                 .requestMatchers(HttpMethod.GET, showUrls).hasRole("CUSTOMER")
-                .requestMatchers(HttpMethod.GET, showStaffUrls).hasRole("STAFF")
+                .requestMatchers(HttpMethod.GET, showStaffUrls).hasAnyRole("STAFF","MANAGER")
                 .requestMatchers(HttpMethod.PUT, updateUrls).hasAnyRole("CUSTOMER","STAFF")
                 .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
                 .requestMatchers(HttpMethod.POST, postStaffUrls).hasRole("STAFF")
