@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnswerOptionDTO {
 
+    String questionID;
     String optionID;
     SkinType skinType;
     String optionText;
