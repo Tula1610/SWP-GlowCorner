@@ -79,7 +79,7 @@ public class SkinCareRoutineController {
 
     // Update an existing skincare routine
     @Operation(summary = "Update a skincare routine", description = "Update an existing skin care routine using its ID " +
-            "*(If update product, only type productID)*")
+            "*(If update product, only type 'productID', and it only add a new product into routine)*")
     @PutMapping("/{id}")
     public ResponseEntity<ResponseData> updateSkinCareRoutine(@PathVariable String id, @RequestBody SkinCareRoutineDTO skinCareRoutineDTO) {
         try {

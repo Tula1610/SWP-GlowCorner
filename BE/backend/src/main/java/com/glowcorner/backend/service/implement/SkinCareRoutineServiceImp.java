@@ -89,14 +89,26 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
             if (skinCareRoutineDTO.getRoutineDescription() != null) existingRoutine.setRoutineDescription(skinCareRoutineDTO.getRoutineDescription());
 
             if (skinCareRoutineDTO.getProductDTOS() != null) {
-                List<Product> products = skinCareRoutineDTO.getProductDTOS().stream()
+                List<Product> existingProducts = existingRoutine.getProducts();
+                List<Product> updatedProducts = skinCareRoutineDTO.getProductDTOS().stream()
                         .map(ProductDTO::getProductID)
                         .map(productRepository::findByProductID)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .collect(Collectors.toList());
-                existingRoutine.setProducts(products);
+                        .toList();
+
+                // Update existing products
+                for (Product updatedProduct : updatedProducts) {
+                    boolean productExists = existingProducts.stream()
+                            .anyMatch(existingProduct -> existingProduct.getProductID().equals(updatedProduct.getProductID()));
+                    if (!productExists) {
+                        existingProducts.add(updatedProduct);
+                    }
+                }
+
+                existingRoutine.setProducts(existingProducts);
             }
+
 
             SkinCareRoutine updatedRoutine = skinCareRoutineRepository.save(existingRoutine);
             return skinCareRoutineMapper.toDTO(updatedRoutine);
