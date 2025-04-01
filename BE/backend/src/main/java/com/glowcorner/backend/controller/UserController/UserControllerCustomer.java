@@ -1,6 +1,7 @@
 package com.glowcorner.backend.controller.UserController;
 
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
+import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.UserService;
@@ -29,6 +30,18 @@ public class UserControllerCustomer {
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .body(new ResponseData(201, true, "User created", createdUser, null, null));
 //    }
+
+    // Get user by ID
+    @Operation(summary = "Get a user by ID", description = "Retrieve a single user using its ID")
+    @GetMapping("{userId}")
+    public ResponseEntity<ResponseData> getUserById(@PathVariable String userId) {
+        UserDTOByManager user = userService.getUserById(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseData(404, false, "User with ID: " + userId + " not found", null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "User found", user, null, null));
+    }
 
     // Update user
     @Operation(summary = "Update a user by ID", description = "Update a user using its ID")

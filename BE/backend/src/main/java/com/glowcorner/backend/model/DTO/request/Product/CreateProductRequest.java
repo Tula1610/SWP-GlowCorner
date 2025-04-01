@@ -1,5 +1,6 @@
 package com.glowcorner.backend.model.DTO.request.Product;
 
+import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.enums.SkinType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ public class CreateProductRequest {
     String productName;
     String description;
     Long price;
+    Category category;
     SkinType skinType;
     Float rating;
     String image_url;

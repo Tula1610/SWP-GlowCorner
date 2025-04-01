@@ -56,13 +56,17 @@ public class CustomFilterSecurity {
                 "/auth/signup",
                 "/auth/forgot-password",
                 "/auth/change-password",
+                "/api/products",
+                "/api/feedbacks",
         };
 
-        String[] showUrls = {"/api/manager/users/**","/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines/**","/api/promotions","/api/feedbacks/**","/api/quizzes/**"};
+//        String[] showUrls = {"/api/manager/users/**","/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines/**","/api/promotions","/api/feedbacks/**","/api/quizzes/**"};
+        String[] showUrls = {"/api/user/**","/api/orders/customer/**","/api/cart/**","/api/categories","/api/skin-care-routines/**"};
         String[] updateUrls = {"/api/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
         String[] postUrls = {"/api/cart/**","/api/orders/**"};
         String[] deleteUrls = {"/api/cart/**"};
-        String[] adminUrls = {"/**"};
+        String[] showStaffUrls = {"/api/orders/staff","/api/promotions","/api/quizzes","/api/answer-options"};
+        String[] adminUrls = {"/api/manager/users/**"};
 
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -71,7 +75,8 @@ public class CustomFilterSecurity {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(publicUrls).permitAll()
-                .requestMatchers(HttpMethod.GET, showUrls).permitAll()
+                .requestMatchers(HttpMethod.GET, showUrls).hasRole("CUSTOMER")
+                .requestMatchers(HttpMethod.GET, showStaffUrls).hasRole("STAFF")
                 .requestMatchers(HttpMethod.PUT, updateUrls).hasAnyRole("CUSTOMER","STAFF")
                 .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
                 .requestMatchers(HttpMethod.DELETE, deleteUrls).hasRole("CUSTOMER")

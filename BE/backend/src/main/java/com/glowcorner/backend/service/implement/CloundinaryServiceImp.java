@@ -13,12 +13,18 @@ import java.util.Map;
 public class CloundinaryServiceImp implements CloudinaryService {
     private final Cloudinary cloudinary;
 
-    public CloundinaryServiceImp (Cloudinary cloudinary) {
+    public CloundinaryServiceImp(Cloudinary cloudinary) {
         this.cloudinary = cloudinary;
     }
 
+    @Override
     public String uploadFile(MultipartFile file) throws IOException {
-        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-        return uploadResult.get("secure_url").toString(); // Return image URL
+        try {
+            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            System.out.println("Cloudinary upload result: " + uploadResult);
+            return uploadResult.get("secure_url").toString();
+        } catch (Exception e) {
+            throw new IOException("Failed to upload file to Cloudinary: " + e.getMessage(), e);
+        }
     }
 }

@@ -24,6 +24,7 @@ public class CreateProductRequestMapper {
         product.setProductName(request.getProductName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
+        product.setCategory(request.getCategory());
         product.setSkinType(request.getSkinType());
         product.setRating(request.getRating());
         product.setImage_url(request.getImage_url());
