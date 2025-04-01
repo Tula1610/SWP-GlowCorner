@@ -4,10 +4,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
+import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.CloudinaryService;
 import com.glowcorner.backend.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,28 +34,11 @@ public class UserControllerCustomer {
 
     // Create user
     @Operation(summary = "Create a new customer", description = "Add a new customer to the system")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ResponseData> createUser(
-            @RequestPart("user") String userJson,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            CreateCustomerRequest request = objectMapper.readValue(userJson, CreateCustomerRequest.class);
-
-            if (imageFile != null && !imageFile.isEmpty()) {
-                String imageUrl = cloudinaryService.uploadFile(imageFile);
-                request.setAvatar_url(imageUrl);
-            }
-
-            UserDTOByCustomer createdUser = userService.createCustomer(request);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new ResponseData(201, true, "User created", createdUser, null, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseData(500, false, "Failed to create user: " + e.getMessage(), null, null, null));
-        }
+    @PostMapping
+    public ResponseEntity<ResponseData> createUser(@RequestBody CreateCustomerRequest request) {
+        UserDTOByCustomer createdUser = userService.createCustomer(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseData(201, true, "User created", createdUser, null, null));
     }
 
     // Update user
@@ -59,8 +46,18 @@ public class UserControllerCustomer {
     @PutMapping(value = "{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseData> updateUserByCustomer(
             @PathVariable String userId,
-            @RequestPart(value = "user", required = false) String userJson,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) {
+            @RequestPart(value = "user", required = false) @Parameter(
+                    description = "User data in JSON format",
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CreateUserRequest.class)
+                    )
+            ) String userJson,
+            @RequestPart(value = "image", required = false) @Parameter(
+                    description = "User's avatar image file",
+                    content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE)
+            ) MultipartFile imageFile) {
         try {
             UserDTOByCustomer userDTO;
             if (userJson != null) {
