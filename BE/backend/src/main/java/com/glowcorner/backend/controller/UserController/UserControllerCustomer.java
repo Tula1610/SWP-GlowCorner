@@ -21,14 +21,14 @@ public class UserControllerCustomer {
         this.userService = userService;
     }
 
-//    // Create user
-//    @Operation(summary = "Create a new customer", description = "Add a new customer to the system")
-//    @PostMapping
-//    public ResponseEntity<ResponseData> createUser(@RequestBody CreateCustomerRequest request) {
-//        UserDTOByCustomer createdUser = userService.createUser(request);
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(new ResponseData(201, true, "User created", createdUser, null, null));
-//    }
+    // Create user
+    @Operation(summary = "Create a new customer", description = "Add a new customer to the system")
+    @PostMapping
+    public ResponseEntity<ResponseData> createUser(@RequestBody CreateCustomerRequest request) {
+        UserDTOByCustomer createdUser = userService.createCustomer(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseData(201, true, "User created", createdUser, null, null));
+    }
 
     // Update user
     @Operation(summary = "Update a user by ID", description = "Update a user using its ID")

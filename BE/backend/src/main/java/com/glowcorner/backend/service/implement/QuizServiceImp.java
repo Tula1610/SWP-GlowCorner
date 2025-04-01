@@ -35,6 +35,24 @@ public class QuizServiceImp implements QuizService {
     public QuizDTO createQuiz(CreateQuizRequest request) {
         Quiz quiz = createQuizRequestMapper.fromCreateRequest(request);
         quiz = quizRepository.save(quiz);
+
+        final String questionID = quiz.getQuestionId();
+
+        // Save answer options
+        if (request.getAnswerOptionRequests() != null) {
+            List<AnswerOption> answerOptions = request.getAnswerOptionRequests().stream()
+                    .map(optionDTO -> {
+                        AnswerOption option = new AnswerOption();
+                        option.setOptionID(counterService.getNextOptionID());
+                        option.setQuestionId(questionID);
+                        option.setSkinType(optionDTO.getSkinType());
+                        option.setOptionText(optionDTO.getOptionText());
+                        return option;
+                    }).collect(Collectors.toList());
+            answerOptionRepository.saveAll(answerOptions);
+            quiz.setOptions(answerOptions);
+        }
+
         return quizMapper.toDTO(quiz);
     }
 
@@ -60,10 +78,9 @@ public class QuizServiceImp implements QuizService {
                                 option = new AnswerOption();
                                 option.setOptionID(counterService.getNextOptionID());
                             }
+
                             option.setQuestionId(questionID);
-                            if (optionDTO.getOptionID() != null) {
-                                option.setOptionID(optionDTO.getOptionID());
-                            }
+
                             if (optionDTO.getSkinType() != null) {
                                 option.setSkinType(optionDTO.getSkinType());
                             }
@@ -72,6 +89,7 @@ public class QuizServiceImp implements QuizService {
                             }
                             return option;
                         }).collect(Collectors.toList());
+                answerOptionRepository.saveAll(updatedOptions);
                 existingQuiz.setOptions(updatedOptions);
             }
 

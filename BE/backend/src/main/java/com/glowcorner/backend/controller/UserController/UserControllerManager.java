@@ -33,7 +33,7 @@ public class UserControllerManager {
 
     // Get user by id
     @Operation(summary = "Get a user by ID", description = "Retrieve a single user using its ID")
-    @GetMapping("/{userId}")
+    @GetMapping("//{userId}")
     public ResponseEntity<?> getUserById(@PathVariable String userId) {
         UserDTOByManager user = userService.getUserById(userId);
         if (user == null) {
@@ -53,6 +53,18 @@ public class UserControllerManager {
                     .body(new ResponseData(404, false, "There is no user with name '" + name + "'.", null, null, null));
         }
         return ResponseEntity.ok(new ResponseData(200, true, "User found", users, null, null));
+    }
+
+    // Get user by email
+    @Operation(summary = "Get a user by email", description = "Retrieve a single user using its email")
+    @GetMapping("/{email}")
+    public ResponseEntity<ResponseData> getUserByEmailByBeautyAdvisor(@PathVariable String email) {
+        UserDTOByManager user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseData(404, false, "User with email: " + email + " not found", null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "User found", user, null, null));
     }
 
     // Create a new user

@@ -3,7 +3,6 @@ package com.glowcorner.backend.service.implement;
 import com.glowcorner.backend.entity.mongoDB.Cart;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.entity.mongoDB.Authentication;
-import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
@@ -30,8 +29,6 @@ public class UserServiceImp implements UserService {
 
     private final UserMapperCustomer userMapperCustomer;
 
-    private final UserMapperBeautyAdvisor userMapperBeautyAdvisor;
-
     private final CreateUserRequestMapper createUserRequestMapper;
 
     private final CreateCustomerRequestMapper customerCreateRequestMapper;
@@ -44,7 +41,6 @@ public class UserServiceImp implements UserService {
             UserRepository userRepository,
             UserMapperManager userMapperManager,
             UserMapperCustomer userMapperCustomer,
-            UserMapperBeautyAdvisor userMapperBeautyAdvisor,
             CreateUserRequestMapper createUserRequestMapper,
             CreateCustomerRequestMapper customerCreateRequestMapper,
             AuthenticationRepository authenticationRepository,
@@ -52,7 +48,6 @@ public class UserServiceImp implements UserService {
         this.userRepository = userRepository;
         this.userMapperManager = userMapperManager;
         this.userMapperCustomer = userMapperCustomer;
-        this.userMapperBeautyAdvisor = userMapperBeautyAdvisor;
         this.createUserRequestMapper = createUserRequestMapper;
         this.customerCreateRequestMapper = customerCreateRequestMapper;
         this.authenticationRepository = authenticationRepository;
@@ -147,7 +142,7 @@ public class UserServiceImp implements UserService {
 
     // Create a customer account
     @Override
-    public UserDTOByCustomer createUser(CreateCustomerRequest request) {
+    public UserDTOByCustomer createCustomer(CreateCustomerRequest request) {
         User user = customerCreateRequestMapper.fromCreateRequest(request);
         Cart cart = new Cart();
         cart.setItems(new ArrayList<>());
@@ -182,52 +177,14 @@ public class UserServiceImp implements UserService {
         }
     }
 
-    /* Beauty Advisor */
-
-    // Get all users
-    @Override
-    public List<UserDTOByBeautyAdvisor> getAllUsersByBeautyAdvisor() {
-        List<User> users = userRepository.findAll();
-        return users.stream()
-                .map(userMapperBeautyAdvisor::toUserDTO)
-                .toList();
-    }
-
     // Get user by email
     @Override
-    public UserDTOByBeautyAdvisor getUserByEmailByBeautyAdvisor(String email) {
+    public UserDTOByManager getUserByEmail(String email) {
         if (!email.isEmpty()) {
             User user = userRepository.findByEmail(email).orElse(null);
-            return userMapperBeautyAdvisor.toUserDTO(user);
+            return userMapperManager.toUserDTO(user);
         }
         return null;
     }
 
-    // Get user by name
-    public List<UserDTOByBeautyAdvisor> searchUserByNameBeautyAdvisor(String name) {
-        List<User> users = userRepository.findByFullNameContainingIgnoreCase(name);
-        return users.stream()
-                .map(userMapperBeautyAdvisor::toUserDTO)
-                .toList();
-    }
-
-    // Update a user
-//    @Override
-//    public UserDTOByBeautyAdvisor updateUserByBeautyAdvisor(String userId, UserDTOByBeautyAdvisor userDTOByBeautyAdvisor) {
-//        //Find existing user
-//        User existingUser = userRepository.findByUserId(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        //Update
-//        existingUser.setFullName(userDTOByBeautyAdvisor.getFullName());
-//        existingUser.setEmail(userDTOByBeautyAdvisor.getEmail());
-//        existingUser.setPhone(userDTOByBeautyAdvisor.getPhone());
-//        existingUser.setSkinType(userDTOByBeautyAdvisor.getSkinType());
-//
-//        //Save update
-//        User updatedUser = userRepository.save(existingUser);
-//
-//        //Convert updated user entity to DTO
-//        return userMapperBeautyAdvisor.toUserDTO(updatedUser);
-//    }
 }

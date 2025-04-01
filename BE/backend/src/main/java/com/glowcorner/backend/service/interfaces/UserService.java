@@ -1,6 +1,5 @@
 package com.glowcorner.backend.service.interfaces;
 
-import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
@@ -18,20 +17,10 @@ public interface UserService {
     List <UserDTOByManager> searchUserByNameManager(String name);
     UserDTOByManager getUserById(String userID);
     List<UserDTOByManager> getAllUsers();
+    UserDTOByManager getUserByEmail(String email);
 
     /* Customer */
     UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer);
-    UserDTOByCustomer createUser(CreateCustomerRequest request);
-
-    /* Beauty Advisor */
-//    UserDTOByBeautyAdvisor updateUserByBeautyAdvisor(String userID, UserDTOByBeautyAdvisor userDTOByBeautyAdvisor);
-
-    List<UserDTOByBeautyAdvisor> getAllUsersByBeautyAdvisor();
-    UserDTOByBeautyAdvisor getUserByEmailByBeautyAdvisor(String email);
-    List<UserDTOByBeautyAdvisor> searchUserByNameBeautyAdvisor(String name);
-
-
-
-
+    UserDTOByCustomer createCustomer(CreateCustomerRequest request);
 
 }
