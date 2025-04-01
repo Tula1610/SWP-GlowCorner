@@ -32,7 +32,7 @@ public class CreateProductRequestMapper {
        product.setDescription(request.getDescription());
        product.setPrice(request.getPrice());
        product.setCategory(request.getCategory());
-       product.setSkinType(request.getSkinType());
+       product.setSkinTypes(request.getSkinTypes());
        product.setRating(request.getRating());
        product.setImage_url(request.getImage_url());
        product.setStatus(ProductStatus.ACTIVE);

@@ -5,6 +5,8 @@ import com.glowcorner.backend.enums.SkinType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -16,7 +18,7 @@ public class ProductDTO {
     String description;
     Long price;
     Long discountedPrice;
-    SkinType skinType;
+    List<SkinType> skinTypes;
     Category category;
     Float rating;
     String image_url;
