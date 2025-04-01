@@ -170,12 +170,32 @@ public class ProductController {
 
     // Update product
     @Operation(summary = "Update a product", description = "Update an existing product using its ID")
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseData> updateProduct(
             @PathVariable String id,
-            @RequestPart("product") ProductDTO productDTO,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) {
+            @RequestPart(value = "product", required = false) @Parameter(
+                    description = "Product data in JSON format",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CreateProductRequest.class)
+                    )
+            ) String productJson, // Nhận dữ liệu dưới dạng String
+            @RequestPart(value = "image", required = false) @Parameter(
+                    description = "Product image file",
+                    content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE)) MultipartFile imageFile) {
         try {
+            ProductDTO productDTO;
+            if (productJson != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                productDTO = objectMapper.readValue(productJson, ProductDTO.class);
+            } else {
+                productDTO = productService.getProductById(id);
+                if (productDTO == null) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ResponseData(404, false, "Product with ID: " + id + " not found", null, null, null));
+                }
+            }
+
             if (imageFile != null && !imageFile.isEmpty()) {
                 String imageUrl = cloudinaryService.uploadFile(imageFile);
                 productDTO.setImage_url(imageUrl); // Override image_url only if a new one is uploaded
