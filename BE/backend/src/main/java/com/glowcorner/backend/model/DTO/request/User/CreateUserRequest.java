@@ -20,6 +20,6 @@ public class CreateUserRequest {
     String address;
     Role role;
     SkinType skinType;
-
+    String avatar_url;
 
 }

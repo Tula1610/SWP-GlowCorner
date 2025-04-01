@@ -17,5 +17,6 @@ public class UserDTOByCustomer {
     String phone;
     String address;
     SkinType skinType;
+    String avatar_url;
 
 }

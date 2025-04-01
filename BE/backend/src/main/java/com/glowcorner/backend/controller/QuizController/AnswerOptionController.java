@@ -1,6 +1,6 @@
 package com.glowcorner.backend.controller.QuizController;
 
-import com.glowcorner.backend.entity.mongoDB.AnswerOption;
+import com.glowcorner.backend.model.DTO.AnswerOptionDTO;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.AnswerOptionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +26,7 @@ public class AnswerOptionController {
     @GetMapping("/question/{questionID}")
     public ResponseEntity<ResponseData> getAnswerOptionsByQuestionID(@PathVariable String questionID) {
         try {
-            List<AnswerOption> answerOptions = answerOptionService.getAnswerOptionByQuestionID(questionID);
+            List<AnswerOptionDTO> answerOptions = answerOptionService.getAnswerOptionByQuestionID(questionID);
             return ResponseEntity.ok(new ResponseData(200, true, "Answer options retrieved successfully", answerOptions, null, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

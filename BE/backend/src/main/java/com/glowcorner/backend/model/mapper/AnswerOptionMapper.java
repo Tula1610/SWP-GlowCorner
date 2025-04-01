@@ -12,6 +12,7 @@ public class AnswerOptionMapper {
             return null;
         }
         return new AnswerOptionDTO(
+                answerOption.getQuestionId(),
                 answerOption.getOptionID(),
                 answerOption.getSkinType(),
                 answerOption.getOptionText()

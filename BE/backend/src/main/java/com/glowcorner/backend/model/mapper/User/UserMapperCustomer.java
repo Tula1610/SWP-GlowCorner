@@ -18,7 +18,8 @@ public class UserMapperCustomer {
                 user.getEmail(),
                 user.getPhone(),
                 user.getAddress(),
-                user.getSkinType()
+                user.getSkinType(),
+                user.getAvatar_url()
         );
     }
 

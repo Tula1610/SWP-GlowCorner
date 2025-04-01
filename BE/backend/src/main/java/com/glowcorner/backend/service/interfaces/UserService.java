@@ -24,6 +24,8 @@ public interface UserService {
     UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer);
     UserDTOByCustomer createCustomer(CreateCustomerRequest request);
 
+    UserDTOByCustomer getUserByIdForCustomer(String userId);
+
     /* Staff */
 
     UserDTOByStaff getStaffById(String userID);

@@ -36,6 +36,8 @@ public class User {
 
     Role role;
 
+    String avatar_url;
+
     UserStatus status;
 
     //One to One

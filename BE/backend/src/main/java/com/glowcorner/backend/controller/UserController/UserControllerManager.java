@@ -1,14 +1,19 @@
 package com.glowcorner.backend.controller.UserController;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
 import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
+import com.glowcorner.backend.service.interfaces.CloudinaryService;
 import com.glowcorner.backend.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,8 +24,11 @@ public class UserControllerManager {
 
     private final UserService userService;
 
-    public UserControllerManager(UserService userService) {
+    private final CloudinaryService cloudinaryService;
+
+    public UserControllerManager(UserService userService, CloudinaryService cloudinaryService) {
         this.userService = userService;
+        this.cloudinaryService = cloudinaryService;
     }
 
     // Get all users
@@ -69,29 +77,61 @@ public class UserControllerManager {
 
     // Create a new user
     @Operation(summary = "Create a new user", description = "Add a new user to the system")
-    @PostMapping
-    public ResponseEntity<ResponseData> createUser(@RequestBody CreateUserRequest request) {
-        UserDTOByManager createdUser = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseData(201, true, "User created", createdUser, null, null));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseData> createUser(
+            @RequestPart("user") String userJson,
+            @RequestPart(value = "image", required = false) MultipartFile imageFile) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            CreateUserRequest request = objectMapper.readValue(userJson, CreateUserRequest.class);
+
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imageUrl = cloudinaryService.uploadFile(imageFile);
+                request.setAvatar_url(imageUrl);
+            }
+
+            UserDTOByManager createdUser = userService.createUser(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResponseData(201, true, "User created", createdUser, null, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseData(500, false, "Failed to create user: " + e.getMessage(), null, null, null));
+        }
     }
 
     // Update user
     @Operation(summary = "Update a user", description = "Update an existing user using their ID")
-    @PutMapping("/{userId}")
-    public ResponseEntity<ResponseData> updateUserByManager(@PathVariable String userId, @RequestBody UserDTOByManager userDTO) {
+    @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseData> updateUserByManager(
+            @PathVariable String userId,
+            @RequestPart(value = "user", required = false) String userJson,
+            @RequestPart(value = "image", required = false) MultipartFile imageFile) {
         try {
-            UserDTOByManager updatedUser = userService.updateUserByManager(userId, userDTO);
-            if (updatedUser == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ResponseData(404, false, "User with ID: " + userId + " not found", null, null, null));
+            UserDTOByManager userDTO;
+            if (userJson != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                userDTO = objectMapper.readValue(userJson, UserDTOByManager.class);
+            } else {
+                userDTO = userService.getUserById(userId);
+                if (userDTO == null) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ResponseData(404, false, "User with ID: " + userId + " not found", null, null, null));
+                }
             }
+
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imageUrl = cloudinaryService.uploadFile(imageFile);
+                userDTO.setAvatar_url(imageUrl);
+            }
+
+            UserDTOByManager updatedUser = userService.updateUserByManager(userId, userDTO);
             return ResponseEntity.ok(new ResponseData(200, true, "User updated", updatedUser, null, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseData(500, false, "Fail to update user with ID: " + userId, null, null, null));
         }
-
     }
 
     // Delete user
