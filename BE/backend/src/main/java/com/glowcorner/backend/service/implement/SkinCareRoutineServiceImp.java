@@ -3,6 +3,7 @@ package com.glowcorner.backend.service.implement;
 import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.enums.SkinType;
+import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
 import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.SkinCareRoutine.CreateRoutineRequestMapper;
@@ -13,6 +14,7 @@ import com.glowcorner.backend.service.interfaces.SkinCareRoutineService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,8 +90,10 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
 
             if (skinCareRoutineDTO.getProductDTOS() != null) {
                 List<Product> products = skinCareRoutineDTO.getProductDTOS().stream()
-                        .map(productDTO -> productRepository.findByProductID(productDTO.getProductID())
-                                .orElseThrow(() -> new RuntimeException("Product not found")))
+                        .map(ProductDTO::getProductID)
+                        .map(productRepository::findByProductID)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .collect(Collectors.toList());
                 existingRoutine.setProducts(products);
             }
@@ -105,6 +109,25 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
     @Override
     public void deleteSkinCareRoutine(String routineId) {
         skinCareRoutineRepository.deleteSkinCareRoutineByRoutineID(routineId);
+    }
+
+    // Delete a product from a skincare routine
+    @Override
+    public SkinCareRoutineDTO deleteProductFromRoutine(String routineId, String productId) {
+        try {
+            SkinCareRoutine existingRoutine = skinCareRoutineRepository.findByRoutineID(routineId)
+                    .orElseThrow(() -> new RuntimeException("Skin care routine not found"));
+
+            List<Product> updatedProducts = existingRoutine.getProducts().stream()
+                    .filter(product -> !product.getProductID().equals(productId))
+                    .collect(Collectors.toList());
+
+            existingRoutine.setProducts(updatedProducts);
+            SkinCareRoutine updatedRoutine = skinCareRoutineRepository.save(existingRoutine);
+            return skinCareRoutineMapper.toDTO(updatedRoutine);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail to delete product from SkincareRoutine: " + e.getMessage(), e);
+        }
     }
 
 }

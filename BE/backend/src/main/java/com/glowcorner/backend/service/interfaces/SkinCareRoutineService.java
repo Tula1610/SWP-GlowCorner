@@ -11,6 +11,7 @@ public interface SkinCareRoutineService {
     SkinCareRoutineDTO createSkinCareRoutine(CreateRoutineRequest request);
     SkinCareRoutineDTO updateSkinCareRoutine(String routineId, SkinCareRoutineDTO skinCareRoutineDTO);
     void deleteSkinCareRoutine(String routineId);
+    SkinCareRoutineDTO deleteProductFromRoutine(String routineId, String productId);
 
 
     List<SkinCareRoutineDTO> getAllSkinCareRoutines();

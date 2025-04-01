@@ -78,7 +78,8 @@ public class SkinCareRoutineController {
     }
 
     // Update an existing skincare routine
-    @Operation(summary = "Update a skincare routine", description = "Update an existing skin care routine using its ID")
+    @Operation(summary = "Update a skincare routine", description = "Update an existing skin care routine using its ID " +
+            "*(If update product, only type productID)*")
     @PutMapping("/{id}")
     public ResponseEntity<ResponseData> updateSkinCareRoutine(@PathVariable String id, @RequestBody SkinCareRoutineDTO skinCareRoutineDTO) {
         try {
@@ -100,5 +101,18 @@ public class SkinCareRoutineController {
     public ResponseEntity<Void> deleteSkinCareRoutine(@PathVariable String id) {
         skinCareRoutineService.deleteSkinCareRoutine(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Delete a product from a skincare routine
+    @Operation(summary = "Delete a product from a skincare routine", description = "Remove a product from a skin care routine using its ID")
+    @DeleteMapping("/{routineId}/products/{productId}")
+    public ResponseEntity<ResponseData> deleteProductFromRoutine(@PathVariable String routineId, @PathVariable String productId) {
+        try {
+            SkinCareRoutineDTO updatedRoutine = skinCareRoutineService.deleteProductFromRoutine(routineId, productId);
+            return ResponseEntity.ok(new ResponseData(200, true, "Product deleted from skin care routine", updatedRoutine, null, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseData(500, false, "Fail to delete product from skin care routine with ID: " + routineId, null, null, null));
+        }
     }
 }
