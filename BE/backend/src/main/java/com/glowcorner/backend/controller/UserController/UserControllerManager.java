@@ -65,8 +65,8 @@ public class UserControllerManager {
 
     // Get user by email
     @Operation(summary = "Get a user by email", description = "Retrieve a single user using its email")
-    @GetMapping("/{email}")
-    public ResponseEntity<ResponseData> getUserByEmailByBeautyAdvisor(@PathVariable String email) {
+    @GetMapping("/email/{email}")
+    public ResponseEntity<ResponseData> getUserByEmail(@PathVariable String email) {
         UserDTOByManager user = userService.getUserByEmail(email);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
