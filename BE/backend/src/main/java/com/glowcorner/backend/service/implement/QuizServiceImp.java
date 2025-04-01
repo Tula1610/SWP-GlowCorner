@@ -53,6 +53,7 @@ public class QuizServiceImp implements QuizService {
             answerOptionRepository.saveAll(answerOptions);
             quiz.setOptions(answerOptions);
         }
+        quiz.setStatus(QuizStatus.ACTIVE);
 
         return quizMapper.toDTO(quiz);
     }
