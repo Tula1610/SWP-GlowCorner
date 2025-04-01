@@ -1,5 +1,7 @@
 package com.glowcorner.backend.controller.ProductController;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Category;
@@ -41,11 +43,17 @@ public class ProductController {
     @Operation(summary = "Get all products", description = "Retrieve a list of all available products")
     @GetMapping
     public ResponseEntity<ResponseData> getAllProducts() {
-        List<ProductDTO> products = productService.getAllProducts();
-        if (products.isEmpty()) {
-            return ResponseEntity.ok(new ResponseData(404, true, "Products found", null, null, null));
+        try {
+            List<ProductDTO> products = productService.getAllProducts();
+            if (products.isEmpty()) {
+                return ResponseEntity.ok(new ResponseData(404, false, "No products found", null, null, null));
+            }
+            return ResponseEntity.ok(new ResponseData(200, true, "Products found", products, null, null));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseData(500, false, "Failed to retrieve products: " + e.getMessage(), null, null, null));
         }
-        return ResponseEntity.ok(new ResponseData(200, true, "Products found", products, null, null));
     }
 
     // Get product by id
@@ -144,24 +152,30 @@ public class ProductController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = CreateProductRequest.class)
                     )
-            ) String productJson, // Nhận dữ liệu dưới dạng String
+            ) String productJson,
             @RequestPart(value = "image", required = false) @Parameter(
                     description = "Product image file",
                     content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE)
             ) MultipartFile imageFile) {
         try {
-            // Parse JSON string thành CreateProductRequest
+            System.out.println("Received product JSON: " + productJson);
+            System.out.println("Received image file: " + (imageFile != null ? imageFile.getOriginalFilename() : "No file"));
+
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // Bỏ qua các trường không nhận diện
             CreateProductRequest request = objectMapper.readValue(productJson, CreateProductRequest.class);
 
             if (imageFile != null && !imageFile.isEmpty()) {
                 String imageUrl = cloudinaryService.uploadFile(imageFile);
+                System.out.println("Uploaded image URL: " + imageUrl);
                 request.setImage_url(imageUrl);
             }
 
             ProductDTO created = productService.createProduct(request);
             return ResponseEntity.ok(new ResponseData(200, true, "Product created successfully", created, null, null));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseData(500, false, "Failed to create product: " + e.getMessage(), null, null, null));
         }
