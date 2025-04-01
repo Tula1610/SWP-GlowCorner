@@ -96,6 +96,7 @@ public class UserServiceImp implements UserService {
             if (userDTOByManager.getPhone() != null) existingUser.setPhone(userDTOByManager.getPhone());
             if (userDTOByManager.getAddress() != null) existingUser.setAddress(userDTOByManager.getAddress());
             if (userDTOByManager.getSkinType() != null) existingUser.setSkinType(userDTOByManager.getSkinType());
+            if (userDTOByManager.getAvatar_url() != null) existingUser.setAvatar_url(userDTOByManager.getAvatar_url());
             if (userDTOByManager.getOrders() != null) existingUser.setOrders(userDTOByManager.getOrders());
 
             // Nếu có thay đổi role
@@ -188,6 +189,7 @@ public class UserServiceImp implements UserService {
             if(userDTOByCustomer.getPhone() != null) existingUser.setPhone(userDTOByCustomer.getPhone());
             if(userDTOByCustomer.getAddress() != null) existingUser.setAddress(userDTOByCustomer.getAddress());
             if(userDTOByCustomer.getSkinType() != null) existingUser.setSkinType(userDTOByCustomer.getSkinType());
+            if(userDTOByCustomer.getAvatar_url() != null) existingUser.setAvatar_url(userDTOByCustomer.getAvatar_url());
 
             //Save update
             User updatedUser = userRepository.save(existingUser);
