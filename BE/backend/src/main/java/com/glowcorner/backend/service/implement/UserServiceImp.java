@@ -5,6 +5,7 @@ import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.entity.mongoDB.Authentication;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
+import com.glowcorner.backend.model.DTO.User.UserDTOByStaff;
 import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
 import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.User.Customer.CreateCustomerRequestMapper;
@@ -150,6 +151,16 @@ public class UserServiceImp implements UserService {
         cartRepository.save(cart);
         user = userRepository.save(user);
         return userMapperCustomer.toUserDTO(user);
+    }
+
+    @Override
+    public UserDTOByStaff getStaffById(String userID) {
+        return null;
+    }
+
+    @Override
+    public UserDTOByStaff updateUserByStaff(String userID, UserDTOByStaff userDTOByStaff) {
+        return null;
     }
 
     // Users update themselves
