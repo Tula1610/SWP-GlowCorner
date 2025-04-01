@@ -3,6 +3,7 @@ package com.glowcorner.backend.service.interfaces;
 import com.glowcorner.backend.model.DTO.User.UserDTOByBeautyAdvisor;
 import com.glowcorner.backend.model.DTO.User.UserDTOByCustomer;
 import com.glowcorner.backend.model.DTO.User.UserDTOByManager;
+import com.glowcorner.backend.model.DTO.User.UserDTOByStaff;
 import com.glowcorner.backend.model.DTO.request.User.CreateCustomerRequest;
 import com.glowcorner.backend.model.DTO.request.User.CreateUserRequest;
 
@@ -22,6 +23,11 @@ public interface UserService {
     /* Customer */
     UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer);
     UserDTOByCustomer createUser(CreateCustomerRequest request);
+
+    /* Staff */
+
+    UserDTOByStaff getStaffById(String userID);
+    UserDTOByStaff updateUserByStaff(String userID, UserDTOByStaff userDTOByStaff);
 
     /* Beauty Advisor */
 //    UserDTOByBeautyAdvisor updateUserByBeautyAdvisor(String userID, UserDTOByBeautyAdvisor userDTOByBeautyAdvisor);
