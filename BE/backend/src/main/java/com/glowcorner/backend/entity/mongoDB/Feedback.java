@@ -35,6 +35,6 @@ public class Feedback {
 
    LocalDate feedbackDate; // Maps to the SQL DATE type
 
-
    FeedbackStatus status;
+
 }
