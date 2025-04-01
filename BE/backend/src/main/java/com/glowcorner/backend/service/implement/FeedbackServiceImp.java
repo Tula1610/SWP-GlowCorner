@@ -51,6 +51,7 @@ public class FeedbackServiceImp implements FeedbackService {
    @Override
    public FeedbackDTO createFeedback(CreateFeedbackRequest request) {
        Feedback feedback = createFeedbackRequestMapper.fromCreateRequest(request);
+       feedback.setStatus(FeedbackStatus.ACTIVE);
        return feedbackMapper.toDTO(feedbackRepository.save(feedback));
    }
 
