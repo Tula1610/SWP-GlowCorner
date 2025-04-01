@@ -57,6 +57,7 @@ public class CustomFilterSecurity {
                 "/auth/forgot-password",
                 "/auth/change-password",
                 "/api/products",
+                "/api/products/**",
                 "/api/products/filter",
                 "/api/feedbacks",
         };
