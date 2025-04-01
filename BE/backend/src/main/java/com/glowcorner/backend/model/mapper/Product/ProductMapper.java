@@ -20,7 +20,7 @@ public class ProductMapper {
             product.getDescription(),
             product.getPrice(),
             product.getDiscountedPrice(),
-            product.getSkinType(),
+            product.getSkinTypes(),
             product.getCategory(),
             product.getRating(),
             product.getImage_url()

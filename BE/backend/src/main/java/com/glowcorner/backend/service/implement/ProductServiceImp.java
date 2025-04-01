@@ -79,10 +79,10 @@ public class ProductServiceImp implements ProductService {
    }
 
 
-   // Get products by category
+   // Get products by skin types
    @Override
    public List<ProductDTO> getProductsBySkinType(SkinType skinType) {
-       List<Product> products = productRepository.findBySkinType(skinType);
+       List<Product> products = productRepository.findBySkinTypesIn(skinType);
        return products.stream()
                .map(product -> {
                    ProductDTO productDTO = productMapper.toDTO(product);
@@ -191,7 +191,7 @@ public class ProductServiceImp implements ProductService {
            if (productDTO.getProductName() != null) existingProduct.setProductName(productDTO.getProductName());
            if (productDTO.getDescription() != null) existingProduct.setDescription(productDTO.getDescription());
            if (productDTO.getPrice() != null) existingProduct.setPrice(productDTO.getPrice());
-           if (productDTO.getSkinType() != null) existingProduct.setSkinType(productDTO.getSkinType());
+           if (productDTO.getSkinTypes() != null) existingProduct.setSkinTypes(productDTO.getSkinTypes());
            if (productDTO.getCategory() != null) existingProduct.setCategory(productDTO.getCategory());
            if (productDTO.getRating() != null) existingProduct.setRating(productDTO.getRating());
            if (productDTO.getImage_url() != null) existingProduct.setImage_url(productDTO.getImage_url());

@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,8 +20,7 @@ public class CreateProductRequest {
     String description;
     Long price;
     Category category;
-    SkinType skinType;
+    List<SkinType> skinTypes;
     Float rating;
     String image_url;
-
 }

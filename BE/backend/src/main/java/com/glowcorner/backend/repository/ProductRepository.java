@@ -16,7 +16,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     Optional<Product> findByProductID(String productId);
 
     void deleteByProductID(String productID);
-    List<Product> findBySkinType(SkinType skinType);
+    List<Product> findBySkinTypesIn(SkinType skinType);
     List<Product> findByCategory(Category category);
     List<Product> findByProductNameContainingIgnoreCase(String productName);
 }
