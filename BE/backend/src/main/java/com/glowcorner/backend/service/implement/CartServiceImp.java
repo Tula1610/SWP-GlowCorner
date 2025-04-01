@@ -111,6 +111,9 @@ public class CartServiceImp implements CartService {
 
         cart.getItems().removeIf(i -> i.getProductID().equals(productID));
 
+        cart.setTotalAmount(calculateCartTotalAmount(cart.getItems()));
+        cart.setDiscountedTotalAmount(calculateCartDiscountedTotalAmount(cart.getItems()));
+
         cartRepository.save(cart);
     }
 
