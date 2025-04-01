@@ -1,9 +1,11 @@
 package com.glowcorner.backend.service.implement;
 
+
 import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.entity.mongoDB.Promotion;
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.enums.SkinType;
+import com.glowcorner.backend.enums.Status.ProductStatus;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.request.Product.CreateProductRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.Product.CreateProductRequestMapper;
@@ -17,188 +19,216 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 public class ProductServiceImp implements ProductService {
 
-    private final ProductRepository productRepository;
 
-    private final CreateProductRequestMapper createProductRequestMapper;
+   private final ProductRepository productRepository;
 
-    private final ProductMapper productMapper;
 
-    private final PromotionRepository promotionRepository;
+   private final CreateProductRequestMapper createProductRequestMapper;
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
-    public ProductServiceImp(ProductRepository productRepository, CreateProductRequestMapper createProductRequestMapper, ProductMapper productMapper, PromotionRepository promotionRepository) {
-        this.productRepository = productRepository;
-        this.createProductRequestMapper = createProductRequestMapper;
-        this.productMapper = productMapper;
-        this.promotionRepository = promotionRepository;
-    }
+   private final ProductMapper productMapper;
 
-    // Get all products
-    @Override
-    public List<ProductDTO> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(product -> {
-                    ProductDTO productDTO = productMapper.toDTO(product);
-                    calculateDiscountedPrice(productDTO);
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-    }
 
-    // Get product by ID
-    @Override
-    public ProductDTO getProductById(String productId) {
-        Product product = productRepository.findByProductID(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        ProductDTO productDTO = productMapper.toDTO(product);
-        calculateDiscountedPrice(productDTO);
-        return productDTO;
-    }
+   private final PromotionRepository promotionRepository;
 
-    // Get products by category
-    @Override
-    public List<ProductDTO> getProductsBySkinType(SkinType skinType) {
-        List<Product> products = productRepository.findBySkinType(skinType);
-        return products.stream()
-                .map(product -> {
-                    ProductDTO productDTO = productMapper.toDTO(product);
-                    calculateDiscountedPrice(productDTO);
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-    }
 
-    // Get products by category
-    @Override
-    public List<ProductDTO> getProductsByCategory(Category category) {
-        List<Product> products = productRepository.findByCategory(category);
-        return products.stream()
-                .map(product -> {
-                    ProductDTO productDTO = productMapper.toDTO(product);
-                    calculateDiscountedPrice(productDTO);
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-    }
+   @Autowired
+   private MongoTemplate mongoTemplate;
 
-    // Get products by product name
-    @Override
-    public List<ProductDTO> getProductsByProductName(String productName) {
-        List<Product> products = productRepository.findByProductNameContainingIgnoreCase(productName);
-        return products.stream()
-                .map(product -> {
-                    ProductDTO productDTO = productMapper.toDTO(product);
-                    calculateDiscountedPrice(productDTO);
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-    }
 
-    // Get products by filter
-    @Override
-    public List<ProductDTO> getProductsByFilter(
-            List<SkinType> skinTypes,
-            List<Category> categories,
-            Long minPrice,
-            Long maxPrice
-    ) {
-        Query query = new Query();
+   public ProductServiceImp(ProductRepository productRepository, CreateProductRequestMapper createProductRequestMapper, ProductMapper productMapper, PromotionRepository promotionRepository) {
+       this.productRepository = productRepository;
+       this.createProductRequestMapper = createProductRequestMapper;
+       this.productMapper = productMapper;
+       this.promotionRepository = promotionRepository;
+   }
 
-        // Lọc theo skinType (nếu có)
-        if (skinTypes != null && !skinTypes.isEmpty()) {
-            query.addCriteria(Criteria.where("skinType").in(skinTypes));
-        }
 
-        // Lọc theo category (nếu có)
-        if (categories != null && !categories.isEmpty()) {
-            query.addCriteria(Criteria.where("category").in(categories));
-        }
+   // Get all products
+   @Override
+   public List<ProductDTO> getAllProducts() {
+       List<Product> products = productRepository.findAll();
+       return products.stream()
+               .map(product -> {
+                   ProductDTO productDTO = productMapper.toDTO(product);
+                   calculateDiscountedPrice(productDTO);
+                   return productDTO;
+               })
+               .collect(Collectors.toList());
+   }
 
-        // Lọc theo price range (kết hợp gte và lte trong một Criteria)
-        if (minPrice != null || maxPrice != null) {
-            Criteria priceCriteria = Criteria.where("price");
-            if (minPrice != null) {
-                priceCriteria.gte(minPrice);
-            }
-            if (maxPrice != null) {
-                priceCriteria.lte(maxPrice);
-            }
-            query.addCriteria(priceCriteria);
-        }
 
-        // Thực hiện truy vấn
-        List<Product> products = mongoTemplate.find(query, Product.class);
-        return products.stream()
-                .map(product -> {
-                    ProductDTO productDTO = productMapper.toDTO(product);
-                    calculateDiscountedPrice(productDTO);
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-    }
+   // Get product by ID
+   @Override
+   public ProductDTO getProductById(String productId) {
+       Product product = productRepository.findByProductID(productId)
+               .orElseThrow(() -> new RuntimeException("Product not found"));
+       ProductDTO productDTO = productMapper.toDTO(product);
+       calculateDiscountedPrice(productDTO);
+       return productDTO;
+   }
 
-    // Create product
-    @Override
-    public ProductDTO createProduct(CreateProductRequest request) {
-        Product product = createProductRequestMapper.fromCreateRequest(request);
-        product = productRepository.save(product);
-        return productMapper.toDTO(product);
-    }
 
-    // Update product
-    @Override
-    public ProductDTO updateProduct(String productId, ProductDTO productDTO) {
-        try {
-            // Find existing product
-            Product existingProduct = productRepository.findByProductID(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
+   // Get products by category
+   @Override
+   public List<ProductDTO> getProductsBySkinType(SkinType skinType) {
+       List<Product> products = productRepository.findBySkinType(skinType);
+       return products.stream()
+               .map(product -> {
+                   ProductDTO productDTO = productMapper.toDTO(product);
+                   calculateDiscountedPrice(productDTO);
+                   return productDTO;
+               })
+               .collect(Collectors.toList());
+   }
 
-            // Update
-            if (productDTO.getProductName() != null) existingProduct.setProductName(productDTO.getProductName());
-            if (productDTO.getDescription() != null) existingProduct.setDescription(productDTO.getDescription());
-            if (productDTO.getPrice() != null) existingProduct.setPrice(productDTO.getPrice());
-            if (productDTO.getSkinType() != null) existingProduct.setSkinType(productDTO.getSkinType());
-            if (productDTO.getCategory() != null) existingProduct.setCategory(productDTO.getCategory());
-            if (productDTO.getRating() != null) existingProduct.setRating(productDTO.getRating());
-            if (productDTO.getImage_url() != null) existingProduct.setImage_url(productDTO.getImage_url());
 
-            // Save update
-            Product updatedProduct = productRepository.save(existingProduct);
+   // Get products by category
+   @Override
+   public List<ProductDTO> getProductsByCategory(Category category) {
+       List<Product> products = productRepository.findByCategory(category);
+       return products.stream()
+               .map(product -> {
+                   ProductDTO productDTO = productMapper.toDTO(product);
+                   calculateDiscountedPrice(productDTO);
+                   return productDTO;
+               })
+               .collect(Collectors.toList());
+   }
 
-            // Convert updated product entity to DTO
-            return productMapper.toDTO(updatedProduct);
-        } catch (Exception e) {
-            throw new RuntimeException("Fail to update product: " + e.getMessage(), e);
-        }
-    }
 
-    // Delete product
-    @Override
-    public void deleteProduct(String productId) {
-        productRepository.deleteByProductID(productId);
-    }
+   // Get products by product name
+   @Override
+   public List<ProductDTO> getProductsByProductName(String productName) {
+       List<Product> products = productRepository.findByProductNameContainingIgnoreCase(productName);
+       return products.stream()
+               .map(product -> {
+                   ProductDTO productDTO = productMapper.toDTO(product);
+                   calculateDiscountedPrice(productDTO);
+                   return productDTO;
+               })
+               .collect(Collectors.toList());
+   }
 
-    // Calculator
-    private void calculateDiscountedPrice(ProductDTO productDTO) {
-        LocalDate now = LocalDate.now();
-        Optional<Promotion> activePromotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(now, now, productDTO.getProductID());
-        if (activePromotion.isPresent()) {
-            Promotion promotion = activePromotion.get();
-            long discountedPrice = productDTO.getPrice() - (productDTO.getPrice() * promotion.getDiscount() / 100);
-            productDTO.setDiscountedPrice(discountedPrice);
-        } else {
-            productDTO.setDiscountedPrice(null);
-        }
-    }
+
+   // Get products by filter
+   @Override
+   public List<ProductDTO> getProductsByFilter(
+           List<SkinType> skinTypes,
+           List<Category> categories,
+           Long minPrice,
+           Long maxPrice
+   ) {
+       Query query = new Query();
+
+
+       // Lọc theo skinType (nếu có)
+       if (skinTypes != null && !skinTypes.isEmpty()) {
+           query.addCriteria(Criteria.where("skinType").in(skinTypes));
+       }
+
+
+       // Lọc theo category (nếu có)
+       if (categories != null && !categories.isEmpty()) {
+           query.addCriteria(Criteria.where("category").in(categories));
+       }
+
+
+       // Lọc theo price range (kết hợp gte và lte trong một Criteria)
+       if (minPrice != null || maxPrice != null) {
+           Criteria priceCriteria = Criteria.where("price");
+           if (minPrice != null) {
+               priceCriteria.gte(minPrice);
+           }
+           if (maxPrice != null) {
+               priceCriteria.lte(maxPrice);
+           }
+           query.addCriteria(priceCriteria);
+       }
+
+
+       // Thực hiện truy vấn
+       List<Product> products = mongoTemplate.find(query, Product.class);
+       return products.stream()
+               .map(product -> {
+                   ProductDTO productDTO = productMapper.toDTO(product);
+                   calculateDiscountedPrice(productDTO);
+                   return productDTO;
+               })
+               .collect(Collectors.toList());
+   }
+
+
+   // Create product
+   @Override
+   public ProductDTO createProduct(CreateProductRequest request) {
+       Product product = createProductRequestMapper.fromCreateRequest(request);
+       product = productRepository.save(product);
+       return productMapper.toDTO(product);
+   }
+
+
+   // Update product
+   @Override
+   public ProductDTO updateProduct(String productId, ProductDTO productDTO) {
+       try {
+           // Find existing product
+           Product existingProduct = productRepository.findByProductID(productId)
+                   .orElseThrow(() -> new RuntimeException("Product not found"));
+
+
+           // Update
+           if (productDTO.getProductName() != null) existingProduct.setProductName(productDTO.getProductName());
+           if (productDTO.getDescription() != null) existingProduct.setDescription(productDTO.getDescription());
+           if (productDTO.getPrice() != null) existingProduct.setPrice(productDTO.getPrice());
+           if (productDTO.getSkinType() != null) existingProduct.setSkinType(productDTO.getSkinType());
+           if (productDTO.getCategory() != null) existingProduct.setCategory(productDTO.getCategory());
+           if (productDTO.getRating() != null) existingProduct.setRating(productDTO.getRating());
+           if (productDTO.getImage_url() != null) existingProduct.setImage_url(productDTO.getImage_url());
+
+
+           // Save update
+           Product updatedProduct = productRepository.save(existingProduct);
+
+
+           // Convert updated product entity to DTO
+           return productMapper.toDTO(updatedProduct);
+       } catch (Exception e) {
+           throw new RuntimeException("Fail to update product: " + e.getMessage(), e);
+       }
+   }
+
+
+   // Delete product
+   @Override
+   public void deleteProduct(String productId) {
+       Product existingProduct = productRepository.findByProductID(productId)
+               .orElseThrow(() -> new RuntimeException("Product not found"));
+       existingProduct.setStatus(ProductStatus.DISABLE);
+       productRepository.save(existingProduct);
+   }
+
+
+   // Calculator
+   private void calculateDiscountedPrice(ProductDTO productDTO) {
+       LocalDate now = LocalDate.now();
+       Optional<Promotion> activePromotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(now, now, productDTO.getProductID());
+       if (activePromotion.isPresent()) {
+           Promotion promotion = activePromotion.get();
+           long discountedPrice = productDTO.getPrice() - (productDTO.getPrice() * promotion.getDiscount() / 100);
+           productDTO.setDiscountedPrice(discountedPrice);
+       } else {
+           productDTO.setDiscountedPrice(null);
+       }
+   }
 }

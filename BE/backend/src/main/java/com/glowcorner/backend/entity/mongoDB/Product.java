@@ -1,11 +1,16 @@
 package com.glowcorner.backend.entity.mongoDB;
 
+
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Category;
+import com.glowcorner.backend.enums.Status.ProductStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+
+
 
 
 
@@ -15,24 +20,37 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public class Product {
 
-    @Id
-    String id;
 
-    String productID;
+   @Id
+   String id;
 
-    String productName;
 
-    String description;
+   String productID;
 
-    Long price;
 
-    Long discountedPrice;
+   String productName;
 
-    SkinType skinType;
 
-    Category category;
+   String description;
 
-    Float rating;
 
-    String image_url;
+   Long price;
+
+
+   Long discountedPrice;
+
+
+   SkinType skinType;
+
+
+   Category category;
+
+
+   Float rating;
+
+
+   String image_url;
+
+
+   ProductStatus status;
 }
