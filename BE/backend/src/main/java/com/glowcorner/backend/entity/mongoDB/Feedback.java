@@ -1,6 +1,7 @@
 package com.glowcorner.backend.entity.mongoDB;
 
 
+import com.glowcorner.backend.enums.Status.FeedbackStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
@@ -33,5 +34,7 @@ public class Feedback {
 
 
    LocalDate feedbackDate; // Maps to the SQL DATE type
+
+   FeedbackStatus status;
 
 }
