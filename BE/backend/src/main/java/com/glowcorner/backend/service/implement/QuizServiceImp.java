@@ -75,7 +75,7 @@ public class QuizServiceImp implements QuizService {
                             AnswerOption option;
                             if (optionDTO.getOptionID() != null) {
                                 option = answerOptionRepository.findAnswerOptionByOptionID(optionDTO.getOptionID())
-                                        .orElse(new AnswerOption());
+                                        .orElseThrow(() -> new RuntimeException("Answer option not found"));
                             } else {
                                 option = new AnswerOption();
                                 option.setOptionID(counterService.getNextOptionID());
