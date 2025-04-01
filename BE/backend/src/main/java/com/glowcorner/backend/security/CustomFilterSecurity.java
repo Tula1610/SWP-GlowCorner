@@ -63,7 +63,7 @@ public class CustomFilterSecurity {
 
 //        String[] showUrls = {"/api/manager/users/**","/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines/**","/api/promotions","/api/feedbacks/**","/api/quizzes/**"};
         String[] showUrls = {"/api/user/**","/api/orders/customer/**","/api/cart/**","/api/categories","/api/skin-care-routines/user/**"};
-        String[] updateUrls = {"/api/user/**","/api/cart/**","/api/orders/**","/api/skin-care-routines/**"};
+        String[] updateUrls = {"/api/user/**","/api/cart/**","/api/skin-care-routines/**","/api/orders/staff/**"};
         String[] postUrls = {"/api/cart/**","/api/orders/**"};
         String[] postStaffUrls = {"/api/skin-care-routines","/api/quizzes"};
         String[] deleteUrls = {"/api/cart/**"};

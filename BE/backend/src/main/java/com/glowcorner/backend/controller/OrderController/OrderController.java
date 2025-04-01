@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Order Management System", description = "Operations pertaining to orders in the Order Management System")
 @RestController
@@ -31,8 +32,12 @@ public class OrderController {
     // Update order
     @Operation(summary = "Update an existing order", description = "Update an existing order using its ID")
     @PutMapping("/{orderId}")
-    public ResponseEntity<ResponseData> updateOrder(@PathVariable String orderId, @RequestBody OrderStatus status) {
+    public ResponseEntity<ResponseData> updateOrder(
+            @PathVariable String orderId,
+            @RequestBody Map<String, String> body) {
         try {
+            String statusStr = body.get("status");
+            OrderStatus status = OrderStatus.valueOf(statusStr);
             OrderDTO updatedOrder = orderService.updateOrder(orderId, status);
             if (updatedOrder == null) {
                 return ResponseEntity.status(404)
