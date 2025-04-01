@@ -22,16 +22,11 @@ public interface UserService {
 
     /* Customer */
     UserDTOByCustomer updateUserByCustomer(String userID, UserDTOByCustomer userDTOByCustomer);
-    UserDTOByCustomer createUser(CreateCustomerRequest request);
+    UserDTOByCustomer createCustomer(CreateCustomerRequest request);
 
     /* Staff */
 
     UserDTOByStaff getStaffById(String userID);
     UserDTOByStaff updateUserByStaff(String userID, UserDTOByStaff userDTOByStaff);
-
-
-
-
-    UserDTOByCustomer createCustomer(CreateCustomerRequest request);
 
 }

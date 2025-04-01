@@ -139,7 +139,9 @@ public class UserServiceImp implements UserService {
                 .toList();
     }
 
-    /* Customer */
+
+    /* Customer
+    * */
 
     // Create a customer account
     @Override
