@@ -2,6 +2,7 @@ package com.glowcorner.backend.model.mapper.CreateMapper.SkinCareRoutine;
 
 import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
+import com.glowcorner.backend.enums.Status.RoutineStatus;
 import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
 import com.glowcorner.backend.repository.ProductRepository;
 import com.glowcorner.backend.service.implement.CounterServiceImpl;
@@ -38,6 +39,7 @@ public class CreateRoutineRequestMapper {
                 .map(Optional::get)
                 .collect(Collectors.toList());
         skinCareRoutine.setProducts(products);
+        skinCareRoutine.setStatus(RoutineStatus.ACTIVE);
 
         return skinCareRoutine;
     }

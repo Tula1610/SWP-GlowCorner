@@ -4,6 +4,7 @@ import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.entity.mongoDB.User;
 import com.glowcorner.backend.enums.SkinType;
+import com.glowcorner.backend.enums.Status.RoutineStatus;
 import com.glowcorner.backend.model.DTO.ProductDTO;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
 import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
@@ -113,7 +114,6 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
                 existingRoutine.setProducts(existingProducts);
             }
 
-
             SkinCareRoutine updatedRoutine = skinCareRoutineRepository.save(existingRoutine);
             return skinCareRoutineMapper.toDTO(updatedRoutine);
         } catch (Exception e) {
@@ -141,7 +141,10 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
     // Delete a routine
     @Override
     public void deleteSkinCareRoutine(String routineId) {
-        skinCareRoutineRepository.deleteSkinCareRoutineByRoutineID(routineId);
+        SkinCareRoutine existingRoutine = skinCareRoutineRepository.findByRoutineID(routineId)
+                .orElseThrow(() -> new RuntimeException("Skin care routine not found"));
+        existingRoutine.setStatus(RoutineStatus.DISABLE); // Assuming RoutineStatus enum has DISABLE status
+        skinCareRoutineRepository.save(existingRoutine);
     }
 
     // Delete a product from a skincare routine
