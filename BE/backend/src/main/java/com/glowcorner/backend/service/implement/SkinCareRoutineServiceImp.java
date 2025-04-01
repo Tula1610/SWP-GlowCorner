@@ -1,16 +1,19 @@
 package com.glowcorner.backend.service.implement;
 
+import com.glowcorner.backend.entity.mongoDB.Product;
 import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.model.DTO.SkinCareRoutineDTO;
 import com.glowcorner.backend.model.DTO.request.SkinCareRoutine.CreateRoutineRequest;
 import com.glowcorner.backend.model.mapper.CreateMapper.SkinCareRoutine.CreateRoutineRequestMapper;
 import com.glowcorner.backend.model.mapper.SkinCareRoutineMapper;
+import com.glowcorner.backend.repository.ProductRepository;
 import com.glowcorner.backend.repository.SkinCareRoutineRepository;
 import com.glowcorner.backend.service.interfaces.SkinCareRoutineService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
@@ -20,11 +23,13 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
     private final SkinCareRoutineRepository skinCareRoutineRepository;
 
     private final CreateRoutineRequestMapper createRoutineRequestMapper;
+    private final ProductRepository productRepository;
 
-    public SkinCareRoutineServiceImp(SkinCareRoutineMapper skinCareRoutineMapper, SkinCareRoutineRepository skinCareRoutineRepository, CreateRoutineRequestMapper createRoutineRequestMapper) {
+    public SkinCareRoutineServiceImp(SkinCareRoutineMapper skinCareRoutineMapper, SkinCareRoutineRepository skinCareRoutineRepository, CreateRoutineRequestMapper createRoutineRequestMapper, ProductRepository productRepository) {
         this.skinCareRoutineMapper = skinCareRoutineMapper;
         this.skinCareRoutineRepository = skinCareRoutineRepository;
         this.createRoutineRequestMapper = createRoutineRequestMapper;
+        this.productRepository = productRepository;
     }
 
     // Get all Skincare routine
@@ -80,6 +85,14 @@ public class SkinCareRoutineServiceImp implements SkinCareRoutineService {
             if (skinCareRoutineDTO.getSkinType() != null) existingRoutine.setSkinType(skinCareRoutineDTO.getSkinType());
             if (skinCareRoutineDTO.getRoutineName() != null) existingRoutine.setRoutineName(skinCareRoutineDTO.getRoutineName());
             if (skinCareRoutineDTO.getRoutineDescription() != null) existingRoutine.setRoutineDescription(skinCareRoutineDTO.getRoutineDescription());
+
+            if (skinCareRoutineDTO.getProductDTOS() != null) {
+                List<Product> products = skinCareRoutineDTO.getProductDTOS().stream()
+                        .map(productDTO -> productRepository.findByProductID(productDTO.getProductID())
+                                .orElseThrow(() -> new RuntimeException("Product not found")))
+                        .collect(Collectors.toList());
+                existingRoutine.setProducts(products);
+            }
 
             SkinCareRoutine updatedRoutine = skinCareRoutineRepository.save(existingRoutine);
             return skinCareRoutineMapper.toDTO(updatedRoutine);

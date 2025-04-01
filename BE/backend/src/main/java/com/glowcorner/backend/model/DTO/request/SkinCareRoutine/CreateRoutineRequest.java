@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,5 +17,6 @@ public class CreateRoutineRequest {
     SkinType skinType;
     String routineName;
     String routineDescription;
+    List<String> productIDs;
 
 }

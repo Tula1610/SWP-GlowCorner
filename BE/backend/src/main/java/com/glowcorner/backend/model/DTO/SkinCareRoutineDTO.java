@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,5 +18,6 @@ public class SkinCareRoutineDTO {
     SkinType skinType;
     String routineName;
     String routineDescription;
+    List<ProductDTO> productDTOS;
 
 }
