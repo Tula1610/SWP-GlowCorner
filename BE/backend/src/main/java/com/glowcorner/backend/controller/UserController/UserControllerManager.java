@@ -33,7 +33,7 @@ public class UserControllerManager {
 
     // Get user by id
     @Operation(summary = "Get a user by ID", description = "Retrieve a single user using its ID")
-    @GetMapping("//{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable String userId) {
         UserDTOByManager user = userService.getUserById(userId);
         if (user == null) {
