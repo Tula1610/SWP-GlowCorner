@@ -160,7 +160,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDTOByCustomer getUserByIdForCustomer(String userId) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUserID(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return userMapperCustomer.toUserDTO(user);
     }
