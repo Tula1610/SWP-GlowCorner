@@ -16,5 +16,6 @@ public class CreateCustomerRequest {
     String email;
     String phone;
     String address;
+    String avatar_url;
 
 }

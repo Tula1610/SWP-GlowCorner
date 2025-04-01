@@ -27,5 +27,7 @@ public class UserDTOByManager {
 
     Role role;
 
+    String avatar_url;
+
     List<Order> orders;
 }

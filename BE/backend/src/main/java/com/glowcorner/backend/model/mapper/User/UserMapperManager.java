@@ -22,6 +22,7 @@ public class UserMapperManager {
                 user.getSkinType(),
                 user.getLoyalPoints(),
                 user.getRole(),
+                user.getAvatar_url(), 
                 user.getOrders()
         );
     }
