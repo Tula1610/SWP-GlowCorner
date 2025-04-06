@@ -21,7 +21,17 @@ public class OrderDetail {
 
     String productID; // Refers to the productID in the Product collection
 
+    String productName;
+
+    Long productPrice;
+
+    String discountName;
+
+    Integer discountPercentage;
+
     int quantity;
 
     Long totalAmount;
+
+    Long discountedTotalAmount;
 }

@@ -13,7 +13,12 @@ public class OrderDetailDTO {
 
     String orderID;
     String productID;
+    String productName;
     Integer quantity;
+    Long productPrice;
+    String discountName;
+    Integer discountPercentage;
     Long totalAmount;
+    Long discountedTotalAmount;
 
 }

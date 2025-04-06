@@ -13,9 +13,12 @@ public class CartItemDTO {
 
     String userID;
     String productID;
+    String productName;
+    Long productPrice;
     int quantity;
-
     Long totalAmount;
+
+    Integer discountPercentage;
     Long discountedTotalAmount;
 
 }

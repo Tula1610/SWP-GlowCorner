@@ -59,25 +59,25 @@ public class PromotionController {
     }
 
     // Search promotion by productID
-    @Operation(summary = "Get a promotion by productID", description = "Retrieve a promotion by productID")
-    @GetMapping("/product/{id}")
-    public ResponseEntity<ResponseData> getPromotionByProductId(@PathVariable String id) {
-        PromotionDTO promotion = promotionService.getPromotionByProductID(id);
+    @Operation(summary = "Get a promotion by product IDs", description = "Retrieve a promotion by product IDs")
+    @GetMapping("/product")
+    public ResponseEntity<ResponseData> getPromotionByProductId(@RequestParam List<String> ids) {
+        List<PromotionDTO> promotion = promotionService.getPromotionByProductIDs(ids);
         if (promotion == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseData(404, false, "Promotion with productID: " + id + " not found", null, null, null));
+                    .body(new ResponseData(404, false, "Promotion with product IDs: " + ids + " not found", null, null, null));
         }
         return ResponseEntity.ok(new ResponseData(200, true, "Promotion found", promotion, null, null));
     }
 
     // Search active promotion by productID
-    @Operation(summary = "Get active promotion by productID", description = "Retrieve the currently active promotion by productID")
-    @GetMapping("/active/product/{productID}")
-    public ResponseEntity<ResponseData> getActivePromotionByProductId(@PathVariable String productID) {
-        PromotionDTO promotion = promotionService.getActivePromotionByProductID(productID);
+    @Operation(summary = "Get active promotion by product IDs", description = "Retrieve the currently active promotion by product IDs")
+    @GetMapping("/active/product")
+    public ResponseEntity<ResponseData> getActivePromotionByProductId(@RequestParam List<String> ids) {
+        PromotionDTO promotion = promotionService.getActivePromotionByProductIDs(ids);
         if (promotion == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseData(404, false, "Promotion with productID: " + productID + " not found", null, null, null));
+                    .body(new ResponseData(404, false, "Promotion with productID: " + ids + " not found", null, null, null));
         }
         return ResponseEntity.ok(new ResponseData(200, true, "Promotion found", promotion, null, null));
     }

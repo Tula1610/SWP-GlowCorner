@@ -75,17 +75,24 @@ public class OrderServiceImp implements OrderService {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrderID(orderID);
             orderDetail.setProductID(cartItem.getProductID());
+            orderDetail.setProductName(cartItem.getProductName());
             orderDetail.setQuantity(cartItem.getQuantity());
 
-            // Apply promotion if available
-            Promotion promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(LocalDate.now(), LocalDate.now(), cartItem.getProductID())
+            Product product = productRepository.findByProductID(cartItem.getProductID())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+            orderDetail.setProductPrice(product.getPrice());
+
+            orderDetail.setTotalAmount(cartItem.getTotalAmount());
+            orderDetail.setDiscountedTotalAmount(cartItem.getDiscountedTotalAmount());
+
+            Promotion promotion = promotionRepository.findActivePromotion(LocalDate.now(), LocalDate.now(), List.of(cartItem.getProductID()))
                     .orElse(null);
             if (promotion != null) {
-                Product product = productRepository.findByProductID(cartItem.getProductID())
-                        .orElseThrow(() -> new RuntimeException("Product not found"));
-                orderDetail.setTotalAmount((product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100)) * cartItem.getQuantity());
+                orderDetail.setDiscountName(promotion.getPromotionName());
+                orderDetail.setDiscountPercentage(promotion.getDiscount());
             } else {
-                orderDetail.setTotalAmount(cartItem.getTotalAmount());
+                orderDetail.setDiscountName(null);
+                orderDetail.setDiscountPercentage(null);
             }
 
             return orderDetail;
@@ -94,6 +101,7 @@ public class OrderServiceImp implements OrderService {
         // Set order details and calculate total amount
         order.setOrderDetails(orderDetails);
         order.setTotalAmount(calculateTotalAmount(orderDetails));
+        order.setDiscountedTotalAmount(calculateDiscountedTotalAmount(orderDetails));
 
         // Save order and order details
         order = orderRepository.save(order);
@@ -316,10 +324,24 @@ public class OrderServiceImp implements OrderService {
     }
 
 
+
     /* Calculate Total Amount */
     private Long calculateTotalAmount(List<OrderDetail> orderDetails) {
         return orderDetails.stream()
                 .mapToLong(OrderDetail::getTotalAmount)
+                .sum();
+    }
+
+    /* Calculate Discounted Total Amount */
+    private Long calculateDiscountedTotalAmount(List<OrderDetail> orderDetails) {
+        return orderDetails.stream()
+                .mapToLong(orderDetail -> {
+                    if (orderDetail.getDiscountedTotalAmount() != null) {
+                        return orderDetail.getDiscountedTotalAmount();
+                    } else {
+                        return orderDetail.getTotalAmount();
+                    }
+                })
                 .sum();
     }
 }

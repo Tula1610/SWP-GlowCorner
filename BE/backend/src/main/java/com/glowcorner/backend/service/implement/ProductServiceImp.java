@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -227,7 +226,7 @@ public class ProductServiceImp implements ProductService {
        List<Product> products = productRepository.findAll()
                .stream()
                .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
-               .collect(Collectors.toList());
+               .toList();
        return products.stream()
                .map(product -> {
                    ProductDTO productDTO = productMapper.toDTO(product);
@@ -254,7 +253,7 @@ public class ProductServiceImp implements ProductService {
         List<Product> products = productRepository.findBySkinTypesIn(skinType)
                 .stream()
                 .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
-                .collect(Collectors.toList());
+                .toList();
         return products.stream()
                 .map(product -> {
                     ProductDTO productDTO = productMapper.toDTO(product);
@@ -270,7 +269,7 @@ public class ProductServiceImp implements ProductService {
         List<Product> products = productRepository.findByCategory(category)
                 .stream()
                 .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
-                .collect(Collectors.toList());
+                .toList();
         return products.stream()
                 .map(product -> {
                     ProductDTO productDTO = productMapper.toDTO(product);
@@ -286,7 +285,7 @@ public class ProductServiceImp implements ProductService {
         List<Product> products = productRepository.findByProductNameContainingIgnoreCase(productName)
                 .stream()
                 .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
-                .collect(Collectors.toList());
+                .toList();
         return products.stream()
                 .map(product -> {
                     ProductDTO productDTO = productMapper.toDTO(product);
@@ -346,13 +345,13 @@ public class ProductServiceImp implements ProductService {
    // Calculator
    private void calculateDiscountedPrice(ProductDTO productDTO) {
        LocalDate now = LocalDate.now();
-       Optional<Promotion> activePromotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(now, now, productDTO.getProductID());
-       if (activePromotion.isPresent()) {
-           Promotion promotion = activePromotion.get();
-           long discountedPrice = productDTO.getPrice() - (productDTO.getPrice() * promotion.getDiscount() / 100);
-           productDTO.setDiscountedPrice(discountedPrice);
+       Promotion activePromotion = promotionRepository.findActivePromotion(
+               now, now, List.of(productDTO.getProductID()))
+               .orElse(null);
+       if (activePromotion != null) {
+           productDTO.setDiscountedPrice(productDTO.getPrice() - (productDTO.getPrice() * activePromotion.getDiscount() / 100));
        } else {
-           productDTO.setDiscountedPrice(null);
+           productDTO.setDiscountedPrice(productDTO.getPrice());
        }
    }
 }

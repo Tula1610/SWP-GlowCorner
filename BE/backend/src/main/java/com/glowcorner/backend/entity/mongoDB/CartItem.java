@@ -1,6 +1,5 @@
 package com.glowcorner.backend.entity.mongoDB;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,8 +18,15 @@ public class CartItem {
 
     String userID;
     String productID;
+    String productName;
+
+    Long productPrice;
+
     int quantity;
 
     Long totalAmount;
+
+    Integer discountPercentage;
+
     Long discountedTotalAmount;
 }

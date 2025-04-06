@@ -48,10 +48,11 @@ public class PromotionServiceImp implements PromotionService {
     }
 
     @Override
-    public PromotionDTO getPromotionByProductID(String productID){
-        Promotion promotion = promotionRepository.findByProductID(productID)
-                .orElseThrow(() -> new RuntimeException("Promotion not found"));
-        return promotionMapper.toDTO(promotion);
+    public List<PromotionDTO> getPromotionByProductIDs(List<String> productIDs){
+        List<Promotion> promotions = promotionRepository.findByProductIDsIn(productIDs);
+        return promotions.stream()
+                .map(promotionMapper::toDTO)
+                .toList();
     }
 
     @Override
@@ -64,11 +65,11 @@ public class PromotionServiceImp implements PromotionService {
     }
 
     @Override
-    public PromotionDTO getActivePromotionByProductID(String productID) {
+    public PromotionDTO getActivePromotionByProductIDs(List<String> productIDs) {
         LocalDate now = LocalDate.now();
-        Promotion promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(now, now, productID)
+        Promotion promotions = promotionRepository.findActivePromotion(now, now, productIDs)
                 .orElseThrow(() -> new RuntimeException("No active promotion found"));
-        return promotionMapper.toDTO(promotion);
+        return promotionMapper.toDTO(promotions);
     }
 
     @Override
@@ -84,8 +85,8 @@ public class PromotionServiceImp implements PromotionService {
 
         promotion.setStartDate(request.getStartDate());
         promotion.setEndDate(request.getEndDate());
-        promotion.setProductID(request.getProductID());
-        boolean exists = promotionRepository.countByProductIDAndDateRangeOverlap(promotion.getProductID(), promotion.getStartDate(), promotion.getEndDate()) > 0;
+        promotion.setProductIDs(request.getProductIDs());
+        boolean exists = promotionRepository.countByProductIDsAndDateRangeOverlap(promotion.getProductIDs(), promotion.getStartDate(), promotion.getEndDate()) > 0;
         if (exists) {
             throw new RuntimeException("A promotion already exists within the given date range for the same product.");
         }
@@ -103,9 +104,9 @@ public class PromotionServiceImp implements PromotionService {
 
             LocalDate startDate = promotionDTO.getStartDate();
             LocalDate endDate = promotionDTO.getEndDate();
-            String productID = promotionDTO.getProductID();
+            List<String> productIDs = promotionDTO.getProductIDs();
 
-            boolean exists = promotionRepository.countByProductIDAndDateRangeOverlapExcludeCurrent(productID, startDate, endDate, id) > 0;
+            boolean exists = promotionRepository.countByProductIDsAndDateRangeOverlapExcludeCurrent(productIDs, startDate, endDate, id) > 0;
             if (exists) {
                 throw new RuntimeException("A promotion already exists within the given date range for the same product.");
             }
@@ -114,6 +115,7 @@ public class PromotionServiceImp implements PromotionService {
             if (promotionDTO.getDiscount() != null) existingPromotion.setDiscount(promotionDTO.getDiscount());
             if (promotionDTO.getStartDate() != null) existingPromotion.setStartDate(promotionDTO.getStartDate());
             if (promotionDTO.getEndDate() != null) existingPromotion.setEndDate(promotionDTO.getEndDate());
+            if (promotionDTO.getProductIDs() != null) existingPromotion.setProductIDs(promotionDTO.getProductIDs());
 
             Promotion updatedPromotion = promotionRepository.save(existingPromotion);
             return promotionMapper.toDTO(updatedPromotion);

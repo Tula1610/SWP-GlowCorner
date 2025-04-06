@@ -20,6 +20,7 @@ public class OrderDTO {
     LocalDate orderDate;
     OrderStatus status;
     Long totalAmount;
+    Long discountedTotalAmount;
     List<OrderDetailDTO> orderDetails;
 
 }

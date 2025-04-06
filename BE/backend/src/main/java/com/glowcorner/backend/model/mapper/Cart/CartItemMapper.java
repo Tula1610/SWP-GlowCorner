@@ -12,13 +12,15 @@ public class CartItemMapper {
             return null;
         }
 
-        return new CartItemDTO(
-                cartItem.getUserID(),
-                cartItem.getProductID(),
-                cartItem.getQuantity(),
-                cartItem.getTotalAmount(),
-                cartItem.getDiscountedTotalAmount()
-        );
+        CartItemDTO cartItemDTO = new CartItemDTO();
+        cartItemDTO.setUserID(cartItem.getUserID());
+        cartItemDTO.setProductID(cartItem.getProductID());
+        cartItemDTO.setQuantity(cartItem.getQuantity());
+        cartItemDTO.setTotalAmount(cartItem.getTotalAmount());
+        cartItemDTO.setDiscountedTotalAmount(cartItem.getDiscountedTotalAmount());
+        cartItemDTO.setProductPrice(cartItem.getProductPrice());
+        cartItemDTO.setDiscountPercentage(cartItem.getDiscountPercentage());
+        return cartItemDTO;
     }
 
     public CartItem toCartItem(CartItemDTO cartItemDTO) {
@@ -29,8 +31,11 @@ public class CartItemMapper {
         CartItem cartItem = new CartItem();
         cartItem.setUserID(cartItemDTO.getUserID());
         cartItem.setProductID(cartItemDTO.getProductID());
+        cartItem.setProductName(cartItemDTO.getProductName());
+        cartItem.setProductPrice(cartItemDTO.getProductPrice());
         cartItem.setQuantity(cartItemDTO.getQuantity());
         cartItem.setTotalAmount(cartItemDTO.getTotalAmount());
+        cartItem.setDiscountPercentage(cartItemDTO.getDiscountPercentage());
         cartItem.setDiscountedTotalAmount(cartItemDTO.getDiscountedTotalAmount());
 
         return cartItem;

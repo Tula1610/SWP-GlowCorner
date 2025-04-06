@@ -15,8 +15,13 @@ public class OrderDetailMapper {
         return new OrderDetailDTO(
             orderDetail.getOrderID(),
             orderDetail.getProductID(),
+            orderDetail.getProductName(),
             orderDetail.getQuantity(),
-            orderDetail.getTotalAmount()
+            orderDetail.getProductPrice(),
+            orderDetail.getDiscountName(),
+            orderDetail.getDiscountPercentage(),
+            orderDetail.getTotalAmount(),
+            orderDetail.getDiscountedTotalAmount()
         );
     }
 
@@ -29,8 +34,13 @@ public class OrderDetailMapper {
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderID(orderID);
         orderDetail.setProductID(orderDetailDTO.getProductID());
+        orderDetail.setProductName(orderDetailDTO.getProductName()); // Map this field
         orderDetail.setQuantity(orderDetailDTO.getQuantity());
+        orderDetail.setProductPrice(orderDetailDTO.getProductPrice());
+        orderDetail.setDiscountName(orderDetailDTO.getDiscountName());
+        orderDetail.setDiscountPercentage(orderDetailDTO.getDiscountPercentage());
         orderDetail.setTotalAmount(orderDetailDTO.getTotalAmount());
+        orderDetail.setDiscountedTotalAmount(orderDetailDTO.getDiscountedTotalAmount());
 
         return orderDetail;
     }

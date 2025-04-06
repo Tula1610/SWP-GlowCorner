@@ -26,6 +26,7 @@ public class OrderMapper {
             order.getOrderDate(),
             order.getStatus(),
             order.getTotalAmount(),
+            order.getDiscountedTotalAmount(),
             order.getOrderDetails().stream()
                 .map(orderDetailMapper::toOrderDetailDTO)
                 .collect(Collectors.toList())

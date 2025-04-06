@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class PromotionDTO {
 
     String promotionID;
     String promotionName;
-    String productID;
+    List<String> productIDs;
     Integer discount;
     LocalDate startDate;
     LocalDate endDate;

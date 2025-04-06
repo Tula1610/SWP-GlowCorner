@@ -59,6 +59,9 @@ public class CartServiceImp implements CartService {
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Cart item not found"));
             cartItemDTO.setDiscountedTotalAmount(cartItem.getDiscountedTotalAmount());
+            cartItemDTO.setProductPrice(cartItem.getProductPrice());
+            cartItemDTO.setProductName(cartItem.getProductName());
+            cartItemDTO.setDiscountPercentage(cartItem.getDiscountPercentage());
         });
 
         return cartDTO;
@@ -91,6 +94,8 @@ public class CartServiceImp implements CartService {
             itemDTO.setUserID(userID);
             itemDTO.setQuantity(quantity);
             itemDTO.setProductID(productID);
+            itemDTO.setProductName(product.getProductName());
+            itemDTO.setProductPrice(product.getPrice());
             CartItem item = cartItemMapper.toCartItem(itemDTO);
             updateCartItemAmounts(item, productID);
             cartItemRepository.save(item);
@@ -186,13 +191,16 @@ public class CartServiceImp implements CartService {
         Product product = productRepository.findByProductID(productID)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         cartItem.setTotalAmount(product.getPrice() * cartItem.getQuantity());
+        cartItem.setProductPrice(product.getPrice());
 
-        Promotion promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(LocalDate.now(), LocalDate.now(), productID)
+        Promotion promotion = promotionRepository.findActivePromotion(LocalDate.now(), LocalDate.now(), List.of(productID))
                 .orElse(null);
         if (promotion != null) {
             cartItem.setDiscountedTotalAmount((product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100)) * cartItem.getQuantity());
+            cartItem.setDiscountPercentage(promotion.getDiscount());
         } else {
             cartItem.setDiscountedTotalAmount(null);
+            cartItem.setDiscountPercentage(null);
         }
     }
 
@@ -207,14 +215,11 @@ public class CartServiceImp implements CartService {
     private Long calculateCartDiscountedTotalAmount(List<CartItem> items) {
         return items.stream()
                 .mapToLong(item -> {
-                    Promotion promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductID(LocalDate.now(), LocalDate.now(), item.getProductID())
-                            .orElse(null);
-                    if (promotion != null) {
-                        Product product = productRepository.findByProductID(item.getProductID())
-                                .orElseThrow(() -> new RuntimeException("Product not found"));
-                        return (product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100)) * item.getQuantity();
+                    if (item.getDiscountedTotalAmount() != null) {
+                        return item.getDiscountedTotalAmount();
+                    } else {
+                        return item.getTotalAmount();
                     }
-                    return 0L;
                 })
                 .sum();
     }

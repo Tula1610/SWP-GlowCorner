@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -17,7 +18,7 @@ public class Promotion {
 
     String promotionID;
 
-    String productID;
+    List<String> productIDs;
 
     String promotionName;
 

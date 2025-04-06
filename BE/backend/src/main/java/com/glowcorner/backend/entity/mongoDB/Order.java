@@ -27,5 +27,7 @@ public class Order {
 
     Long totalAmount; // Stored as an integer, representing the total cost of the order
 
+    Long discountedTotalAmount;
+
     List<OrderDetail> orderDetails; // List of OrderDetail objects
 }

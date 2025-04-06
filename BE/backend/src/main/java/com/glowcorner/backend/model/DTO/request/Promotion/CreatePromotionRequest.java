@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 public class CreatePromotionRequest {
 
     String promotionName;
-    String productID;
+    List<String> productIDs;
     Integer discount;
     LocalDate startDate;
     LocalDate endDate;
