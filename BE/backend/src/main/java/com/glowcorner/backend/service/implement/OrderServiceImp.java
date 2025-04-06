@@ -10,6 +10,9 @@ import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderMapper;
 import com.glowcorner.backend.repository.*;
 import com.glowcorner.backend.service.interfaces.OrderService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentMethod;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -53,7 +56,7 @@ public class OrderServiceImp implements OrderService {
 
     // Customer create order
     @Override
-    public OrderDTO customerCreateOrder(String userID) {
+    public OrderDTO customerCreateOrder(String userID, String paymentIntentId) {
         User user = userRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         if (user.getRole() != Role.CUSTOMER) {
@@ -69,6 +72,19 @@ public class OrderServiceImp implements OrderService {
         order.setCustomerName(user.getFullName());
         order.setOrderDate(LocalDate.now());
         order.setStatus(OrderStatus.PENDING);
+
+        try {
+            PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
+            PaymentMethod method = PaymentMethod.retrieve(paymentIntent.getPaymentMethod());
+
+            order.setPaymentIntentId(paymentIntentId);
+            order.setPaymentMethodType(method.getType());
+            order.setPaymentBrand(method.getCard().getBrand());
+            order.setPaymentLast4(method.getCard().getLast4());
+        } catch (StripeException e) {
+            throw new RuntimeException("Failed to retrieve payment info from Stripe: " + e.getMessage(), e);
+        }
+
 
         final String orderID = order.getOrderID();
 

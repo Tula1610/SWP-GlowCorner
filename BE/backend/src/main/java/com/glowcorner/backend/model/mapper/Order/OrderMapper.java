@@ -30,7 +30,12 @@ public class OrderMapper {
             order.getDiscountedTotalAmount(),
             order.getOrderDetails().stream()
                 .map(orderDetailMapper::toOrderDetailDTO)
-                .collect(Collectors.toList())
+                .collect(Collectors.toList()),
+            order.getPaymentIntentId(),
+            order.getPaymentMethodType(),
+            order.getPaymentBrand(),
+            order.getPaymentLast4(),
+            order.getStripePaymentMethodId()
         );
     }
 
