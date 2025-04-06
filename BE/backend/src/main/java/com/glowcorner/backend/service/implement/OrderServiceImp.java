@@ -66,6 +66,7 @@ public class OrderServiceImp implements OrderService {
         Order order = new Order();
         order.setOrderID(counterServiceImpl.getNextOrderID());
         order.setCustomerID(userID);
+        order.setCustomerName(user.getFullName());
         order.setOrderDate(LocalDate.now());
         order.setStatus(OrderStatus.PENDING);
 
@@ -178,6 +179,15 @@ public class OrderServiceImp implements OrderService {
     @Override
     public List<OrderDTO> getOrdersByCustomerID(String customerID) {
         List<Order> orders = orderRepository.findByCustomerID(customerID);
+        return orders.stream()
+                .map(orderMapper::toOrderDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Get orders by customer name
+    @Override
+    public List<OrderDTO> getOrdersByCustomerName(String customerName) {
+        List<Order> orders = orderRepository.findByCustomerName(customerName);
         return orders.stream()
                 .map(orderMapper::toOrderDTO)
                 .collect(Collectors.toList());

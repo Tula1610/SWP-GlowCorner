@@ -21,6 +21,8 @@ public class Order {
 
     String customerID; // Refers to userID in the User collection (foreign key in SQL)
 
+    String customerName; // Name of the customer
+
     LocalDate orderDate; // Maps to the SQL DATE type
 
     OrderStatus status; // Status of the order (e.g., "Pending", "Completed")

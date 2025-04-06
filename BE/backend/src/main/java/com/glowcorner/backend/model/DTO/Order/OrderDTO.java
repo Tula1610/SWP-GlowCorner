@@ -17,6 +17,7 @@ public class OrderDTO {
 
     String orderID;
     String customerID;
+    String customerName;
     LocalDate orderDate;
     OrderStatus status;
     Long totalAmount;

@@ -19,6 +19,7 @@ public interface OrderService {
     List<OrderDTO> getAllOrders();
     OrderDTO getOrderById(String orderId);
     List<OrderDTO> getOrdersByCustomerID(String customerID);
+    List<OrderDTO> getOrdersByCustomerName(String customerName);
     List<OrderDTO> getOrdersByStatus(String status);
     List<OrderDTO> getOrdersByStatusAndCustomerID(String status, String userID);
     List<OrderDTO> getOrdersByOrderDate(LocalDate orderDate);

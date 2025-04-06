@@ -93,6 +93,18 @@ public class OrderController {
         return ResponseEntity.ok(new ResponseData(200, true, "Orders found", orders, null, null));
     }
 
+    // Get orders by customer name
+    @Operation(summary = "Get orders by customer name", description = "Retrieve a list of orders using the customer name")
+    @GetMapping("/customer/name/{customerName}")
+    public ResponseEntity<ResponseData> getOrdersByCustomerName(@PathVariable String customerName) {
+        List<OrderDTO> orders = orderService.getOrdersByCustomerName(customerName);
+        if (orders.isEmpty()) {
+            return ResponseEntity.status(404)
+                    .body(new ResponseData(404, false, "There is no order with customer name: " + customerName, null, null, null));
+        }
+        return ResponseEntity.ok(new ResponseData(200, true, "Orders found", orders, null, null));
+    }
+
     // Get orders by status
     @Operation(summary = "Get orders by status", description = "Retrieve a list of orders using the status")
     @GetMapping("/status/{status}")

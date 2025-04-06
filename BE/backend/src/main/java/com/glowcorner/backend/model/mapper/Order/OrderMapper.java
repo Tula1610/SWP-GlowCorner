@@ -23,6 +23,7 @@ public class OrderMapper {
         return new OrderDTO(
             order.getOrderID(),
             order.getCustomerID(),
+            order.getCustomerName(),
             order.getOrderDate(),
             order.getStatus(),
             order.getTotalAmount(),
