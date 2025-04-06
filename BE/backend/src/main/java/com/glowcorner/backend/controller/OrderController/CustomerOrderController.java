@@ -26,7 +26,7 @@ public class CustomerOrderController {
     }
 
     @Operation(summary = "Create a new order *from cart*", description = "Add a new order to the system")
-    @PostMapping("/{userID}")
+    @PostMapping("/create")
     public ResponseEntity<ResponseData> createOrder(@PathVariable String userID, @RequestParam String paymentIntentId) {
         try {
             OrderDTO createdOrder = orderService.customerCreateOrder(userID, paymentIntentId);
