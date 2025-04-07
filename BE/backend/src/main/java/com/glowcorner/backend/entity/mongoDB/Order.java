@@ -32,4 +32,13 @@ public class Order {
     Long discountedTotalAmount;
 
     List<OrderDetail> orderDetails; // List of OrderDetail objects
+
+    // Payment method info
+    String paymentIntentId;    // Unique identifier for the payment intent in Stripe
+    String paymentMethodType;  // e.g. "card", "paypal", "klarna"
+    String paymentBrand;       // e.g. "visa", "mastercard"
+    String paymentLast4;       // e.g. "4242"
+
+    // Optionally store full Stripe payment method ID for references
+    String stripePaymentMethodId;
 }

@@ -24,4 +24,12 @@ public class OrderDTO {
     Long discountedTotalAmount;
     List<OrderDetailDTO> orderDetails;
 
+    String paymentIntentId;
+
+    String paymentMethodType;
+    String paymentBrand;
+    String paymentLast4;
+
+    String stripePaymentMethodId;
+
 }

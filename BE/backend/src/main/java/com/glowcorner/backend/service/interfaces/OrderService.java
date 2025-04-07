@@ -11,7 +11,7 @@ import java.util.List;
 public interface OrderService {
 
     /* Order CRUD */
-    OrderDTO customerCreateOrder(String userID);
+    OrderDTO customerCreateOrder(String userID, String paymentIntentId);
     OrderDTO updateOrder(String orderId, OrderStatus status);
     void deleteOrder(String orderId);
 

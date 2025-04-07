@@ -4,6 +4,7 @@ import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.OrderService;
+import com.stripe.exception.StripeException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -24,15 +25,20 @@ public class CustomerOrderController {
         this.orderService = orderService;
     }
 
-    // Create order
     @Operation(summary = "Create a new order *from cart*", description = "Add a new order to the system")
-    @PostMapping
-    public ResponseEntity<ResponseData> createOrder(@PathVariable String userID) {
-        OrderDTO createdOrder = orderService.customerCreateOrder(userID);
-        createdOrder.setCustomerID(userID);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseData(201, true, "Order created", createdOrder, null, null));
+    @PostMapping("/create")
+    public ResponseEntity<ResponseData> createOrder(@PathVariable String userID, @RequestParam String paymentIntentId) {
+        try {
+            OrderDTO createdOrder = orderService.customerCreateOrder(userID, paymentIntentId);
+            createdOrder.setCustomerID(userID);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResponseData(201, true, "Order created", createdOrder, null, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseData(500, false, "Order creation failed: " + e.getMessage(), null, null, null));
+        }
     }
+
 
     // Get orders by customer ID
     @Operation(summary = "Get orders by customer ID", description = "Retrieve a list of orders using the customer ID")
