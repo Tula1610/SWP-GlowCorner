@@ -1,5 +1,6 @@
 package com.glowcorner.backend.model.DTO.User;
 
+import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.enums.SkinType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +19,7 @@ public class UserDTOByCustomer {
     String address;
     SkinType skinType;
     String avatar_url;
+
+    SkinCareRoutine skinCareRoutine;
 
 }

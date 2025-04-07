@@ -19,7 +19,8 @@ public class UserMapperCustomer {
                 user.getPhone(),
                 user.getAddress(),
                 user.getSkinType(),
-                user.getAvatar_url()
+                user.getAvatar_url(),
+                user.getSkinCareRoutine()
         );
     }
 

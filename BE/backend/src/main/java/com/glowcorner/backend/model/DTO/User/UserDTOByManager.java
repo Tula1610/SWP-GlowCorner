@@ -2,6 +2,7 @@ package com.glowcorner.backend.model.DTO.User;
 
 
 import com.glowcorner.backend.entity.mongoDB.Order;
+import com.glowcorner.backend.entity.mongoDB.SkincareRoutine.SkinCareRoutine;
 import com.glowcorner.backend.enums.SkinType;
 import com.glowcorner.backend.enums.Role;
 import lombok.AllArgsConstructor;
@@ -30,4 +31,6 @@ public class UserDTOByManager {
     String avatar_url;
 
     List<Order> orders;
+
+    SkinCareRoutine skinCareRoutine;
 }
