@@ -307,7 +307,7 @@ public class ProductServiceImp implements ProductService {
 
         // Filter by skinType (if any)
         if (skinTypes != null && !skinTypes.isEmpty()) {
-            query.addCriteria(Criteria.where("skinType").in(skinTypes));
+            query.addCriteria(Criteria.where("skinTypes").in(skinTypes));
         }
 
         // Filter by category (if any)

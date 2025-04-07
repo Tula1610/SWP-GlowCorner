@@ -61,13 +61,14 @@ public class CustomFilterSecurity {
                 "/api/products/filter",
                 "/api/feedbacks",
                 "/api/quizzes",
+                "/api/user/**",
         };
 
 //        String[] showUrls = {"/api/manager/users/**","/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines/**","/api/promotions","/api/feedbacks/**","/api/quizzes/**"};
-        String[] showUrls = {"/api/user/**","/api/orders/customer/**","/api/cart/**","/api/categories","/api/skin-care-routines/user/**","/api/skin-care-routines/skinType/**"};
-        String[] updateUrls = {"/api/user/**","/api/cart/**","/api/skin-care-routines/**","/api/orders/staff/**"};
+        String[] showUrls = {"/api/orders/customer/**","/api/cart/**","/api/categories","/api/skin-care-routines/user/**","/api/skin-care-routines/skinType/**"};
+        String[] updateUrls = {"/api/cart/**","/api/skin-care-routines/**","/api/orders/staff/**"};
         String[] postUrls = {"/api/cart/**","/api/orders/**"};
-        String[] postStaffUrls = {"/api/skin-care-routines"};
+        String[] postManagerUrls = {"/api/skin-care-routines"};
         String[] deleteUrls = {"/api/cart/**"};
         String[] showStaffUrls = {"/api/orders/staff","/api/promotions","/api/quizzes","/api/answer-options/question/**","/api/skin-care-routines"};
         String[] adminUrls = {"/api/manager/users/**"};
@@ -83,7 +84,7 @@ public class CustomFilterSecurity {
                 .requestMatchers(HttpMethod.GET, showStaffUrls).hasAnyRole("STAFF","MANAGER")
                 .requestMatchers(HttpMethod.PUT, updateUrls).hasAnyRole("CUSTOMER","STAFF")
                 .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
-                .requestMatchers(HttpMethod.POST, postStaffUrls).hasRole("STAFF")
+                .requestMatchers(HttpMethod.POST, postManagerUrls).hasRole("MANAGER")
                 .requestMatchers(HttpMethod.DELETE, deleteUrls).hasRole("CUSTOMER")
                 .requestMatchers(adminUrls).hasRole("MANAGER")
                 .anyRequest().authenticated()
