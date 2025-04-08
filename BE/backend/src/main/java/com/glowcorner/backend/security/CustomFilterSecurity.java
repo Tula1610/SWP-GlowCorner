@@ -62,15 +62,17 @@ public class CustomFilterSecurity {
                 "/api/feedbacks",
                 "/api/quizzes",
                 "/api/user/**",
+                "/api/skin-care-routines/skinType/**",
         };
 
 //        String[] showUrls = {"/api/manager/users/**","/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines/**","/api/promotions","/api/feedbacks/**","/api/quizzes/**"};
-        String[] showUrls = {"/api/orders/customer/**","/api/cart/**","/api/categories","/api/skin-care-routines/user/**","/api/skin-care-routines/skinType/**"};
+        String[] showUrls = {"/api/orders/customer/**","/api/cart/**","/api/categories","/api/skin-care-routines/user/**"};
         String[] updateUrls = {"/api/cart/**","/api/skin-care-routines/**","/api/orders/staff/**"};
         String[] postUrls = {"/api/cart/**","/api/orders/**"};
         String[] postManagerUrls = {"/api/skin-care-routines"};
         String[] deleteUrls = {"/api/cart/**"};
-        String[] showStaffUrls = {"/api/orders/staff","/api/promotions","/api/quizzes","/api/answer-options/question/**","/api/skin-care-routines"};
+        String[] showManagerUrls = {"/api/orders/staff","/api/promotions"};
+        String[] showStaffUrls = {"/api/quizzes/**","/api/answer-options/question/**"};
         String[] adminUrls = {"/api/manager/users/**"};
 
         http
@@ -81,7 +83,8 @@ public class CustomFilterSecurity {
                 .authorizeHttpRequests()
                 .requestMatchers(publicUrls).permitAll()
                 .requestMatchers(HttpMethod.GET, showUrls).hasRole("CUSTOMER")
-                .requestMatchers(HttpMethod.GET, showStaffUrls).hasAnyRole("STAFF","MANAGER")
+                .requestMatchers(HttpMethod.GET, showManagerUrls).hasAnyRole("MANAGER")
+                .requestMatchers(HttpMethod.GET, showStaffUrls).hasAnyRole("STAFF")
                 .requestMatchers(HttpMethod.PUT, updateUrls).hasAnyRole("CUSTOMER","STAFF")
                 .requestMatchers(HttpMethod.POST, postUrls).hasRole("CUSTOMER")
                 .requestMatchers(HttpMethod.POST, postManagerUrls).hasRole("MANAGER")
