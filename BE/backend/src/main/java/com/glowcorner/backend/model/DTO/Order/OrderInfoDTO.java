@@ -1,10 +1,13 @@
 package com.glowcorner.backend.model.DTO.Order;
 
+import com.glowcorner.backend.enums.PaymentMethod;
+import com.glowcorner.backend.enums.Status.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -16,6 +19,12 @@ public class OrderInfoDTO {
     String orderID;
 
     CustomerInfoDTO customerInfo;
+
+    LocalDate orderDate;
+
+    OrderStatus status;
+
+    PaymentMethod paymentMethodType;
 
     List<OrderDetailItemDTO> orderDetails;
 
@@ -39,8 +48,10 @@ public class OrderInfoDTO {
     public static class OrderDetailItemDTO {
         String productID;
         String name;
-        Long price;
+        Long productPrice;
+        Integer discount;
         Integer quantity;
         String image;
+
     }
 }
