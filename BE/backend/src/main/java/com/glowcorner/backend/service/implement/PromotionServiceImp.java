@@ -65,6 +65,14 @@ public class PromotionServiceImp implements PromotionService {
     }
 
     @Override
+    public List<PromotionDTO> getActivePromotionByDate(LocalDate date){
+        List<Promotion> promotion = promotionRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(date, date);
+        return promotion.stream()
+                .map(promotionMapper::toDTO)
+                .toList();
+    }
+
+    @Override
     public PromotionDTO getActivePromotionByProductIDs(List<String> productIDs) {
         LocalDate now = LocalDate.now();
         Promotion promotions = promotionRepository.findActivePromotion(now, now, productIDs)

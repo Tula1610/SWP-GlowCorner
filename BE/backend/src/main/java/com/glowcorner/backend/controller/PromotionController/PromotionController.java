@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "Promotion Management System", description = "Operations pertaining to promotions in the Promotion Management System")
@@ -87,6 +88,14 @@ public class PromotionController {
     @GetMapping("/active")
     public ResponseEntity<ResponseData> getActivePromotion() {
         List<PromotionDTO> promotion = promotionService.getActivePromotion();
+        return ResponseEntity.ok(new ResponseData(200, true, "Active promotion found", promotion, null, null));
+    }
+
+    // Get active promotion
+    @Operation(summary = "Get active promotion", description = "Retrieve the currently active promotion")
+    @GetMapping("/active/{date}")
+    public ResponseEntity<ResponseData> getActivePromotionByDate(@PathVariable LocalDate date) {
+        List<PromotionDTO> promotion = promotionService.getActivePromotionByDate(date);
         return ResponseEntity.ok(new ResponseData(200, true, "Active promotion found", promotion, null, null));
     }
 
