@@ -1,10 +1,11 @@
 package com.glowcorner.backend.controller.OrderController;
 
+import com.glowcorner.backend.enums.PaymentMethod;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
+import com.glowcorner.backend.model.DTO.Order.PaymentInfo;
 import com.glowcorner.backend.model.DTO.response.ResponseData;
 import com.glowcorner.backend.service.interfaces.OrderService;
-import com.stripe.exception.StripeException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,9 @@ public class CustomerOrderController {
 
     @Operation(summary = "Create a new order *from cart*", description = "Add a new order to the system")
     @PostMapping("/create")
-    public ResponseEntity<ResponseData> createOrder(@PathVariable String userID, @RequestParam String paymentIntentId) {
+    public ResponseEntity<ResponseData> createOrder(@PathVariable String userID) {
         try {
-            OrderDTO createdOrder = orderService.customerCreateOrder(userID, paymentIntentId);
+            OrderDTO createdOrder = orderService.customerCreateOrder(userID);
             createdOrder.setCustomerID(userID);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ResponseData(201, true, "Order created", createdOrder, null, null));
@@ -83,5 +84,44 @@ public class CustomerOrderController {
         OrderInfoDTO orderInfo = orderService.getOrderInfoByOrderID(userID, orderID);
         return ResponseEntity.ok(new ResponseData(200, true, "Order details found", orderInfo, null, null));
     }
+
+    // Update order payment info
+    @Operation(
+            summary = "Update payment info for an order",
+            description = "Attach payment info (e.g., Stripe PaymentIntent ID or mark as COD) to an existing order"
+    )
+    @PostMapping("/{orderID}/payment")
+    public ResponseEntity<ResponseData> updateOrderPaymentInfo(
+            @PathVariable String userID,
+            @PathVariable String orderID,
+            @RequestParam PaymentMethod methodType,
+            @RequestBody PaymentInfo paymentInfo
+    ) {
+        try {
+            // Make sure order belongs to user (optional validation)
+            OrderInfoDTO order = orderService.getOrderInfoByOrderID(userID, orderID);
+            if (order == null) {
+                return ResponseEntity.status(404).body(
+                        new ResponseData(404, false, "Order not found or does not belong to user", null, null, null)
+                );
+            }
+
+            // Update payment
+            orderService.updatePaymentInfo(orderID, methodType, paymentInfo);
+
+            // Fetch and return updated order info
+            OrderDTO updatedOrder = orderService.getOrderById(orderID);
+            return ResponseEntity.ok(new ResponseData(200, true, "Payment info updated", updatedOrder, null, null));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                    new ResponseData(400, false, "Invalid payment method: " + e.getMessage(), null, null, null)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(
+                    new ResponseData(500, false, "Payment update failed: " + e.getMessage(), null, null, null)
+            );
+        }
+    }
+
 
 }

@@ -1,9 +1,11 @@
 package com.glowcorner.backend.service.interfaces;
 
+import com.glowcorner.backend.enums.PaymentMethod;
 import com.glowcorner.backend.enums.Status.OrderStatus;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
+import com.glowcorner.backend.model.DTO.Order.PaymentInfo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
 public interface OrderService {
 
     /* Order CRUD */
-    OrderDTO customerCreateOrder(String userID, String paymentIntentId);
+    OrderDTO customerCreateOrder(String userID);
     OrderDTO updateOrder(String orderId, OrderStatus status);
     void deleteOrder(String orderId);
 
@@ -34,5 +36,7 @@ public interface OrderService {
     List<OrderDetailDTO> getOrderDetailByOrderID(String orderID);
 
     OrderInfoDTO getOrderInfoByOrderID(String userID, String orderID);
+
+    void updatePaymentInfo(String orderId, PaymentMethod methodType, PaymentInfo paymentInfo);
 
 }

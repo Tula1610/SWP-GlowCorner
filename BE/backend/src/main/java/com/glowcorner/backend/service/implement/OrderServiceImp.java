@@ -1,22 +1,24 @@
 package com.glowcorner.backend.service.implement;
 
 import com.glowcorner.backend.entity.mongoDB.*;
+import com.glowcorner.backend.enums.PaymentMethod;
 import com.glowcorner.backend.enums.Status.OrderStatus;
 import com.glowcorner.backend.enums.Role;
 import com.glowcorner.backend.model.DTO.Order.OrderDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderDetailDTO;
 import com.glowcorner.backend.model.DTO.Order.OrderInfoDTO;
+import com.glowcorner.backend.model.DTO.Order.PaymentInfo;
 import com.glowcorner.backend.model.mapper.Order.OrderDetailMapper;
 import com.glowcorner.backend.model.mapper.Order.OrderMapper;
 import com.glowcorner.backend.repository.*;
 import com.glowcorner.backend.service.interfaces.OrderService;
-import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.PaymentMethod;
+import com.glowcorner.backend.service.interfaces.payment.PaymentProcessor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,18 +36,22 @@ public class OrderServiceImp implements OrderService {
 
     private final OrderDetailMapper orderDetailMapper;
 
+    private final Map<PaymentMethod, PaymentProcessor> paymentProcessors;
+
     private final CartRepository cartRepository;
 
     private final PromotionRepository promotionRepository;
     private final CounterServiceImpl counterServiceImpl;
 
-    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductRepository productRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, CartRepository cartRepository, PromotionRepository promotionRepository, CounterServiceImpl counterServiceImpl) {
+    public OrderServiceImp(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductRepository productRepository, UserRepository userRepository, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, List<PaymentProcessor> processors, CartRepository cartRepository, PromotionRepository promotionRepository, CounterServiceImpl counterServiceImpl) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
+        this.paymentProcessors = processors.stream()
+                .collect(Collectors.toMap(PaymentProcessor::getSupportedMethod, Function.identity()));
         this.cartRepository = cartRepository;
         this.promotionRepository = promotionRepository;
         this.counterServiceImpl = counterServiceImpl;
@@ -54,9 +60,8 @@ public class OrderServiceImp implements OrderService {
     /* Order
     * */
 
-    // Customer create order
     @Override
-    public OrderDTO customerCreateOrder(String userID, String paymentIntentId) {
+    public OrderDTO customerCreateOrder(String userID) {
         User user = userRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         if (user.getRole() != Role.CUSTOMER) {
@@ -72,19 +77,6 @@ public class OrderServiceImp implements OrderService {
         order.setCustomerName(user.getFullName());
         order.setOrderDate(LocalDate.now());
         order.setStatus(OrderStatus.PENDING);
-
-        try {
-            PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
-            PaymentMethod method = PaymentMethod.retrieve(paymentIntent.getPaymentMethod());
-
-            order.setPaymentIntentId(paymentIntentId);
-            order.setPaymentMethodType(method.getType());
-            order.setPaymentBrand(method.getCard().getBrand());
-            order.setPaymentLast4(method.getCard().getLast4());
-        } catch (StripeException e) {
-            throw new RuntimeException("Failed to retrieve payment info from Stripe: " + e.getMessage(), e);
-        }
-
 
         final String orderID = order.getOrderID();
 
@@ -120,11 +112,10 @@ public class OrderServiceImp implements OrderService {
         order.setTotalAmount(calculateTotalAmount(orderDetails));
         order.setDiscountedTotalAmount(calculateDiscountedTotalAmount(orderDetails));
 
-        // Save order and order details
         order = orderRepository.save(order);
         orderDetailRepository.saveAll(orderDetails);
 
-        // Clear the cart
+        // Clear cart
         cart.getItems().clear();
         cart.setTotalAmount(0L);
         cart.setDiscountedTotalAmount(null);
@@ -132,6 +123,7 @@ public class OrderServiceImp implements OrderService {
 
         return orderMapper.toOrderDTO(order);
     }
+
 
     // Update order
     @Override
@@ -328,6 +320,25 @@ public class OrderServiceImp implements OrderService {
         response.setTotalAmount(totalAmount);
 
         return response;
+    }
+
+    // Update payment info
+    public void updatePaymentInfo(String orderId, PaymentMethod methodType, PaymentInfo paymentInfo) {
+        // Retrieve the order first
+        Order order = orderRepository.findByOrderID(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // Find the appropriate processor based on the method type
+        PaymentProcessor processor = paymentProcessors.get(methodType);
+        if (processor == null) {
+            throw new IllegalArgumentException("Unsupported payment method: " + methodType);
+        }
+
+        // Process payment using the correct processor
+        processor.processPayment(order, paymentInfo);
+
+        // Save the updated order after payment info is added
+        orderRepository.save(order);
     }
 
     // Delete order detail
