@@ -55,7 +55,7 @@ public class CustomerOrderController {
 
     // Get orders by status
     @Operation(summary = "Get orders by status", description = "Retrieve a list of orders using the status")
-    @GetMapping("/{status}")
+    @GetMapping("/status/{status}")
     public ResponseEntity<ResponseData> getOrdersByStatus(@PathVariable String userID, @PathVariable String status) {
         List<OrderDTO> orders = orderService.getOrdersByStatusAndCustomerID(status, userID);
         if (orders.isEmpty()) {
@@ -67,7 +67,7 @@ public class CustomerOrderController {
 
     // Get orders by order date
     @Operation(summary = "Get orders by order date", description = "Retrieve a list of orders using the order date")
-    @GetMapping("/{orderDate}")
+    @GetMapping("/date/{orderDate}")
     public ResponseEntity<ResponseData> getOrdersByOrderDate(@PathVariable String userID, @PathVariable LocalDate orderDate) {
         List<OrderDTO> orders = orderService.getOrdersByOrderDateAndCustomerID(orderDate, userID);
         if (orders.isEmpty()) {
