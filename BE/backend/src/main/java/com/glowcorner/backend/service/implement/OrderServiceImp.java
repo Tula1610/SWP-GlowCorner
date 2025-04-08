@@ -296,8 +296,15 @@ public class OrderServiceImp implements OrderService {
             OrderInfoDTO.OrderDetailItemDTO item = new OrderInfoDTO.OrderDetailItemDTO();
             item.setProductID(orderDetail.getProductID());
             item.setQuantity(orderDetail.getQuantity());
-            item.setPrice(orderDetail.getTotalAmount());
+            item.setProductPrice(orderDetail.getProductPrice());
             item.setName(product.getProductName());
+            Promotion promotion = promotionRepository.findActivePromotion(LocalDate.now(), LocalDate.now(), List.of(orderDetail.getProductID()))
+                    .orElse(null);
+            if (promotion != null) {
+                item.setDiscount(promotion.getDiscount());
+            } else {
+                item.setDiscount(null);
+            }
             item.setImage(product.getImage_url());
             return item;
         }).collect(Collectors.toList());
@@ -308,6 +315,8 @@ public class OrderServiceImp implements OrderService {
         // 6. Build the response
         OrderInfoDTO response = new OrderInfoDTO();
         response.setOrderID(orderID);
+        response.setOrderDate(order.getOrderDate());
+        response.setStatus(order.getStatus());
 
         OrderInfoDTO.CustomerInfoDTO customerInfo = new OrderInfoDTO.CustomerInfoDTO();
         customerInfo.setName(user.getFullName());

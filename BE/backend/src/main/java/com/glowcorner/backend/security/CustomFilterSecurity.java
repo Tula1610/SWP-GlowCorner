@@ -56,22 +56,24 @@ public class CustomFilterSecurity {
                 "/auth/signup",
                 "/auth/forgot-password",
                 "/auth/change-password",
-                "/api/products",
+                "/api/customer/products",
                 "/api/products/**",
-                "/api/products/filter",
+                "/api/customer/products/filter",
                 "/api/feedbacks",
                 "/api/quizzes",
+                "/api/promotions",
                 "/api/user/**",
                 "/api/skin-care-routines/skinType/**",
+                "/api/payment/stripe/create-intent",
         };
 
 //        String[] showUrls = {"/api/manager/users/**","/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines/**","/api/promotions","/api/feedbacks/**","/api/quizzes/**"};
         String[] showUrls = {"/api/orders/customer/**","/api/cart/**","/api/categories","/api/skin-care-routines/user/**"};
         String[] updateUrls = {"/api/cart/**","/api/skin-care-routines/**","/api/orders/staff/**"};
-        String[] postUrls = {"/api/cart/**","/api/orders/**"};
+        String[] postUrls = {"/api/cart/**","/api/orders/customer/**"};
         String[] postManagerUrls = {"/api/skin-care-routines"};
         String[] deleteUrls = {"/api/cart/**"};
-        String[] showManagerUrls = {"/api/orders/staff","/api/promotions"};
+        String[] showManagerUrls = {"/api/orders/manager","/api/feedbacks/**","/api/products/**","/api/categories/**","/api/skin-care-routines/**"};
         String[] showStaffUrls = {"/api/quizzes/**","/api/answer-options/question/**"};
         String[] adminUrls = {"/api/manager/users/**"};
 
