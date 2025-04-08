@@ -2,6 +2,7 @@ package com.glowcorner.backend.model.DTO;
 
 import com.glowcorner.backend.enums.Category;
 import com.glowcorner.backend.enums.SkinType;
+import com.glowcorner.backend.enums.Status.ProductStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,4 +23,5 @@ public class ProductDTO {
     Category category;
     Float rating;
     String image_url;
+    ProductStatus status;
 }

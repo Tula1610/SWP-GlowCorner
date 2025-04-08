@@ -23,7 +23,8 @@ public class ProductMapper {
             product.getSkinTypes(),
             product.getCategory(),
             product.getRating(),
-            product.getImage_url()
+            product.getImage_url(),
+            product.getStatus()
         );
     }
 }

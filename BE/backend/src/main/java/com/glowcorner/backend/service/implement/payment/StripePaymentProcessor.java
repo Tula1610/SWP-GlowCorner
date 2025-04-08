@@ -1,6 +1,7 @@
 package com.glowcorner.backend.service.implement.payment;
 
 import com.glowcorner.backend.entity.mongoDB.Order;
+import com.glowcorner.backend.enums.Status.OrderStatus;
 import com.glowcorner.backend.model.DTO.Order.PaymentInfo;
 import com.glowcorner.backend.service.interfaces.payment.PaymentProcessor;
 import com.stripe.exception.StripeException;
@@ -21,6 +22,7 @@ public class StripePaymentProcessor implements PaymentProcessor {
             order.setPaymentMethodType(method.getType());
             order.setPaymentBrand(method.getCard().getBrand());
             order.setPaymentLast4(method.getCard().getLast4());
+            order.setStatus(OrderStatus.PROCESSING);
         } catch (StripeException e) {
             throw new RuntimeException("Stripe error: " + e.getMessage());
         }
