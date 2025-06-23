@@ -65,6 +65,8 @@ public class CustomFilterSecurity {
                 "/api/user/**",
                 "/api/skin-care-routines/skinType/**",
                 "/api/payment/stripe/create-intent",
+                "/api/cart/**",
+                "/api/quizzes",
         };
 
 //        String[] showUrls = {"/api/manager/users/**","/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines/**","/api/promotions","/api/feedbacks/**","/api/quizzes/**"};
