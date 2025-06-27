@@ -56,7 +56,7 @@ public class CustomFilterSecurity {
                 "/auth/signup",
                 "/auth/forgot-password",
                 "/auth/change-password",
-                "/api/customer/products",
+                "/api/customer/**",
                 "/api/products/**",
                 "/api/customer/products/filter",
                 "/api/feedbacks",
