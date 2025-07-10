@@ -70,6 +70,7 @@ public class CustomFilterSecurity {
                 "/api/orders/**",
                 "/api/skin-care-routines/**",
                 "/api/manager/**",
+                "/api/products/**",
         };
 
 //        String[] showUrls = {"/api/manager/users/**","/api/products/**","/api/orders/**","/api/cart/**","/api/categories","/api/skin-care-routines/**","/api/promotions","/api/feedbacks/**","/api/quizzes/**"};
